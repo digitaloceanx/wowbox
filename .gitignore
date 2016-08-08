@@ -1,0 +1,15 @@
+/*
+!/Interface/
+/Interface/*
+!/Interface/AddOns/
+Interface/AddOns/Blizzard_*
+Interface/AddOns/GladiatorosSA_zhCN
+*.mp3
+*.ogg
+*.tga
+*.blp
+*.wav
+*.ttf
+!wow.exe
+!wow-64.exe
+!.gitignore
