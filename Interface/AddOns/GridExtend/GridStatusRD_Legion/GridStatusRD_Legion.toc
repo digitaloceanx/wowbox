@@ -1,0 +1,17 @@
+## Interface: 70000
+## Title: GridStatusRaidDebuff(Legion)
+## Notes: Debuff List for Legion
+## Author: Stassart (Treliss-Sargeras-US)
+## Version: 7.00
+## Grid Author: Pastamancer & Maia
+## Dependencies: GridStatusRaidDebuff
+## X-Curse-Packaged-Version: r8
+## X-Curse-Project-Name: GridStatusRD_Legion
+## X-Curse-Project-ID: gridstatusrd_legion
+## X-Curse-Repository-ID: wow/gridstatusrd_legion/mainline
+
+CheckCompat.lua
+BrokenIsles.lua
+EmeraldNightmare.lua
+Nighthold.lua
+

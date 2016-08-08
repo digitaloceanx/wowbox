@@ -1,0 +1,250 @@
+<!--
+$Id: Accountant_Classic_Options.xml 142 2016-07-08 08:22:50Z arith $
+-->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
+	<Script file="Accountant_Classic_Options.lua"/>
+	<Frame name="AccountantClassicOptionsFrame" hidden="true">
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString inherits="GameFontNormalLarge" text="ACCLOC_OPTS">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="15" y="-15"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="$parentWeek" inherits="UIDropDownMenuTemplate" enableMouse="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="340" y="-65"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<FontString name="$parentLabel" inherits="GameFontNormalSmall" text="ACCLOC_STARTWEEK">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="21" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						AccountantClassicOptionsFrameWeek_Init();
+					</OnLoad>
+				</Scripts>
+			</Frame>
+			<CheckButton name="$parentToggleButton" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="20" y="-45"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(ACCLOC_MINIBUT);
+					</OnLoad>
+					<OnClick>
+						AccountantClassic_ButtonToggle();
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentToggleMoneyOnMiniMap" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentToggleButton">
+						<Offset>
+							<AbsDimension x="10" y="-25"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(ACCLOC_MINIBUTMONEY);
+					</OnLoad>
+					<OnClick>
+						AccountantClassicOptionsMoneyOnMinimap_Toggle();
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentToggleSessionOnMiniMap" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentToggleMoneyOnMiniMap">
+						<Offset>
+							<AbsDimension x="0" y="-25"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(ACCLOC_MINIBUTSESSINF);
+					</OnLoad>
+					<OnClick>
+						AccountantClassicOptionsSessionOnMinimap_Toggle();
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentToggleMoneyDisplay" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentToggleSessionOnMiniMap">
+						<Offset>
+							<AbsDimension x="-10" y="-25"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(ACCLOC_ONSCRMONEY);
+					</OnLoad>
+					<OnClick>
+						AccountantClassicMoneyInfoFrame_Toggle();
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<Button name="$parentResetPosition" inherits="OptionsButtonTemplate" text="ACCLOC_RSTPOSITION">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentToggleMoneyDisplay" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="310" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Size>
+					<AbsDimension x="160" y="21" />
+				</Size>
+				<Scripts>
+					<OnClick>
+						AccountantClassicMoneyInfoFrame_ResetPosition();
+					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+						GameTooltip:SetText(ACCLOC_RSTMNYFRM_TIP, nil, nil, nil, nil, 1);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+			</Button>
+			<CheckButton name="$parentToggleDisplayInstroTips" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentToggleMoneyDisplay">
+						<Offset>
+							<AbsDimension x="0" y="-25"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(ACCLOC_INTROTIPS);
+					</OnLoad>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+						GameTooltip:SetText(ACCLOC_INTROTIPS_TIP, nil, nil, nil, nil, 1);
+					</OnEnter>
+					<OnClick>
+						AccountantClassicOptionsIntroTip_Toggle();
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<Frame name="$parentCharacterDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentToggleDisplayInstroTips" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="-10" y="-45"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<FontString name="$parentLabel" inherits="GameFontNormalSmall" text="ACCLOC_REMOVECHAR">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="21" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+						GameTooltip:SetText(ACCLOC_REMOVECHAR_TIP, nil, nil, nil, nil, 1);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentDateDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentCharacterDropDown" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-45"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<FontString name="$parentLabel" inherits="GameFontNormalSmall" text="ACCLOC_DATEFORMAT">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="21" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
+						GameTooltip:SetText(ACCLOC_DATEFORMAT_TIP, nil, nil, nil, nil, 1);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+			</Frame>
+<!--			<Button name="AccountantClassicOptionsFrameDone" inherits="OptionsButtonTemplate" text="ACCLOC_DONE">
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="20"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						AccountantClassicOptions_Toggle();
+					</OnClick>
+				</Scripts>
+			</Button>-->
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				AccountantClassicOptions_OnLoad(self);
+			</OnLoad>
+			<OnShow>
+				AccountantClassicOptions_OnShow(self);
+			</OnShow>
+			<OnHide>
+				AccountantClassicOptions_OnHide(self);
+			</OnHide>
+		</Scripts>
+	</Frame>
+</Ui>

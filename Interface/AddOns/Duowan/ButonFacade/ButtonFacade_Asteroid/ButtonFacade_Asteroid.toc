@@ -1,0 +1,17 @@
+## Interface: 30100
+## Title: ButtonFacade: |cffff8000Asteroid|r
+## Version: 1.0
+## Notes: Asteroid skin for ButtonFacade.
+## Notes-deDE: Asteroid Skins für ButtonFacade.
+## Notes-esMX: Asteroid texturas para ButtonFacade.
+## Notes-esES: Asteroid texturas para ButtonFacade.
+## Notes-frFR: Skin Asteroid pour ButtonFacade.
+## Notes-koKR: ButtonFacade에 대한 Asteroid 스킨.
+## Notes-ruRU: Asteroid Шкурки для ButtonFacade.
+## Notes-zhCN: 为ButtonFacade Asteroid皮肤。
+## Notes-zhTW: Asteroid皮膚的ButtonFacade。
+## Author: E. Mars
+## X-Category: Action Bars
+## Dependencies: ButtonFacade
+
+Skins.lua
