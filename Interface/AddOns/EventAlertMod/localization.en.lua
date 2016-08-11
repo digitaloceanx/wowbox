@@ -58,6 +58,7 @@ EA_TTIP_GRPCFG_TALENT = "Only active at this talent";
 EA_TTIP_GRPCFG_HIDEONLEAVECOMBAT = "Hide when leave of combat";
 EA_TTIP_GRPCFG_HIDEONLOSTTARGET = "Hide when lost of target";
 
+EA_CLASS_DH = "DEMONHUNTER";
 EA_CLASS_DK = "DEATHKNIGHT";
 EA_CLASS_DRUID = "DRUID";
 EA_CLASS_HUNTER = "HUNTER";
@@ -326,6 +327,7 @@ EA_SPELL_POWER_DEMONIC_FURY = 15;		-- Demonic Fury (Demonology Warlock)
 EA_SPELL_POWER_ARCANE_CHARGES = 16;		-- Arcane Charges (Arcane Mage )
 EA_SPELL_POWER_MAELSTROM = 11;			-- Maelstrom (Enhanced Shaman and Element Shaman)
 
+EA_XOPT_SPECFLAG_LUNARPOWER = "Lunar Power"
 EA_XOPT_SPECFLAG_HOLYPOWER = "HolyP ower";
 EA_XOPT_SPECFLAG_RUNICPOWER = "Runic Power";
 EA_XOPT_SPECFLAG_SOULSHARDS = "Soul Shards";

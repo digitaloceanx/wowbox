@@ -36,6 +36,14 @@ end
 if (GetLocale() == "zhCN") then
 	HTML_BEGIN();
 		HTML_TITLE("更新日志:");
+		HTML_VER("2016-08-11(7.0.0.5)");
+		HTML_LOG("多玩界面", "修正恶魔猎手一些错误");
+		HTML_LOG("技能特效报警", "增加恶魔猎手一些监视,禁用DK的符文等");
+		HTML_LOG("距离显示", "距离显示模块更新");
+		HTML_LOG("伤害统计", "更新Recount到最新版本");
+		HTML_LOG("一键驱散", "更新最新版");
+		HTML_LOG("泰坦信息条", "更新新版");
+		
 		HTML_VER("2016-08-09(7.0.0.4)");
 		HTML_LOG("首领模块", "更新DBM语音版");
 		HTML_LOG("考古助手", "更新考古助手");

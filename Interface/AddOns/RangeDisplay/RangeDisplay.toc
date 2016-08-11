@@ -3,7 +3,7 @@
 ## Title-zhCN: [多玩] 距离显示 RangeDisplay
 ## Title-zhTW: [多玩] 距離顯示 RangeDisplay
 ## Author: mitch0
-## Version: v4.4.0
+## Version: v4.5.0
 ## Notes: Estimated range display. Type /rangedisplay for config
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Always: true

@@ -35,7 +35,7 @@ if (GetLocale() == "zhCN") then
 	L["斯通纳德"] = "斯通纳德";
 	L["暴风城"] = "暴风城";
 	L["沙塔斯"] = "沙塔斯";
-	L["达拉然"] = "达拉然";
+--	L["达拉然"] = "达拉然";
 	L["达拉然 - 诺森德"] = "达拉然 - 诺森德";
 	L["达纳苏斯"] = "达纳苏斯";
 	L["铁炉堡"] = "铁炉堡";
@@ -46,7 +46,7 @@ if (GetLocale() == "zhCN") then
 	L["暴风之盾"] = "暴风之盾";
 	L["战争之矛"] = "战争之矛";
 	L["传送门: "] = "传送门：";
-	L["远古传送门: "] = "远古传送门：";
+--	L["远古传送门: "] = "远古传送门：";
 	L["传送: "] = "传送：";
 	L["左键 - 传送: "] = "左键 - 传送: ";
 	L["右键 - 传送门: "] = "右键 - 传送门: ";
@@ -77,7 +77,7 @@ elseif (GetLocale() == "zhTW") then
 	L["斯通纳德"] = "斯通納德";
 	L["暴风城"] = "暴風城";
 	L["沙塔斯"] = "撒塔斯";
-	L["达拉然"] = "達拉然";
+--	L["达拉然"] = "達拉然";
 	L["达拉然 - 诺森德"] = "達拉然 - 諾森德";
 	L["达纳苏斯"] = "達納蘇斯";
 	L["铁炉堡"] = "鐵爐堡";
@@ -88,7 +88,7 @@ elseif (GetLocale() == "zhTW") then
 	L["暴风之盾"] = "暴風之盾";
 	L["战争之矛"] = "戰爭之矛";
 	L["传送门: "] = "傳送門:";
-	L["远古传送门: "] = "遠古傳送門：";
+--	L["远古传送门: "] = "遠古傳送門：";
 	L["传送: "] = "傳送:";
 	L["左键 - 传送: "] = "左鍵 - 傳送:";
 	L["右键 - 传送门: "] = "右鍵 - 傳送門:";
@@ -118,7 +118,7 @@ else
 	L["斯通纳德"] = "斯通纳德";
 	L["暴风城"] = "暴风城";
 	L["沙塔斯"] = "撒塔斯";
-	L["达拉然"] = "達拉然";
+--	L["达拉然"] = "達拉然";
 	L["达拉然 - 诺森德"] = "达拉然 - 诺森德";
 	L["达纳苏斯"] = "达纳苏斯";
 	L["铁炉堡"] = "铁炉堡";
@@ -128,7 +128,7 @@ else
 	L["托巴拉德"] = "托尔巴拉德";
 	L["锦绣谷"] = "锦绣谷";
 	L["传送门: "] = "传送门：";
-	L["远古传送门: "] = "远古传送门：";
+--	L["远古传送门: "] = "远古传送门：";
 	L["传送: "] = "传送：";
 	L["左键 - 传送: "] = "左键 - 传送: ";
 	L["右键 - 传送门: "] = "右键 - 传送门: ";
@@ -166,7 +166,7 @@ A.spellsDB = {
 		[5] = {t = "d", name = L["斯通纳德"]},
 		[6] = {t = "d", name = L["暴风城"]},
 		[7] = {t = "d", name = L["沙塔斯"]},
-		[8] = {t = "d", name = L["达拉然"]},
+		[8] = {t = "d", name = L["达拉然 - 诺森德"]},
 		[9] = {t = "d", name = L["达纳苏斯"]},
 		[10] = {t = "d", name = L["铁炉堡"]},	
 		[11] = {t = "d", name = L["银月城"]},
@@ -365,7 +365,7 @@ function A:UpdateAspect()
 				elseif (spellID.t and spellID.t == "d") then	-- 传送门
 					local check1, check2
 					if spellID.name == L["达拉然"] then
-						check1, check2 = self:CheckSpell(L["远古传送门: "] .. spellID.name), self:CheckSpell(L["传送: "] .. L["达拉然 - 诺森德"]);
+						check1, check2 = self:CheckSpell(L["传送门: "] .. spellID.name), self:CheckSpell(L["传送: "] .. L["达拉然 - 诺森德"]);
 					else
 						check1, check2 = self:CheckSpell(L["传送门: "] .. spellID.name), self:CheckSpell(L["传送: "] .. spellID.name);
 					end
@@ -612,7 +612,7 @@ function A:AspectBarUpdateState()
 						--else
 						if name == L["达拉然"] then
 							button:SetAttribute("spell1", L["传送: "] .. L["达拉然 - 诺森德"]);
-							button:SetAttribute("spell2", L["远古传送门: "] .. name);
+							button:SetAttribute("spell2", L["传送门: "] .. name);
 						else
 							button:SetAttribute("spell1", L["传送: "] .. name);
 							button:SetAttribute("spell2", L["传送门: "] .. name);

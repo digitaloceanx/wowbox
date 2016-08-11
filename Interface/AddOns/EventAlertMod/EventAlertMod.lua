@@ -25,7 +25,7 @@ EA_Config2 = 	{
 		SCD_CloseAfterEnd		= false,		
 		
 		--是否顯示死騎符文
-		DK_ShowRunes			= true,	
+		DK_ShowRunes			= false,	
 
 		--是否顯示獵人寵物集中�?
 		HUNTER_ShowPetFocus		= true,
@@ -73,6 +73,7 @@ EA_Config = {
 				DemonicFury,
 				LifeBloom,	
 				ArcaneCharges,
+				Fury,
 				},
 			}
 
@@ -2289,6 +2290,7 @@ function EventAlert_UpdateSinglePower(iPowerType)
 	if (iPowerType == EA_SPELL_POWER_LIGHT_FORCE) then iPowerName = EA_XSPECINFO_LIGHTFORCE end;	
 	if (iPowerType == EA_SPELL_POWER_BURNING_EMBERS) then iPowerName = EA_XSPECINFO_BURNINGEMBERS end;
 	if (iPowerType == EA_SPELL_POWER_DEMONIC_FURY) then iPowerName = EA_XSPECINFO_DEMONICFURY end;	
+
 	
 
 	if (EA_Config.ShowFrame == true) then

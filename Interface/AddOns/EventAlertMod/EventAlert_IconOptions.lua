@@ -33,6 +33,8 @@ function EventAlert_Icon_Options_Frame_Init()
 	--EA_Icon_Options_Frame_SpecFlag_BurningEmbers:SetChecked(EA_Config.SpecPowerCheck.BurningEmbers);
 	EA_Icon_Options_Frame_SpecFlag_ArcaneCharges:SetChecked(EA_Config.SpecPowerCheck.ArcaneCharges);
 	EA_Icon_Options_Frame_SpecFlag_Maelstrom:SetChecked(EA_Config.SpecPowerCheck.Maelstrom);
+--	EA_Icon_Options_Frame_SpecFlag_Fury:SetChecked(EA_Config.SpecPowerCheck.Fury);
+	
 end
 
 function EventAlert_Icon_Options_Frame_ToggleAlertFrame()
@@ -225,6 +227,10 @@ function EventAlert_Icon_Options_Frame_PaintAlertFrame()
 		if (EA_Config.SpecPowerCheck.Maelstrom) then
 			EventAlert_Icon_Options_Frame_SetAlertFrameText(EAFrameSpec_10110, "", false);  -- Shaman Maelstrom
 		end
+--	elseif (EA_playerClass == EA_CLASS_DH) then --  ¤ä´©DH
+--		if (EA_Config.SpecPowerCheck.Fury) then
+--			EventAlert_Icon_Options_Frame_SetAlertFrameText(EAFrameSpec_10110, "", false);  -- DEMONHUNTER
+--		end
 	end
 end
 

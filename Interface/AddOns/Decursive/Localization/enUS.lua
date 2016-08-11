@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
     
-    Decursive (v 2.7.4.7) add-on for World of Warcraft UI
+    Decursive (v 2.7.4.7-1-g0548d4f) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT
     teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
@@ -21,7 +21,7 @@
     Decursive is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY.
 
-    This file was last updated on 2016-07-25T09:26:06Z
+    This file was last updated on 2016-08-10T09:13:36Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -478,8 +478,8 @@ Go to curse.com and search for 'Decursive' or use Curse's client to update all y
 
 This notice will be displayed again in 2 days.]=]
 L["TOOFAR"] = "Too far"
-L["TOO_MANY_ERRORS_ALERT"] = [=[There are too many Lua errors in your User Interface (%d). Your game experience is currently degraded. Disable or update the failing add-ons to turn off this message and regain a proper frame rate.
-You may want to turn on Lua error reporting ('Help' section of World of Warcraft's interface options) to identify the problematic add-ons.]=]
+L["TOO_MANY_ERRORS_ALERT"] = [=[There are too many Lua errors in your User Interface (%d errors). Your game experience may be degraded. Disable or update the failing add-ons to turn off this message.
+You may want to turn on Lua error reporting ('Help' section of World of Warcraft's interface options).]=]
 L["UNITSTATUS"] = "Unit Status: "
 L["UNSTABLERELEASE"] = "Unstable release"
 
@@ -487,4 +487,4 @@ L["UNSTABLERELEASE"] = "Unstable release"
 
 
 
-T._LoadedFiles["enUS.lua"] = "2.7.4.7";
+T._LoadedFiles["enUS.lua"] = "2.7.4.7-1-g0548d4f";

@@ -81,7 +81,46 @@ end
 function EventAlert_LoadSpellArray()
 
 	EADef_Items = {};
-
+--DH
+	EADef_Items[EA_CLASS_DH] = {
+		-- Primary Alert / 本職業提醒區
+		["ITEMS"] = {
+			[187827] = {enable=true,},   -- Metamorphosis
+			[218256] = {enable=true,},   -- Empower Wards
+			[196718] = {enable=true,},   -- Darkness
+			[178470] = {enable=true,},   -- Immolation Aura
+			[203720] = {enable=true,},   -- Demon Spikes
+			[227225] = {enable=true,},   -- Soul Barrier (Talent)
+			[196555] = {enable=true,},   -- Netherwalk (Talent)
+			[207810] = {enable=true,},   -- Nether Bond (Talent)
+		},
+		-- Alternate Alert / 本職業額外提醒區
+		["ALTITEMS"] = {
+			[162919] = {enable=true,},   -- Nightmare Fire (Crit, Proc)
+			[162913] = {enable=true,},
+			[162915] = {enable=true,},
+			[162917] = {enable=true,},
+		},
+		-- Target Alert / 目標提醒區
+		["TARITEMS"] = {
+			[204598] = {enable=true, self=true,},    -- Sigil of Flame
+			[204490] = {enable=true, self=true,},    -- Sigil of Silence
+			[207685] = {enable=true, self=true,},    -- Sigil of Misery
+			[204843] = {enable=true, self=false},	-- Sigil of Grasp
+			[207744] = {enable=true, self=false,},	-- Fiery Brand
+			[224509] = {enable=true, self=false,},	-- Frailty (Spirit Bomb Talent)
+			[206491] = {enable=true, self=false,},	-- Nemesis (Talent)
+		},
+		-- Spell Cooldown Alert / 本職業技能CD區
+		["SCDITEMS"] = {
+			[195072] = {enable=false,}, 
+		},
+		-- GroupEvent Alert / 本職業條件技能區
+		["GRPITEMS"] = {
+		},
+	}
+	
+	
 --------------------------------------------------------------------------------
 -- Death Knight / 死亡騎士
 --------------------------------------------------------------------------------

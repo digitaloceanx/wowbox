@@ -323,6 +323,7 @@ if (GetLocale() =="zhCN") then
 	SPELL_TIMER_PATTERN_TABLE["DEATHKNIGHT"]["亡者大军"] = {"buff", nil, nil, nil, {["live"] = 1, ["spell"] = {"食尸鬼军团", 45}}};
 
 	SPELL_TIMER_PATTERN_TABLE["MONK"] = {};
+	SPELL_TIMER_PATTERN_TABLE["DEMONHUNTER"] = {};
 elseif (GetLocale() == "zhTW") then
 	SPELL_TIMER_TITILE = "法術計時器";
 	SPELL_TIMER_TEXT_OPTION_SLIDER = "你可以在原有的法術的持續時間上再額外增加一段時間，拖動滑動塊來調整該時間。";
@@ -564,6 +565,7 @@ elseif (GetLocale() == "zhTW") then
 	SPELL_TIMER_PATTERN_TABLE["DEATHKNIGHT"]["死亡凋零"] = {"持續([%d%.]+)秒", nil, nil, nil, {["notarget"] = 1}};
 
 	SPELL_TIMER_PATTERN_TABLE["MONK"] = {};
+	SPELL_TIMER_PATTERN_TABLE["DEMONHUNTER"] = {};
 else
 	SPELL_TIMER_TITILE = "SpellTimer";
 	SPELL_TIMER_TEXT_OPTION_SLIDER = "You can add some time on this spell .";
@@ -747,4 +749,5 @@ else
 	SPELL_TIMER_PATTERN_TABLE["DEATHKNIGHT"]["Ebon Plague"] = {nil}; 
 
 	SPELL_TIMER_PATTERN_TABLE["MONK"] = {};
+	SPELL_TIMER_PATTERN_TABLE["DEMONHUNTER"] = {};
 end
