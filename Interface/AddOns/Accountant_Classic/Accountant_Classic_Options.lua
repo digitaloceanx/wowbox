@@ -1,5 +1,5 @@
 --[[
-$Id: Accountant_Classic_Options.lua 142 2016-07-08 08:22:50Z arith $
+$Id: Accountant_Classic_Options.lua 150 2016-08-04 16:54:18Z arith $
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("Accountant_Classic");
@@ -34,6 +34,7 @@ function AccountantClassicOptions_OnShow()
 	AccountantClassicOptionsFrameToggleDisplayInstroTips:SetChecked(AccountantClassic_Profile["options"].showintrotip);
 	AccountantClassicOptionsFrameToggleMoneyOnMiniMap:SetChecked(AccountantClassic_Profile["options"].showmoneyonbutton);
 	AccountantClassicOptionsFrameToggleSessionOnMiniMap:SetChecked(AccountantClassic_Profile["options"].showsessiononbutton);
+	AccountantClassicOptionsFrameToggleMoneyDisplayOnLDB:SetChecked(AccountantClassic_Profile["options"].LDBDisplaySessionInfo);
 	--AccountantSliderButtonPos:SetValue(AccountantClassic_Profile["options"].buttonpos);
 	UIDropDownMenu_Initialize(AccountantClassicOptionsFrameWeek, AccountantClassicOptionsFrameWeek_Init);
 	UIDropDownMenu_SetSelectedID(AccountantClassicOptionsFrameWeek, AccountantClassic_Profile["options"].weekstart);
@@ -98,10 +99,18 @@ function AccountantClassicOptionsSessionOnMinimap_Toggle()
 	end
 end
 
+function AccountantClassicLDBDisplay_Toggle()
+	if (AccountantClassic_Profile["options"].LDBDisplaySessionInfo == true) then
+		AccountantClassic_Profile["options"].LDBDisplaySessionInfo = false;
+	else
+		AccountantClassic_Profile["options"].LDBDisplaySessionInfo = true;
+	end
+end
+
 function AccountantClassicMoneyInfoFrame_ResetPosition()
-	AccountantClassicMoneyInfoFrame:SetPoint("TOPLEFT", nil, "TOPLEFT", 90, 0);
-	AccountantClassic_Profile["options"].moneyinfoframe_x = 90;
-	AccountantClassic_Profile["options"].moneyinfoframe_y = 0;
+	AccountantClassicMoneyInfoFrame:SetPoint("TOPLEFT", nil, "TOPLEFT", 10, -80);
+	AccountantClassic_Profile["options"].moneyinfoframe_x = 10;
+	AccountantClassic_Profile["options"].moneyinfoframe_y = -80;
 end
 
 function AccountantClassicOptionsCharacterDropDown_Init()

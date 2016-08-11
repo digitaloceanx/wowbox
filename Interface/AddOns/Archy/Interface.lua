@@ -65,6 +65,46 @@ function private:ResetFramePositions()
 	Archy:UpdateFramePositions()
 end
 
+
+function Archy:DisableProgressBar()
+	if not private.DefaultProgressBarData or not private.DefaultProgressBarData.isDisabled then
+		local bar = _G.ArcheologyDigsiteProgressBar
+		bar:UnregisterEvent("ARCHAEOLOGY_SURVEY_CAST")
+		bar:UnregisterEvent("ARCHAEOLOGY_FIND_COMPLETE")
+		bar:UnregisterEvent("ARTIFACT_DIGSITE_COMPLETE")
+
+		private.DefaultProgressBarData = private.DefaultProgressBarData or {
+			OnEvent = bar:GetScript("OnEvent"),
+			OnHide = bar:GetScript("OnHide"),
+			OnShow = bar:GetScript("OnShow"),
+			OnUpdate = bar:GetScript("OnUpdate"),
+		}
+
+		bar:SetScript("OnEvent", nil)
+		bar:SetScript("OnHide", nil)
+		bar:SetScript("OnShow", nil)
+		bar:SetScript("OnUpdate", nil)
+		bar:Hide()
+
+		private.DefaultProgressBarData.isDisabled = true
+	end
+end
+
+function Archy:EnableProgressBar()
+	if private.DefaultProgressBarData and private.DefaultProgressBarData.isDisabled then
+		local bar = _G.ArcheologyDigsiteProgressBar
+		bar:RegisterEvent("ARCHAEOLOGY_SURVEY_CAST")
+		bar:RegisterEvent("ARCHAEOLOGY_FIND_COMPLETE")
+		bar:RegisterEvent("ARTIFACT_DIGSITE_COMPLETE")
+		bar:SetScript("OnEvent", private.DefaultProgressBarData.OnEvent)
+		bar:SetScript("OnHide", private.DefaultProgressBarData.OnHide)
+		bar:SetScript("OnShow", private.DefaultProgressBarData.OnShow)
+		bar:SetScript("OnUpdate", private.DefaultProgressBarData.OnUpdate)
+
+		private.DefaultProgressBarData.isDisabled = nil
+	end
+end
+
 local ArtifactFrame
 local DigSiteFrame
 local DistanceIndicatorFrame
@@ -111,7 +151,7 @@ do
 					local completionCount = race:GetArtifactCompletionCountByName(project.name)
 					local continentHasRace = currentContinentRaces and currentContinentRaces[raceID]
 
-					if not race:IsOnArtifactBlacklist() and project.fragments_required > 0 and (not artifactSettings.filter or continentHasRace) then
+					if not race:IsOnArtifactBlacklist() and project.fragments_required > 0 and (not artifactSettings.filter or project.canSolve or continentHasRace) then
 						child:ClearAllPoints()
 
 						if topFrame == self.container then
@@ -550,10 +590,8 @@ do
 			if not canShow then
 				self:Hide()
 			end
-		else
-			if canShow then
-				self:Show()
-			end
+		elseif canShow then
+			self:Show()
 		end
 	end
 
@@ -752,11 +790,14 @@ function Archy:ShowDigSiteChildFrameSiteButtonTooltip(siteButton)
 	siteButton.tooltip = siteButton.tooltip .. ("\n%s%s %s%s|r"):format(normalFont, L["Key Stones:"], highlightFont, digsite.stats.keystones)
 	siteButton.tooltip = siteButton.tooltip .. "\n\n" .. _G.GREEN_FONT_COLOR_CODE .. L["Left-Click to view the zone map"]
 
-	if siteButton.digsite:IsBlacklisted() then
+	local raceIsBlacklisted = siteButton.digsite.race:IsOnDigSiteBlacklist()
+
+	if siteButton.digsite:IsBlacklisted() and not raceIsBlacklisted then
 		siteButton.tooltip = siteButton.tooltip .. "\n" .. L["Right-Click to remove from blacklist"]
-	else
+	elseif not raceIsBlacklisted then
 		siteButton.tooltip = siteButton.tooltip .. "\n" .. L["Right-Click to blacklist"]
 	end
+
 	_G.GameTooltip:SetOwner(siteButton, "ANCHOR_BOTTOMRIGHT")
 	_G.GameTooltip:SetText(siteButton.tooltip, _G.NORMAL_FONT_COLOR[1], _G.NORMAL_FONT_COLOR[2], _G.NORMAL_FONT_COLOR[3], 1, true)
 end

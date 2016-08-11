@@ -1,5 +1,5 @@
 <!--
-$Id: Accountant_Classic_Options.xml 142 2016-07-08 08:22:50Z arith $
+$Id: Accountant_Classic_Options.xml 150 2016-08-04 16:54:18Z arith $
 -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 	<Script file="Accountant_Classic_Options.lua"/>
@@ -137,9 +137,26 @@ $Id: Accountant_Classic_Options.xml 142 2016-07-08 08:22:50Z arith $
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<CheckButton name="$parentToggleDisplayInstroTips" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+			<CheckButton name="$parentToggleMoneyDisplayOnLDB" inherits="InterfaceOptionsSmallCheckButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentToggleMoneyDisplay">
+						<Offset>
+							<AbsDimension x="-10" y="-25"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(ACCLOC_LDBINFOTYPE);
+					</OnLoad>
+					<OnClick>
+						AccountantClassicLDBDisplay_Toggle();
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parentToggleDisplayInstroTips" inherits="InterfaceOptionsSmallCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentToggleMoneyDisplayOnLDB">
 						<Offset>
 							<AbsDimension x="0" y="-25"/>
 						</Offset>

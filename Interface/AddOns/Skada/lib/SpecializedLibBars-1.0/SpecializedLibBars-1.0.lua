@@ -921,11 +921,16 @@ do
 	function barListPrototype:SortBars()
 		local lastBar = self
 		local ct = 0
+        local has_fixed = false
+        
 		if not bars[self] then return end
 		for k, v in pairs(bars[self]) do
 			ct = ct + 1
 			values[ct] = v
 			v:Hide()
+            if v.fixed then
+                has_fixed = true
+            end
 		end
 		for i = ct + 1, #values do
 			values[i] = nil
@@ -958,6 +963,16 @@ do
 			stop = math.min(maxbars + offset, #values)
 			step = 1
 		end
+        
+        -- Fixed bar replaces the last bar
+        if has_fixed and stop < #values then
+            for i = stop + 1, #values, 1 do
+                if values[i].fixed then
+                    table.insert(values, stop, values[i])
+                    break
+                end
+            end
+        end
 
 		local shown = 0
 		local last_icon = false

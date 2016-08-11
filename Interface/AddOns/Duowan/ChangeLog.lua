@@ -36,6 +36,15 @@ end
 if (GetLocale() == "zhCN") then
 	HTML_BEGIN();
 		HTML_TITLE("更新日志:");
+		HTML_VER("2016-08-09(7.0.0.4)");
+		HTML_LOG("首领模块", "更新DBM语音版");
+		HTML_LOG("考古助手", "更新考古助手");
+		HTML_LOG("伤害统计", "更新Skada到最新版本");
+		HTML_LOG("收支统计", "更新到最新版本");
+		HTML_LOG("竞技大师", "更新新版");
+		HTML_LOG("传送门条", "修正错误");
+		HTML_LOG("背包整合", "修正物品边框染色错误");
+		
 		HTML_VER("2016-08-03(7.0.0.3)");
 		HTML_LOG("首领模块", "更新DBM语音版");
 		HTML_LOG("技能特效报警", "增加重置配置按钮,有异常的点下");

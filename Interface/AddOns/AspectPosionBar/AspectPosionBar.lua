@@ -353,7 +353,7 @@ end
 function A:UpdateAspect()
 	self.tmp.spells = {};
 	self.tmp.teleport = {};
-	self.tmp.items = {};	
+	self.tmp.items = {};
 	if (self.spellsDB[self.class]) then
 		for i, spellID in ipairs(self.spellsDB[self.class]) do
 			if (type(spellID) == "table") then				
@@ -363,10 +363,11 @@ function A:UpdateAspect()
 						tinsert(self.tmp.items, name);
 					end
 				elseif (spellID.t and spellID.t == "d") then	-- 传送门
+					local check1, check2
 					if spellID.name == L["达拉然"] then
-						local check1, check2 = self:CheckSpell(L["远古传送门: "] .. spellID.name), self:CheckSpell(L["传送: "] .. L["达拉然 - 诺森德"]);
+						check1, check2 = self:CheckSpell(L["远古传送门: "] .. spellID.name), self:CheckSpell(L["传送: "] .. L["达拉然 - 诺森德"]);
 					else
-						local check1, check2 = self:CheckSpell(L["传送门: "] .. spellID.name), self:CheckSpell(L["传送: "] .. spellID.name);
+						check1, check2 = self:CheckSpell(L["传送门: "] .. spellID.name), self:CheckSpell(L["传送: "] .. spellID.name);
 					end
 					--if (spellID.name == L["托巴拉德"]) then
 					--	check2 = check1;						

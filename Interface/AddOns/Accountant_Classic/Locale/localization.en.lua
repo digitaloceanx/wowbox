@@ -1,4 +1,4 @@
-﻿-- $Id: localization.en.lua 143 2016-07-08 11:34:14Z arith $ 
+﻿-- $Id: localization.en.lua 150 2016-08-04 16:54:18Z arith $ 
 
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
 local L = AceLocale:NewLocale("Accountant_Classic", "enUS", true, is_silent);
@@ -30,6 +30,7 @@ L["ACCLOC_GOLD"] = "g "
 L["ACCLOC_IN"] = "Incomings"
 L["ACCLOC_INTROTIPS"] = "Display Instruction Tips"
 L["ACCLOC_INTROTIPS_TIP"] = "Toggle whether to display minimap button or floating money frame's operation tips."
+L["ACCLOC_LDBINFOTYPE"] = "Show current session's net income / expanse instead of total money on LDB"
 L["ACCLOC_LFG"] = "LFD, LFR and Scen."
 L["ACCLOC_LOADED"] = "Accountant Classic loaded."
 L["ACCLOC_LOADPROFILE"] = "Loaded Accountant Classic profile for %s"

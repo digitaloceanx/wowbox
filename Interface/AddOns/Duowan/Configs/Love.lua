@@ -23,6 +23,8 @@ if (GetLocale() == "zhCN") then
 	DW_PITCH_DESC = "在飞行，游泳时显示你与水平线的角度"
 	DW_Collector = "魔兽达人"
 	DW_Collector_OPEN = "打开魔兽达人界面"
+	DW_TALENTSETMANAGER = "天赋配置管理"
+	DW_TALENTSETMANAGER_DESC = "保存多套天赋配置以供切换"
 elseif (GetLocale() == "zhTW") then
 	LOVE_MOD_TITLE = "便捷工具";
 	LOVE_MOD_FOCUS_ENABLE = "允許快速設置焦點";
@@ -44,7 +46,9 @@ elseif (GetLocale() == "zhTW") then
 	DW_PITCH = "俯仰角"
 	DW_PITCH_DESC = "在飞行，游泳时显示你与水平线的角度"
 	DW_Collector = "魔兽达人"
-	DW_Collector_OPEN = "打开魔兽达人界面"	
+	DW_Collector_OPEN = "打开魔兽达人界面"
+	DW_TALENTSETMANAGER = "天賦配置管理"
+	DW_TALENTSETMANAGER_DESC = "保存多套天賦配置以供切換"
 else
 	LOVE_MOD_TITLE = "便捷工具";
 	LOVE_MOD_FOCUS_ENABLE = "允许快速设置焦点";
@@ -66,7 +70,9 @@ else
 	DW_PITCH = "俯仰角"
 	DW_PITCH_DESC = "在飞行，游泳时显示你与水平线的角度"
 	DW_Collector = "魔兽达人"
-	DW_Collector_OPEN = "打开魔兽达人界面"	
+	DW_Collector_OPEN = "打开魔兽达人界面"
+	DW_TALENTSETMANAGER = "天賦配置管理"
+	DW_TALENTSETMANAGER_DESC = "保存多套天賦配置以供切換"
 end
 
 --if (dwIsConfigurableAddOn("MapNotes") or dwIsConfigurableAddOn("Love") or dwIsConfigurableAddOn("FriendsMenuXP") or GetLocale() == "zhTW") then
@@ -252,8 +258,23 @@ if (dwIsConfigurableAddOn("Love") or dwIsConfigurableAddOn("Collector")) then
 				DWPitch_Toggle(false)
 			end
 		end
-	);	
+	);
 	
+	-- dwRegisterCheckButton(
+		-- "LoveMod",
+		-- DW_TALENTSETMANAGER,
+		-- DW_TALENTSETMANAGER_DESC,
+		-- "EnableTalentSetManager",
+		-- 1,
+		-- function (arg)
+			-- if (arg == 1) then
+				-- if TalentSetManager_Options then TalentSetManager_Options.visible = true end
+			-- else
+				-- if TalentSetManager_Options then TalentSetManager_Options.visible = false end
+			-- end
+		-- end
+	-- );
+
 	if (dwIsConfigurableAddOn("Collector")) then
 		dwRegisterCheckButton(
 			"LoveMod",

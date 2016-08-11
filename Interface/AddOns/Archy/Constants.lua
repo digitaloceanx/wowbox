@@ -131,6 +131,7 @@ private.DEFAULT_SETTINGS = {
 				"TOPRIGHT", "TOPRIGHT", -400, -200
 			},
 			anchor = "TOPRIGHT",
+			blacklist = {},
 			positionX = 400,
 			positionY = -300,
 			scale = 0.75,
@@ -138,6 +139,7 @@ private.DEFAULT_SETTINGS = {
 			style = "Extended",
 			sortByDistance = true,
 			announceNearest = true,
+			displayProgressBar = false,
 			distanceIndicator = {
 				enabled = true,
 				green = 40,

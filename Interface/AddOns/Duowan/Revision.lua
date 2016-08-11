@@ -8,7 +8,7 @@
 local VER;
 
 if (GetLocale() == "zhCN") then
-	VER = "7.0.0.3";
+	VER = "7.0.0.4";
 else
 	VER = "6.0.0.0";
 end

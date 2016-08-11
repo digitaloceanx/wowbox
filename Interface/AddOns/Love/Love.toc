@@ -10,7 +10,8 @@
 ## Dependencies: Duowan
 ## X-Revision: Duowan
 ## LoadOnDemand: 
-## SavedVariables: LoveDB, ezIconsDB, FlashTaskbarDB, ACHIEVEMENTSEARCH_DB
+## SavedVariables: LoveDB, ezIconsDB, FlashTaskbarDB, ACHIEVEMENTSEARCH_DB, TalentSetManager_Options
+## SavedVariablesPerCharacter: TalentSetManager_Saves
 
 locale\localization.xml
 Love.lua
@@ -26,3 +27,7 @@ FlashTaskBar.lua
 #AchievementSearch.lua
 
 QuickCompare\QuickCompare.xml
+
+#TalentSetManager\localization.lua
+#TalentSetManager\TalentSetManager.lua
+#TalentSetManager\components.xml

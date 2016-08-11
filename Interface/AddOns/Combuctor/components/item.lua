@@ -318,11 +318,11 @@ function ItemSlot:UpdateBorder()
 		end
 
 		if self:HighlightSetItems() and ItemSearch:InSet(item) then
-	   		return self:SetBorderColor(.1, 1, 1)
+	   --		return self:SetBorderColor(.1, 1, 1)
 	  	end
 
 		if self:HighlightUnusableItems() and Unfit:IsItemUnusable(item) then
-			return self:SetBorderColor(RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
+		--	return self:SetBorderColor(RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b)
 		end
 
 		if self:HighlightItemsByQuality() and quality and quality > 1 then
