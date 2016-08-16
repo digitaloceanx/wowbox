@@ -95,9 +95,9 @@ function mod:Create(window, isnew)
         window.frame = CreateFrame("Frame", window.db.name.."InlineFrame", UIParent)
         window.frame.win = window
         window.frame:SetFrameLevel(5)
-        if window.db.barheight==15 then window.db.barheight = 23 end--TODO: Fix dirty hack
+        if window.db.height==15 then window.db.height = 23 end--TODO: Fix dirty hack
         window.frame:SetHeight(window.db.height)
-        window.frame:SetWidth(GetScreenWidth())
+        window.frame:SetWidth(window.db.width or GetScreenWidth())
         window.frame:ClearAllPoints()
         window.frame:SetPoint("BOTTOM", -1)
         window.frame:SetPoint("LEFT", -1)
@@ -124,15 +124,15 @@ function mod:Create(window, isnew)
         
     local titlebg = CreateFrame("Frame", "InlineTitleBackground", window.frame)
     local title = window.frame:CreateFontString("frameTitle", 6)
-    title:SetTextColor(window.db.title.color.r,window.db.title.color.g,window.db.title.color.b,window.db.title.color.a)
+    title:SetTextColor(self:GetFontColor(window.db))
     --window.frame.fstitle:SetTextColor(255,255,255,1)
-    title:SetFont([[Interface\AddOns\Skada\fonts\ABF.ttf]], 10, nil)
+    title:SetFont(self:GetFont(window.db))
     title:SetText(window.metadata.title or "Skada")
     title:SetWordWrap(false)
     title:SetJustifyH("LEFT")
     title:SetPoint("LEFT", leftmargin, -1)
     title:SetPoint("CENTER", 0, 0)
-    title:SetHeight(window.db.barheight or 23)
+    title:SetHeight(window.db.height or 23)
     window.frame.fstitle = title
     window.frame.titlebg = titlebg
         
@@ -171,14 +171,15 @@ function mod:Create(window, isnew)
     menu:SetHighlightTexture("Interface\\Buttons\\UI-OptionsButton", 1.0)
     menu:SetAlpha(0.5)
     menu:RegisterForClicks("LeftButtonUp", "RightButtonUp")
-    menu:SetBackdropColor(window.db.title.color.r,window.db.title.color.g,window.db.title.color.b,window.db.title.color.a)
-    menu:SetPoint("BOTTOMLEFT", window.frame, "BOTTOMLEFT", 6, window.db.barheight/2-6)
+    menu:SetBackdropColor(window.db.title.textcolor.r,window.db.title.textcolor.g,window.db.title.textcolor.b,window.db.title.textcolor.a)
+    menu:SetPoint("BOTTOMLEFT", window.frame, "BOTTOMLEFT", 6, window.db.height/2-8)
     menu:SetFrameLevel(9)
     menu:SetPoint("CENTER")
     menu:SetBackdrop(skadamenubuttonbackdrop)
     menu:SetScript("OnClick", function()
         Skada:OpenMenu(window)
     end)
+    window.frame.menu = menu
     window.frame.skadamenubutton = title
 
     window.frame.barstartx = leftmargin + window.frame.fstitle:GetStringWidth()
@@ -193,21 +194,7 @@ function mod:Create(window, isnew)
         barlibrary.bars[temp] = bar
         temp = temp - 1
     until(temp < 1)
-
-end
-
-function mod:IsShown()
-    return not window.db.hidden
-end
-
-function mod:Show()
-    window.db.hidden = true
-    window.frame:Show()
-end
-
-function mod:Hide()
-    window.db.hidden = false
-    window.frame:Hide()
+    self:Update(window)
 end
 
 function mod:Destroy(win)
@@ -231,7 +218,8 @@ function barlibrary:CreateBar(uuid, win)
         
     bar.bg = CreateFrame("Frame", "bg"..bar.uuid, win.frame)
     bar.label = bar.bg:CreateFontString("label"..bar.uuid)
-    bar.label:SetFont(win.db.title.fontpath or media:Fetch('font', win.db.barfont), win.db.barfontsize, win.db.barfontflags)
+    bar.label:SetFont(mod:GetFont(win.db))
+    bar.label:SetTextColor(mod:GetFontColor(win.db))
     bar.label:SetJustifyH("LEFT")
     bar.label:SetJustifyV("MIDDLE")
     bar.bg:EnableMouse(true)
@@ -321,7 +309,7 @@ function mod:UpdateBar(bar, bardata, db)
         label = bardata.label
     end
     if bardata.valuetext then
-        if db.isonnewline and db.barfontsize*2 < db.barheight then label = label.."\n" else label = label.." - " end
+        if db.isonnewline and db.barfontsize*2 < db.height then label = label.."\n" else label = label.." - " end
         label = label..bardata.valuetext
     end
     bar.label:SetFont(mod:GetFont(db))
@@ -375,10 +363,7 @@ function mod:Update(win)
     
     -- TODO: fixed bars
         
-    local yoffset = (win.db.barheight - win.db.barfontsize) / 2
---    if win.db.isonnewline then
---        yoffset = (win.db.height - (win.db.barfontsize * 2)) / 2
---    end
+    local yoffset = (win.db.height - win.db.barfontsize) / 2
     local left = win.frame.barstartx + 40
     for key, bar in pairs(mybars) do
         --set bar positions
@@ -386,17 +371,26 @@ function mod:Update(win)
         --bar.texture:SetTexture(255, 0, 0, 1.00)
         
         bar.bg:SetFrameLevel(9)
-        bar.bg:SetHeight(win.db.barheight)
+        bar.bg:SetHeight(win.db.height)
         bar.bg:SetPoint("BOTTOMLEFT", win.frame, "BOTTOMLEFT", left, 0)
-        bar.label:SetHeight(win.db.barheight)
+        bar.label:SetHeight(win.db.height)
         bar.label:SetPoint("BOTTOMLEFT", win.frame, "BOTTOMLEFT", left, 0)
         bar.bg:SetWidth(bar.label:GetStringWidth())
         --increment left value
-        left = left + bar.label:GetStringWidth()
-        left = left + 15
+        if win.db.fixedbarwidth then
+            left = left + win.db.barwidth
+        else
+            left = left + bar.label:GetStringWidth()
+            left = left + 15
+        end
         --show bar
-        bar.bg:Show()
-        bar.label:Show()
+        if (left + win.frame:GetLeft()) < win.frame:GetRight() then
+            bar.bg:Show()
+            bar.label:Show()
+        else
+            bar.bg:Hide()
+            bar.label:Hide()
+        end
     end
 end
     
@@ -426,15 +420,15 @@ function mod:GetFont(db)
     if db.isusingelvuiskin and ElvUI then
         if ElvUI then return ElvUI[1]["media"].normFont, db.barfontsize, nil else return nil end
     else
-        return  db.title.fontpath or media:Fetch('font', db.barfont), db.barfontsize, db.barfontflags
+        return media:Fetch('font', db.barfont), db.barfontsize, db.barfontflags
     end
 end
 
 function mod:GetFontColor(db)
-    if not db.isusingelvuiskin and ElvUI then
-        return  db.title.color.r,db.title.color.g,db.title.color.b,db.title.color.a
-    else
+    if db.isusingelvuiskin and ElvUI then
         return 255,255,255,1
+    else
+        return  db.title.textcolor.r,db.title.textcolor.g,db.title.textcolor.b,db.title.textcolor.a
     end
 end
 
@@ -443,50 +437,34 @@ function mod:ApplySettings(win)
     local p = win.db
 
     -- TODO: fix, this is not working
-    f:SetMovable(p.barslocked)
+    --f:SetMovable(p.barslocked)
         
     --
     --bars
     --
-    f:SetHeight(p.barheight)
-    f.fstitle:SetTextColor(p.title.color.r,p.title.color.g,p.title.color.b,p.title.color.a)
-    f.fstitle:SetFont(p.title.fontpath or media:Fetch('font', p.barfont), p.barfontsize, p.barfontflags)
+    f:SetHeight(p.height)
+    f:SetWidth(win.db.width or GetScreenWidth())
+    f.fstitle:SetTextColor(self:GetFontColor(p))
+    f.fstitle:SetFont(self:GetFont(p))
     for k,bar in pairs(mybars) do
         --bar.label:SetFont(p.barfont,p.barfontsize,p.barfontflags )
-        bar.label:SetFont( p.title.fontpath or media:Fetch('font', p.barfont), p.barfontsize, p.barfontflags )
-        bar.label:SetTextColor(p.title.color.r,p.title.color.g,p.title.color.b,p.title.color.a)
+        bar.label:SetFont(self:GetFont(p))
+        bar.label:SetTextColor(self:GetFontColor(p))
             
         bar.bg:EnableMouse(not p.clickthrough)
     end
 
+    f.menu:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 6, win.db.height/2-8)
+        
     f:EnableMouse(not p.clickthrough)
     --print("SetFont", p.barfont, p.barfontsize, p.barfontflags)
-
-    --
-    --background
-    --
-    local fbackdrop = {}
-    fbackdrop.bgFile = media:Fetch("background", p.background.texture)
-    if p.background.edgesize == nil then p.background.edgesize = 0 end
-    if p.background.edgesize > 0 and p.background.bordertexture ~= "None" then
-        fbackdrop.edgeFile = media:Fetch("border", p.background.bordertexture)
-    else
-        fbackdrop.edgeFile = nil
-    end
-    fbackdrop.tile = p.background.tile
-    fbackdrop.tileSize = p.background.tilesize
-    fbackdrop.edgeSize = p.background.edgesize
-    fbackdrop.insets = { left = p.background.margin, right = p.background.margin, top = p.background.margin, bottom = p.background.margin }
-    f:SetBackdrop(fbackdrop)
-    f:SetBackdropColor(p.background.color.r,p.background.color.g,p.background.color.b,p.background.color.a)
-    if p.background.strata then f:SetFrameStrata(p.background.strata) end
 
     --
     --ElvUI
     --
     if p.isusingelvuiskin and ElvUI then
         --bars
-        f:SetHeight(p.barheight)
+        f:SetHeight(p.height)
         f.fstitle:SetTextColor(255,255,255,1)        --local _r, _g, _b = unpack(ElvUI[1]["media"].rgbvaluecolor)
         f.fstitle:SetFont(ElvUI[1]["media"].normFont, p.barfontsize, nil)
         for k,bar in pairs(mybars) do
@@ -495,7 +473,7 @@ function mod:ApplySettings(win)
         end
 
         --background
-        fbackdrop = {}
+        local fbackdrop = {}
         local borderR,borderG,borderB = unpack(ElvUI[1]["media"].bordercolor)
         local backdropR, backdropG, backdropB = unpack(ElvUI[1]["media"].backdropcolor)
         local backdropA = 0
@@ -513,6 +491,19 @@ function mod:ApplySettings(win)
         f:SetBackdropColor(backdropR, backdropG, backdropB, backdropA)
         f:SetBackdropBorderColor(borderR, borderG, borderB, 1.0)
 
+    else
+        --
+        --background
+        --
+        local fbackdrop = {}
+        fbackdrop.bgFile = media:Fetch("background", p.background.texture)
+        fbackdrop.tile = p.background.tile
+        fbackdrop.tileSize = p.background.tilesize
+        f:SetBackdrop(fbackdrop)
+        f:SetBackdropColor(p.background.color.r,p.background.color.g,p.background.color.b,p.background.color.a)
+        if p.background.strata then f:SetFrameStrata(p.background.strata) end
+
+        Skada:ApplyBorder(f, p.background.bordertexture, p.background.bordercolor, p.background.borderthickness)
     end
 end
 
@@ -547,19 +538,35 @@ function mod:AddDisplayOptions(win, options)
             },
             height = {
                 type = 'range',
-                name = "Height",
-                desc = "Height of the frame.\nDefault: 23",
+				name=L["Bar height"],
+				desc=L["The height of the bars."],
                 min=10,
                 max=math.floor(GetScreenHeight()),
                 step=1.0,
                 get = function()
-                    return db.barheight
+                    return db.height
                 end,
                 set = function(win,key)
-                    db.barheight = key
+                    db.height = key
                     Skada:ApplySettings()
                 end,
                 order=0.1,
+            },
+            barwidth = {
+                type = 'range',
+                name = "Width",
+                desc = "Width of bars. This only applies if the 'Fixed bar width' option is used.",
+                min=100,
+                max=300,
+                step=1.0,
+                get = function()
+                    return db.barwidth
+                end,
+                set = function(win,key)
+                    db.barwidth = key
+                    Skada:ApplySettings()
+                end,
+                order=2,
             },
             color = {
                 type="color",
@@ -567,12 +574,11 @@ function mod:AddDisplayOptions(win, options)
                 desc="Font Color. \nClick 'class color' to begin.",
                 hasAlpha=true,
                 get=function()
-                    local c = db.title.color
+                    local c = db.title.textcolor
                     return c.r, c.g, c.b, c.a
                 end,
                 set=function(win, r, g, b, a)
-                    db.title.color = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a or 1.0 }
-                    if db.title.color.a==0.8 then db.title.color.a=100 end
+                    db.title.textcolor = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a or 1.0 }
                     Skada:ApplySettings()
                 end,
                 order=3.1,
@@ -627,6 +633,18 @@ function mod:AddDisplayOptions(win, options)
 			        get=function() return db.clickthrough end,
 			        set=function()
 			        		db.clickthrough = not db.clickthrough
+		         			Skada:ApplySettings()
+			        	end,
+			},
+            
+			fixedbarwidth = {
+			        type="toggle",
+			        name=L["Fixed bar width"],
+			        desc=L["If checked, bar width is fixed. Otherwise, bar width depends on the text width."],
+			        order=21,
+			        get=function() return db.fixedbarwidth end,
+			        set=function()
+			        		db.fixedbarwidth = not db.fixedbarwidth
 		         			Skada:ApplySettings()
 			        	end,
 			},
@@ -710,54 +728,72 @@ function mod:AddDisplayOptions(win, options)
                 order=1,
             },
 
-            bordersize = {
-                type="range",
-                name="Border size",
-                desc="The thickness of the borders. \nDefault: 0",
-                min=0,
-                max=100,
-                step=0.05,
-                get=function() return db.background.edgesize end,
-                set=function(win, val)
-                    db.background.edgesize = val
-                    Skada:ApplySettings()
-                end,
-                order=3.1,
-            },
-
+			thickness = {
+				type="range",
+				name=L["Border thickness"],
+				desc=L["The thickness of the borders."],
+				min=0,
+				max=50,
+				step=0.5,
+				get=function() return db.background.borderthickness end,
+				set=function(win, val)
+							db.background.borderthickness = val
+		         			Skada:ApplySettings()
+						end,
+				order=2.2,
+			},
+            
             bordertexture = {
                 type = 'select',
                 dialogControl = 'LSM30_Border',
-                name = "Border texture",
-                desc = "The texture for the border. \nDefault: None",
+		         name = L["Border texture"],
+		         desc = L["The texture used for the border of the title."],
                 values = AceGUIWidgetLSMlists.border,
                 get = function() return db.background.bordertexture end,
                 set = function(win,key)
                     db.background.bordertexture = key
                     Skada:ApplySettings()
                 end,
-                order=3,
+                order=2,
             },
-
-            margin = {
-                type="range",
-                name=L["Margin"],
-                desc="The margin between the outer edge and the background texture. \nDefault: 0",
-                min=0,
-                max=math.floor(23/2-1),
-                step=0.5,
-                get=function() return db.background.margin end,
-                set=function(win, val)
-                    db.background.margin = val
+                
+            bordercolor = {
+                type="color",
+				name=L["Border color"],
+				desc=L["The color used for the border."],
+                hasAlpha=true,
+                get=function()
+                    local c = db.background.bordercolor
+                    return c.r, c.g, c.b, c.a
+                end,
+                set=function(win, r, g, b, a)
+                    db.background.color = {["r"] = r, ["g"] = g, ["b"] = b, ["a"] = a or 1.0 }
+                    if db.background.bordercolor.a==0.2 then db.background.bordercolor.a=100 end
                     Skada:ApplySettings()
                 end,
-                order=1.3,
+                order=2.1,
             },
 
+            width = {
+                type = 'range',
+                name = "Width",
+                min=100,
+                max=GetScreenWidth(),
+                step=1.0,
+                get = function()
+                    return db.width
+                end,
+                set = function(win,key)
+                    db.width = key
+                    Skada:ApplySettings()
+                end,
+                order=2,
+            },
+                
             color = {
                 type="color",
-                name="Color",
-                desc="Background Color. \nClick 'class color' to begin.",
+				name=L["Background color"],
+				desc=L["The color of the background."],
                 hasAlpha=true,
                 get=function()
                     local c = db.background.color

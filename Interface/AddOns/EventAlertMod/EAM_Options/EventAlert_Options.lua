@@ -378,9 +378,13 @@ function EAFun_GroupEvent_LoadGroupEventToFrame(GroupID)
 	EA_GroupEventSetting_Frame_IconAlpha:SetValue(G_GroupItems.IconAlpha * 100);
 	EA_GroupEventSetting_Frame_Talent1:SetChecked(false);
 	EA_GroupEventSetting_Frame_Talent2:SetChecked(false);
+	EA_GroupEventSetting_Frame_Talent3:SetChecked(false);
+	EA_GroupEventSetting_Frame_Talent4:SetChecked(false);
 	if (G_GroupItems.ActiveTalentGroup) ~= nil then
 		if (G_GroupItems.ActiveTalentGroup==1) then EA_GroupEventSetting_Frame_Talent1:SetChecked(true) end;
 		if (G_GroupItems.ActiveTalentGroup==2) then EA_GroupEventSetting_Frame_Talent2:SetChecked(true) end;
+		if (G_GroupItems.ActiveTalentGroup==3) then EA_GroupEventSetting_Frame_Talent3:SetChecked(true) end;
+		if (G_GroupItems.ActiveTalentGroup==4) then EA_GroupEventSetting_Frame_Talent4:SetChecked(true) end;
 	end
 	EA_GroupEventSetting_Frame_HideOnLeaveCombat:SetChecked(false);
 	if (G_GroupItems.HideOnLeaveCombat) ~= nil then
@@ -626,6 +630,8 @@ function EAFun_GroupEvent_SaveFrameToGroupEvent()
 		aTempGroupItem.IconRelatePoint = EA_GroupEventSetting_Frame.IconRelatePoint;
 		if (EA_GroupEventSetting_Frame_Talent1:GetChecked()) then aTempGroupItem.ActiveTalentGroup = 1 end;
 		if (EA_GroupEventSetting_Frame_Talent2:GetChecked()) then aTempGroupItem.ActiveTalentGroup = 2 end;
+		if (EA_GroupEventSetting_Frame_Talent3:GetChecked()) then aTempGroupItem.ActiveTalentGroup = 3 end;
+		if (EA_GroupEventSetting_Frame_Talent4:GetChecked()) then aTempGroupItem.ActiveTalentGroup = 4 end;
 		if (EA_GroupEventSetting_Frame_HideOnLeaveCombat:GetChecked()) then aTempGroupItem.HideOnLeaveCombat = true end;
 		if (EA_GroupEventSetting_Frame_HideOnLostTarget:GetChecked()) then aTempGroupItem.HideOnLostTarget = true end;
 

@@ -208,7 +208,7 @@ function CreateFrames_SpecialFrames_Show(index)
 	if (eaf ~= nil) then 
 		-- 已建立特殊能力框架，直接更新
 		
-		local iPowerType = format("%i",(index - 1000000) / 10)
+		local iPowerType = floor((index - 1000000) / 10)		
 		
 		if (index == EA_SpecPower.LifeBloom.frameindex[1]) then
 			EventAlert_UpdateLifeBloom("player");
@@ -217,11 +217,12 @@ function CreateFrames_SpecialFrames_Show(index)
 		elseif (index == EA_SpecPower.ComboPoint.frameindex[1]) then
 			EventAlert_UpdateComboPoint()		
 		elseif (iPowerType == EA_SpecPower.Runes.powerId) then
+			
 			EventAlert_UpdateRunes()
 		else
-			EventAlert_UpdateSinglePower(iPowerType);
+			EventAlert_UpdateSinglePower(iPowerType)
 		end		
-		return;
+		return
 	end
 	
 	
@@ -314,10 +315,14 @@ function CreateFrames_SpecialFrames_Show(index)
 		local specIcon = select(3,GetSpellInfo(30451))
 		eaf.texture:SetTexture(specIcon)
 	elseif index == EA_SpecPower.Maelstrom.frameindex[1] then		
-		-- 薩滿元能圖案
-		--eaf:SetBackdrop({bgFile = "Interface/Icons/Arcane_Charges"});			
+		-- 薩滿元能圖案		
 		local specIcon = select(3,GetSpellInfo(556))
 		specIcon = 136010
+		eaf.texture:SetTexture(specIcon)
+	elseif index == EA_SpecPower.Fury.frameindex[1] then		
+		-- 惡魔獵人魔怒圖案
+		local specIcon
+		specIcon = 1305156
 		eaf.texture:SetTexture(specIcon)
 	end
 	
@@ -644,7 +649,7 @@ function CreateFrames_CfgBtn_LoadSpellCondition(self)
 		Chk_Stack = true;
 	end
 	if (SC_Self == nil) then
-		SC_Self = false;
+		SC_Self =  true;
 	end
 	if (SC_OverGrow == nil or SC_OverGrow <=0) then
 		Chk_OverGrow = false;
@@ -767,6 +772,9 @@ local function CreateFrames_CfgBtn_ShowGroupFramePos(self)
 		eaf.spellStack:SetFontObject(ChatFontNormal);
 		eaf.spellStack:SetPoint("BOTTOMRIGHT", 0, 15);
 		
+		eaf.texture = eaf:CreateTexture()
+		eaf.texture:SetAllPoints(eaf)
+		
 		eaf:Hide();
 	end
 
@@ -778,9 +786,11 @@ local function CreateFrames_CfgBtn_ShowGroupFramePos(self)
 		--eaf:SetBackdrop({bgFile = eaf.GC.Spells[1].SpellIconPath});
 		
 		--for 7.0
-		if not eaf.texture then eaf.texture = eaf:CreateTexture() end
-		eaf.texture:SetAllPoints(eaf)
-		eaf.texture:SetTexture(eaf.GC.Spell[1].SpellIconPath)
+		--if not(eaf.texture) then eaf.texture = eaf:CreateTexture() end
+		--eaf.texture:SetAllPoints(eaf)
+		
+		
+		eaf.texture:SetTexture(eaf.GC.Spells[1].SpellIconPath)
 		----------------------------------------------------------
 		
 		if (eaf.GC.IconAlpha ~= nil) then eaf:SetAlpha(eaf.GC.IconAlpha) end;
@@ -973,11 +983,16 @@ function CreateFrames_EventsFrame_RefreshSpellList(FrameIndex)
 			EA_name, _, EA_icon = EACFFun_EventsFrame_CheckSpellID(aGrpChecks.Spells[1].SpellIconID, false);
 			EA_rank = EA_XGRPALERT_TALENTS;
 			if (aGrpChecks.ActiveTalentGroup ~= nil) then
+				
 				if (aGrpChecks.ActiveTalentGroup == 1) then 
-					EA_rank = EA_XGRPALERT_TALENT1;
+					EA_rank = EA_XGRPALERT_TALENT1
 				elseif (aGrpChecks.ActiveTalentGroup == 2) then
-					EA_rank = EA_XGRPALERT_TALENT2;
-				end
+					EA_rank = EA_XGRPALERT_TALENT2
+				elseif (aGrpChecks.ActiveTalentGroup == 3) then
+					EA_rank = EA_XGRPALERT_TALENT3
+				elseif (aGrpChecks.ActiveTalentGroup == 4) then
+					EA_rank = EA_XGRPALERT_TALENT4
+				end								
 			end
 			CreateFrames_CreateSpellListIcon(iGrpIndex, "EA_GroupFrame_Icon_", EA_Group_Events_Frame_SpellScrollFrameList, 0, LocOffsetY, EA_icon);
 			CreateFrames_CreateSpellListChkbox(iGrpIndex, "EA_GroupFrame_ChkBtn_", EA_Group_Events_Frame_SpellScrollFrameList, 0, LocOffsetY, EA_name, EA_rank, FrameIndex, EA_Group_Events_Frame_SpellEditBox);
@@ -989,7 +1004,7 @@ function CreateFrames_EventsFrame_RefreshSpellList(FrameIndex)
 end
 
 
-local GC_PowerType={[0]="MANA", [1]="RAGE", [2]="FOCUS", [3]="ENERGY", [4]="HAPPINESS", [5]="RUNES", [6]="RUNIC_POWER", [7]="SOUL_SHARDS", [8]="LUNA_POWER", 
+local GC_PowerType={[0]="MANA", [1]="RAGE", [2]="FOCUS", [3]="ENERGY", [4]="HAPPINESS", [5]="RUNES", [6]="RUNIC_POWER", [7]="SOUL_SHARDS", [8]="LUNAR_POWER", 
 	[9]="HOLY_POWER", [10]="ALT_POWER", [11]="DARK_FORCE", [12]="LIGHT_FORCE", [13]="INSANITY", [14]="BURNING_EMBERS", [15]="DEMONIC_FURY"};
 function CreateFrames_CreateGroupCheckFrame(iGroupIndex)
 	local FrameNamePrefix = "EAGrpFrame_";
@@ -1163,7 +1178,7 @@ function CreateFrames_EventsFrame_AddSpell(FrameIndex)
 			if (sname ~= nil) then
 				CreateFrames_EventsFrame_ClearSpellList(FrameIndex);
 				-- 為了便於分享法術id 所以儲存時增加儲存法術名稱
-				local sname=GetSpellInfo(spellID);
+				local sname = GetSpellInfo(spellID);
 				if (FrameIndex==1 and EA_Items[EA_playerClass][spellID] == nil) then EA_Items[EA_playerClass][spellID] = {enable=true,name=sname} end;
 				if (FrameIndex==2 and EA_AltItems[EA_playerClass][spellID] == nil) then EA_AltItems[EA_playerClass][spellID] = {enable=true,name=sname} end;
 				if (FrameIndex==3 and EA_Items[EA_CLASS_OTHER][spellID] == nil) then EA_Items[EA_CLASS_OTHER][spellID] = {enable=true,name=sname} end;

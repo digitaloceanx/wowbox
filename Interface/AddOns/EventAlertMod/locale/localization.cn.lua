@@ -37,26 +37,27 @@ EA_TTIP_SPELLCOND_ORDERWTD = "开启/关闭, 设定显示顺序的优先比重�
 
 EA_TTIP_SPECFLAG_CHECK_HOLYPOWER = "开启/关闭, 于本身BUFF框架左侧第一格显示圣能堆叠数";
 EA_TTIP_SPECFLAG_CHECK_RUNICPOWER = "开启/关闭, 于本身BUFF框架左侧第一格显示符文能量";
+EA_TTIP_SPECFLAG_CHECK_RUNES = "开启/关闭, 于本身BUFF框架上方显示符文";
 EA_TTIP_SPECFLAG_CHECK_SOULSHARDS = "开启/关闭, 于本身BUFF框架左侧第一格显示灵魂碎片";
 EA_TTIP_SPECFLAG_CHECK_LUNARPOWER = "开启/关闭, 于本身BUFF框架左侧第一格显示星界能量";
 EA_TTIP_SPECFLAG_CHECK_COMBOPOINT = "开启/关闭, 于目标DEBUFF框架左侧第一格显示集星连击数";
 EA_TTIP_SPECFLAG_CHECK_LIFEBLOOM = "开启/关闭, 于本身BUFF框架左侧第一格显示生命之花堆叠与时间";
-EA_TTIP_SPECFLAG_CHECK_RAGE = "开启/关闭, 于本身BUFF框架左侧第一格显示怒气"; -- 支援怒气(战士,熊D)
-EA_TTIP_SPECFLAG_CHECK_FOCUS = "开启/关闭, 于本身BUFF框架左侧第一格显示集中值"; -- 支援集中值(猎人)
-EA_TTIP_SPECFLAG_CHECK_ENERGY = "开启/关闭, 于本身BUFF框架左侧第一格显示能量"; -- 支援能量(贼,猫D,武僧)
-EA_TTIP_SPECFLAG_CHECK_LIGHTFORCE = "开启/关闭, 于本身BUFF框架左侧第一格显示真气堆叠数"; -- 支援武僧真气
-EA_TTIP_SPECFLAG_CHECK_SHADOWORBS = "开启/关闭, 于本身BUFF框架左侧第一格显示暗影宝珠"; -- 支援暗影宝珠(暗牧)
-EA_TTIP_SPECFLAG_CHECK_DEMONICFURY = "开启/关闭于本身的BUFF框架左侧第一格显示恶魔之怒"; --  支援恶魔之怒
+EA_TTIP_SPECFLAG_CHECK_RAGE = "开启/关闭, 于本身BUFF框架左侧第一格显示怒气";					-- 支援怒气(战士,熊D)
+EA_TTIP_SPECFLAG_CHECK_FOCUS = "开启/关闭, 于本身BUFF框架左侧第一格显示集中值";					-- 支援集中值(猎人)
+EA_TTIP_SPECFLAG_CHECK_ENERGY = "开启/关闭, 于本身BUFF框架左侧第一格显示能量";					-- 支援能量(贼,猫D,武僧)
+EA_TTIP_SPECFLAG_CHECK_LIGHTFORCE = "开启/关闭, 于本身BUFF框架左侧第一格显示真气堆叠数";		-- 支援武僧真气
+EA_TTIP_SPECFLAG_CHECK_SHADOWORBS = "开启/关闭, 于本身BUFF框架左侧第一格显示暗影宝珠";			-- 支援暗影宝珠(暗牧)
+EA_TTIP_SPECFLAG_CHECK_DEMONICFURY = "开启/关闭于本身的BUFF框架左侧第一格显示恶魔之怒"; 		--  支援恶魔之怒
 EA_TTIP_SPECFLAG_CHECK_BURNINGEMBERS = "开启/关闭于本身的BUFF框架左侧第一格显示燃火余烬";		--  支援燃火余烬
 EA_TTIP_SPECFLAG_CHECK_ARCANECHARGES = "开启/关闭于本身的BUFF框架左侧第一格显示奥术充能";		--  支援奥术充能
-EA_TTIP_SPECFLAG_CHECK_MAELSTROM = "开启/关闭于本身的BUFF框架左侧第一格显示漩涡值";		--  支援薩滿漩涡值
+EA_TTIP_SPECFLAG_CHECK_MAELSTROM = "开启/关闭于本身的BUFF框架左侧第一格显示漩涡值";				--  支援薩滿漩涡值
+EA_TTIP_SPECFLAG_CHECK_FURY = "开启/关闭于本身的BUFF框架左侧第一格显示痛苦值";					--  支援痛苦值(恶魔猎手)
 
 EA_TTIP_GRPCFG_ICONALPHA = "变更图示的透明度";
-EA_TTIP_GRPCFG_TALENT = "限定此天赋时才作用";
+EA_TTIP_GRPCFG_TALENT = "限定此專精时才作用";
 EA_TTIP_GRPCFG_HIDEONLEAVECOMBAT = "离开战斗后,隐藏图示";
 EA_TTIP_GRPCFG_HIDEONLOSTTARGET = "没有目标时,隐藏图示";
 
-EA_CLASS_DH = "DEMONHUNTER";
 EA_CLASS_DK = "DEATHKNIGHT";
 EA_CLASS_DRUID = "DRUID";
 EA_CLASS_HUNTER = "HUNTER";
@@ -70,8 +71,9 @@ EA_CLASS_WARRIOR = "WARRIOR";
 EA_CLASS_MONK = "MONK";
 EA_CLASS_FUNKY = "FUNKY";
 EA_CLASS_OTHER = "OTHER";
+EA_CLASS_DEMONHUNTER = "DEMONHUNTER";
 
-EA_XOPT_ICONPOSOPT = "图示位置选项";
+EA_XOPT_ICONPOSOPT = "图示位置&副资源";
 EA_XOPT_SHOW_ALTFRAME = "显示主提示框架";
 EA_XOPT_SHOW_BUFFNAME = "显示法术名称";
 EA_XOPT_SHOW_TIMER = "显示倒数秒数";
@@ -125,7 +127,7 @@ EA_XICON_LIGHT = "淡";
 EA_XICON_TAR_NEWLINE = "目标Debuff以另一行显示";
 EA_XICON_TAR_HORSPACE = "与提醒框架水平间距";
 EA_XICON_TAR_VERSPACE = "与提醒框架垂直间距";
-EA_XICON_TOGGLE_ALERTFRAME = "显示范例框架";
+EA_XICON_TOGGLE_ALERTFRAME = "移动框架";
 EA_XICON_RESET_FRAMEPOS = "重设框架位置";
 EA_XICON_SELF_BUFF = "本身Buff";
 EA_XICON_SELF_SPBUFF = "本身DeBuff(1)\n或特殊框架";
@@ -152,17 +154,19 @@ EX_XCLSALERT_HELP3 = "了解在游戏中[查询法术]的各种指令。";
 EX_XCLSALERT_HELP4 = "额外提醒区为非Buff类型之条件式技能";
 EX_XCLSALERT_HELP5 = "例如:敌人血量进入斩杀期,或招架后使用";
 EX_XCLSALERT_HELP6 = ",不会额外显示Buff,却能使用的技能。";
-EX_XCLSALERT_SPELLURL = "http://www.wowbox.tw/spell.php?sname=";
+EX_XCLSALERT_SPELLURL = "http://www.wowhead.com/spells";
 
 EA_XTARALERT_TARGET_MYDEBUFF = "仅限玩家施放减益";
 
 EA_XGRPALERT_ICONALPHA = "图示透明度";
 EA_XGRPALERT_GRPID = "群组ID:";
-EA_XGRPALERT_TALENT1 = "主要天赋";
-EA_XGRPALERT_TALENT2 = "次要天赋";
+EA_XGRPALERT_TALENT1 = "专精1";
+EA_XGRPALERT_TALENT2 = "专精2";
+EA_XGRPALERT_TALENT3 = "专精3";
+EA_XGRPALERT_TALENT4 = "专精4";
 EA_XGRPALERT_HIDEONLEAVECOMBAT = "无战斗时隐藏"
 EA_XGRPALERT_HIDEONLOSTTARGET = "无目标时隐藏"
-EA_XGRPALERT_TALENTS = "不限天赋";
+EA_XGRPALERT_TALENTS = "不限专精";
 EA_XGRPALERT_NEWSPELLBTN = "新增法术";
 EA_XGRPALERT_NEWCHECKBTN = "新增父条件";
 EA_XGRPALERT_NEWSUBCHECKBTN = "新增子条件";
@@ -215,6 +219,8 @@ EA_XGRPALERT_COMPARES = {
 	[3]={text="=", value=3},
 	[4]={text=">=", value=4},
 	[5]={text=">", value=5},
+	[6]={text="<>", value=6}, 
+	[7]={text="*", value=7}, 		--any
 };
 EA_XGRPALERT_COMPARETYPES = {
 	[1]={text="数值", value=1},
@@ -250,6 +256,13 @@ EA_XLOAD_NEWVERSION_LOAD = "请使用 \124cffFFFF00/eam help\124r 查阅详细�
 "以上所有条件可以用 AND 或 OR，一个或以上的条件来筛选。\n"..
 "筛选结果为真时，则提示所指定的图案。\n"..
 ""; -- END OF NEWVERSION
+
+
+
+
+
+
+
 
 EA_XCMD_VER = " \124cff00FFFFBy Whitep@雷鳞\124r 版本: ";
 EA_XCMD_DEBUG = " 模式: ";
@@ -313,30 +326,33 @@ EA_SPELL_POWER_RUNIC_POWER = 6;			-- 符文能量（死亡骑士）
 EA_SPELL_POWER_SOUL_SHARDS = 7;			-- 灵魂碎片（痛苦术士）
 EA_SPELL_POWER_LUNAR_POWER = 8;			-- 星界能量（鸟D）
 EA_SPELL_POWER_HOLY_POWER = 9;			-- 圣能（圣骑士）
+EA_SPELL_POWER_MAELSTROM = 11;			-- 漩渦值(增強薩、元素薩)
 EA_SPELL_POWER_LIGHT_FORCE = 12;		-- 真气（武僧）
 EA_SPELL_POWER_SHADOW_ORBS = 13;		-- 暗影宝珠（暗牧）
 EA_SPELL_POWER_BURNING_EMBERS = 14;		-- 燃火余烬（毁灭术士）
 EA_SPELL_POWER_DEMONIC_FURY = 15;		-- 恶魔之怒（恶魔术士）
-EA_SPELL_POWER_ARCANE_CHARGES = 16;		-- 恶魔之怒（恶魔术士）
-EA_SPELL_POWER_MAELSTROM = 11;			-- 漩渦值(增強薩、元素薩)
+EA_SPELL_POWER_ARCANE_CHARGES = 16;		-- 奥术充能(奧法)
+EA_SPELL_POWER_FURY = 17;				-- 痛苦值(恶魔猎手)
+
 
 EA_XOPT_SPECFLAG_HOLYPOWER = "圣能";
-EA_XOPT_SPECFLAG_LUNARPOWER = "星界能量";
 EA_XOPT_SPECFLAG_RUNICPOWER = "符文能量";
+EA_XOPT_SPECFLAG_RUNES = "符文";
 EA_XOPT_SPECFLAG_SOULSHARDS = "灵魂碎片";
 EA_XOPT_SPECFLAG_LUNAR_POWER = "星界能量";
 EA_XOPT_SPECFLAG_COMBOPOINT = "贼猫德连击数";
 EA_XOPT_SPECFLAG_LIFEBLOOM = "生命之花";
-EA_XOPT_SPECFLAG_SHADOWORBS = "狂乱";	--5.1新增by ZYF:增加暗影宝珠、能量、怒气、集中值的显示文字
+EA_XOPT_SPECFLAG_SHADOWORBS = "狂乱";	
 EA_XOPT_SPECFLAG_RAGE = "怒气";
 EA_XOPT_SPECFLAG_ENERGY = "能量";
 EA_XOPT_SPECFLAG_FOCUS = "集中值";
 EA_XOPT_SPECFLAG_FOCUS_PET = "宠物集中";
-EA_XOPT_SPECFLAG_LIGHTFORCE = "真气";		-- 增加真气的显示文字
+EA_XOPT_SPECFLAG_LIGHTFORCE = "真气";		
 EA_XOPT_SPECFLAG_BURNINGEMBERS = "燃火余烬";
 EA_XOPT_SPECFLAG_DEMONICFURY = "恶魔之怒";
 EA_XOPT_SPECFLAG_ARCANECHARGES = "奥术充能";
 EA_XOPT_SPECFLAG_MAELSTROM = "漩涡值";
+EA_XOPT_SPECFLAG_FURY = "痛苦值";
 
 EA_XGRPALERT_POWERTYPE = "能量别:";
 EA_XGRPALERT_POWERTYPES = {
@@ -355,10 +371,12 @@ EA_XGRPALERT_POWERTYPES = {
 	[13]={text="恶魔之怒", value=EA_SPELL_POWER_DEMONIC_FURY},
 	[14]={text="奥术充能", value=EA_SPELL_POWER_ARCANE_CHARGES},
 	[15]={text="漩涡值", value=EA_SPELL_POWER_MAELSTROM},
+	[16]={text="痛苦值", value=EA_SPELL_POWER_FURY},
 };
 
 EA_XSPECINFO_COMBOPOINT = "连击数";
 EA_XSPECINFO_RUNICPOWER = "符能";
+EA_XSPECINFO_RUNES = "符文";
 EA_XSPECINFO_SOULSHARDS = "灵魂碎片";
 EA_XSPECINFO_LUNAR_POWER = "星界能量";
 --EA_XSPECINFO_ECLIPSE = "月能";
@@ -372,3 +390,4 @@ EA_XSPECINFO_FOCUS_PET= "宠物集中";
 EA_XSPECINFO_LIGHTFORCE= "真气";			-- 支援武僧真气
 EA_XSPECINFO_ARCANECHARGES= "奥术充能";		-- 支援奥术充能
 EA_XSPECINFO_MAELSTROM= "漩涡值";			-- 支援薩滿漩涡值
+EA_XSPECINFO_FURY= "痛苦值";				-- 支援恶魔猎手痛苦值

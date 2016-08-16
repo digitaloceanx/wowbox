@@ -6,7 +6,7 @@
 ## Notes-zhCN: 方便快捷的设置你想监视的任何法术。
 ## Notes-zhTW: 方便快捷的設置你想監視的任何法術
 ## Author: Whitep@雷鱗 (Thanks for ACDACD as previous author of 4.7.02)
-## Version: 5.1.0.14
+## Version: 7.0.3.20160811
 ## SavedVariables: EA_Config,EA_Position,EA_Items,EA_AltItems,EA_TarItems,EA_ScdItems,EA_GrpItems,EA_Pos
 ## X-DuowanAddon: 战斗
 ## Dependencies: Duowan
@@ -20,16 +20,16 @@ libs\DropDownMenu\EasyMenu.lua
 libs\ActionButton\EventAlert_ActionBarButtonSpellActivationAlert.xml
 libs\ActionButton\EventAlert_ActionButtonOverlayGlow.lua
 
-localization.en.lua
-localization.cn.lua
-localization.tw.lua
+locale\localization.en.lua
+locale\localization.cn.lua
+locale\localization.tw.lua
 
 EventAlertMod.xml
 
-EventAlert_Options.xml
-EventAlert_IconOptions.xml
-EventAlert_ClassAlerts.xml
-EventAlert_OtherAlerts.xml
-EventAlert_TargetAlerts.xml
-EventAlert_SCDAlerts.xml
-EventAlert_GroupAlerts.xml
+EAM_Options\EventAlert_Options.xml
+EAM_IconOptions\EventAlert_IconOptions.xml
+EAM_ClassAlerts\EventAlert_ClassAlerts.xml
+EAM_OtherAlerts\EventAlert_OtherAlerts.xml
+EAM_TargetAlerts\EventAlert_TargetAlerts.xml
+EAM_SCDAlerts\EventAlert_SCDAlerts.xml
+EAM_GroupAlerts\EventAlert_GroupAlerts.xml

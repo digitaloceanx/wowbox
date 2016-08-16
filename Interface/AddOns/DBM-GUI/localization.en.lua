@@ -6,7 +6,7 @@ L.MainFrame = "Deadly Boss Mods"
 
 L.TranslationByPrefix		= "Translated by "
 L.TranslationBy 			= nil -- your name here, localizers!
-L.Website					= "Visit our discussion and support forums at |cFF73C2FBwww.deadlybossmods.com|r. Follow main dev on twitter @MysticalOS"
+L.Website					= "Visit discussion/support forums at |cFF73C2FBwww.deadlybossmods.com|r. Follow on twitter @deadlybossmods or @MysticalOS"
 L.WebsiteButton				= "Forums"
 
 L.OTabBosses	= "Bosses"
@@ -56,7 +56,6 @@ L.Statistic_BestRank		= "Best Rank:"--Maybe not get used, not sure yet, localize
 
 -- Tab: General Core Options
 L.General 					= "General DBM Core Options"
-L.EnableDBM 				= "Enable DBM"
 L.EnableMiniMapIcon			= "Show minimap button"
 L.UseSoundChannel			= "Set audio channel used by DBM to play alert sounds"
 L.UseMasterChannel			= "Master audio channel."

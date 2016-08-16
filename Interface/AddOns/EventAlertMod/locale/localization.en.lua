@@ -39,26 +39,27 @@ EA_TTIP_SPELLCOND_ORDERWTD = "Set/Ignore, Set the Order-Weight(1-20) of an icon.
 
 EA_TTIP_SPECFLAG_CHECK_HOLYPOWER = "Show HolyPower in the left 1st position of Self-Buffs";
 EA_TTIP_SPECFLAG_CHECK_RUNICPOWER = "Show RunicPower in the left 1st position of Self-Buffs";
+EA_TTIP_SPECFLAG_CHECK_RUNES = "Show Runes in the top position of Self-Buffs";
 EA_TTIP_SPECFLAG_CHECK_SOULSHARDS = "Show SoulShards in the left 1st position of Self-Buffs";
 EA_TTIP_SPECFLAG_CHECK_LUNARPOWER = "Show Lunar Power in the left 1st position of Self-Buffs";
 EA_TTIP_SPECFLAG_CHECK_COMBOPOINT = "Show ComboPoint in the left 1st position of Target-DeBuffs";
 EA_TTIP_SPECFLAG_CHECK_LIFEBLOOM = "Show the LifeBloom timer and stack in the left 1st position of Self-Buffs"
-EA_TTIP_SPECFLAG_CHECK_RAGE = "Show Rage in the left 1st position of Slef-Buffs";				-- 支援怒氣(戰士,熊D)
-EA_TTIP_SPECFLAG_CHECK_FOCUS = "Show Focus in the left 1st position of Slef-Buffs";				--  支援集中值(獵人)
-EA_TTIP_SPECFLAG_CHECK_ENERGY = "Show Energy in the left 1st position of Slef-Buffs";			--  支援能量(賊,貓D,武僧)
-EA_TTIP_SPECFLAG_CHECK_LIGHTFORCE = "Show Chi of Monk in the left 1st position of Self-Buffs";	--  支援武僧真氣
-EA_TTIP_SPECFLAG_CHECK_SHADOWORBS = "Show Shadow Orbs in the left 1st position of Slef-Buffs";	--  支援暗影寶珠(暗牧)
-EA_TTIP_SPECFLAG_CHECK_DEMONICFURY = "Show Demonic Fury in the left 1st position of Slef-Buffs";	--  支援惡魔之怒
-EA_TTIP_SPECFLAG_CHECK_BURNINGEMBERS = "Show Burning Embers in the left 1st position of Slef-Buffs";--  支援燃火餘燼
-EA_TTIP_SPECFLAG_CHECK_ARCANECHARGES = "Show Arcane Charges in the left 1st position of Slef-Buffs";--  Support Mage's Arcane Charges
-EA_TTIP_SPECFLAG_CHECK_MAELSTROM = "Show Maelstrom in the left 1st position of Slef-Buffs";--  Support Shaman's Maelstrom
+EA_TTIP_SPECFLAG_CHECK_RAGE = "Show Rage in the left 1st position of Slef-Buffs";					-- 支援怒氣(戰士,熊D)
+EA_TTIP_SPECFLAG_CHECK_FOCUS = "Show Focus in the left 1st position of Slef-Buffs";					--  支援集中值(獵人)
+EA_TTIP_SPECFLAG_CHECK_ENERGY = "Show Energy in the left 1st position of Slef-Buffs";				--  支援能量(賊,貓D,武僧)
+EA_TTIP_SPECFLAG_CHECK_LIGHTFORCE = "Show Chi of Monk in the left 1st position of Self-Buffs";		--  支援武僧真氣
+EA_TTIP_SPECFLAG_CHECK_SHADOWORBS = "Show Shadow Orbs in the left 1st position of Self-Buffs";		--  支援暗影寶珠(暗牧)
+EA_TTIP_SPECFLAG_CHECK_DEMONICFURY = "Show Demonic Fury in the left 1st position of Self-Buffs";	--  支援惡魔之怒
+EA_TTIP_SPECFLAG_CHECK_BURNINGEMBERS = "Show Burning Embers in the left 1st position of Self-Buffs";--  支援燃火餘燼
+EA_TTIP_SPECFLAG_CHECK_ARCANECHARGES = "Show Arcane Charges in the left 1st position of Self-Buffs";--  Support Mage's Arcane Charges
+EA_TTIP_SPECFLAG_CHECK_MAELSTROM = "Show Maelstrom in the left 1st position of Self-Buffs";			--  Support Shaman's Maelstrom
+EA_TTIP_SPECFLAG_CHECK_FURY = "Show Fury in the left 1st position of Self-Buffs";					--  Support Demonhunter's Fury 
 
 EA_TTIP_GRPCFG_ICONALPHA = "Change the alpha value of this Icon";
-EA_TTIP_GRPCFG_TALENT = "Only active at this talent";
+EA_TTIP_GRPCFG_TALENT = "Only active at this spec.";
 EA_TTIP_GRPCFG_HIDEONLEAVECOMBAT = "Hide when leave of combat";
 EA_TTIP_GRPCFG_HIDEONLOSTTARGET = "Hide when lost of target";
 
-EA_CLASS_DH = "DEMONHUNTER";
 EA_CLASS_DK = "DEATHKNIGHT";
 EA_CLASS_DRUID = "DRUID";
 EA_CLASS_HUNTER = "HUNTER";
@@ -72,6 +73,7 @@ EA_CLASS_WARRIOR = "WARRIOR";
 EA_CLASS_MONK = "MONK";
 EA_CLASS_FUNKY = "FUNKY";
 EA_CLASS_OTHER = "OTHER";
+EA_CLASS_DEMONHUNTER = "DEMONHUNTER";
 
 EA_XOPT_ICONPOSOPT = "Icon Position Options";
 EA_XOPT_SHOW_ALTFRAME = "Show Alert Frame";
@@ -127,7 +129,7 @@ EA_XICON_LIGHT = "Light";
 EA_XICON_TAR_NEWLINE = "Target's Debuff in a new line";
 EA_XICON_TAR_HORSPACE = "Horizontal Spacing w/ Alert Frame";
 EA_XICON_TAR_VERSPACE = "Vertical Spacing w/ Alert Frame";
-EA_XICON_TOGGLE_ALERTFRAME = "Show Alert Sample";
+EA_XICON_TOGGLE_ALERTFRAME = "Adjust Alert Sample Position";
 EA_XICON_RESET_FRAMEPOS = "Reset Alert Position";
 EA_XICON_SELF_BUFF = "Self Buff";
 EA_XICON_SELF_SPBUFF = "Self Debuff(1)\nOr SpecFrame";
@@ -154,14 +156,16 @@ EX_XCLSALERT_HELP3 = "To look up the spellID, copy the following:";
 EX_XCLSALERT_HELP4 = "Alternate Alert is for some spells being";
 EX_XCLSALERT_HELP5 = "actived in Combat Event and without";
 EX_XCLSALERT_HELP6 = "any buff. Ex:Warrior's Revenge...etc.";
-EX_XCLSALERT_SPELLURL = "http://thottbot.com/spell=SPELLIDHERE";
+EX_XCLSALERT_SPELLURL = "http://www.wowhead.com/spells";
 
 EA_XTARALERT_TARGET_MYDEBUFF = "Debuffs only player casts";
 
 EA_XGRPALERT_ICONALPHA = "Icon Alpha";
 EA_XGRPALERT_GRPID = "GroupID:";
-EA_XGRPALERT_TALENT1 = "Primary";
-EA_XGRPALERT_TALENT2 = "Secondary";
+EA_XGRPALERT_TALENT1 = "1st SPEC";
+EA_XGRPALERT_TALENT2 = "2nd SPEC";
+EA_XGRPALERT_TALENT2 = "3rd SPEC";
+EA_XGRPALERT_TALENT2 = "4th SPEC";
 EA_XGRPALERT_HIDEONLEAVECOMBAT = "Hide NoCombat"
 EA_XGRPALERT_HIDEONLOSTTARGET = "Hide NoTarget"
 EA_XGRPALERT_TALENTS = "All Talent";
@@ -217,6 +221,8 @@ EA_XGRPALERT_COMPARES = {
 	[3]={text="=", value=3},
 	[4]={text=">=", value=4},
 	[5]={text=">", value=5}, 
+	[6]={text="<>", value=6}, 
+	[7]={text="*", value=7}, 	--any
 };
 EA_XGRPALERT_COMPARETYPES = {
 	[1]={text="Value", value=1},
@@ -326,10 +332,11 @@ EA_SPELL_POWER_BURNING_EMBERS = 14;		-- Burning Embers (Destruction Warlock)
 EA_SPELL_POWER_DEMONIC_FURY = 15;		-- Demonic Fury (Demonology Warlock)
 EA_SPELL_POWER_ARCANE_CHARGES = 16;		-- Arcane Charges (Arcane Mage )
 EA_SPELL_POWER_MAELSTROM = 11;			-- Maelstrom (Enhanced Shaman and Element Shaman)
+EA_SPELL_POWER_FURY = 17;			-- Maelstrom (Enhanced Shaman and Element Shaman)
 
-EA_XOPT_SPECFLAG_LUNARPOWER = "Lunar Power"
 EA_XOPT_SPECFLAG_HOLYPOWER = "HolyP ower";
 EA_XOPT_SPECFLAG_RUNICPOWER = "Runic Power";
+EA_XOPT_SPECFLAG_RUNES = "Runes";
 EA_XOPT_SPECFLAG_SOULSHARDS = "Soul Shards";
 EA_XOPT_SPECFLAG_LUNAR_POWER = "Lunar Power";
 EA_XOPT_SPECFLAG_COMBOPOINT = "Combo Points";
@@ -343,6 +350,7 @@ EA_XOPT_SPECFLAG_BURNINGEMBERS = "Burning Embers";
 EA_XOPT_SPECFLAG_DEMONICFURY = "Demonic Fury";
 EA_XOPT_SPECFLAG_ARCANECHARGES = "Arcane Charges";
 EA_XOPT_SPECFLAG_MAELSTROM = "Maelstrom";
+EA_XOPT_SPECFLAG_FURY = "Fury";
 
 EA_XGRPALERT_POWERTYPE = "PowerType:";
 EA_XGRPALERT_POWERTYPES = {
@@ -350,7 +358,7 @@ EA_XGRPALERT_POWERTYPES = {
 	[2]={text="Rage", value=EA_SPELL_POWER_RAGE},
 	[3]={text="Focus", value=EA_SPELL_POWER_FOCUS},
 	[4]={text="Energy", value=EA_SPELL_POWER_ENERGY},
-	[5]={text="Rune", value=EA_SPELL_POWER_RUNES},
+	[5]={text="Runes", value=EA_SPELL_POWER_RUNES},
 	[6]={text="Runic Power", value=EA_SPELL_POWER_RUNIC_POWER},
 	[7]={text="Soul Shards", value=EA_SPELL_POWER_SOUL_SHARDS},
 	[8]={text="Lunar Power", value=EA_SPELL_POWER_LUNAR_POWER},
@@ -361,10 +369,12 @@ EA_XGRPALERT_POWERTYPES = {
 	[13]={text="Demonic Fury", value=EA_SPELL_POWER_DEMONIC_FURY},
 	[14]={text="Arcane Charges", value=EA_SPELL_POWER_ARCANE_CHARGES},
 	[15]={text="Maelstrom", value=EA_SPELL_POWER_MAELSTROM},
+	[16]={text="Maelstrom", value=EA_SPELL_POWER_FURY},
 };
 
 EA_XSPECINFO_COMBOPOINT = "Combo Point";
 EA_XSPECINFO_RUNICPOWER	= "Runic Power";
+EA_XSPECINFO_RUNES	= "Runes";
 EA_XSPECINFO_SOULSHARDS	= "Soul Shards";
 EA_XSPECINFO_LUNAR_POWER	= "Lunar Power";		--7.0  support Lunar Power of Balance Druid.
 --EA_XSPECINFO_ECLIPSE	= "Eclipse(Luna)";
@@ -377,3 +387,4 @@ EA_XSPECINFO_FOCUS= "Focus";
 EA_XSPECINFO_LIGHTFORCE= "Chi";						--5.1   support Chi of Monk.
 EA_XSPECINFO_ARCANE_CHARGES= "Arcane Charges";		--7.0   support Arcane Charges of Arcane Mage.
 EA_XSPECINFO_MAELSTROM= "Maelstrom";				--7.0   support Maelstrom of Shaman.
+EA_XSPECINFO_FURY= "Fury";							--7.0   support Fury of Demonhunter

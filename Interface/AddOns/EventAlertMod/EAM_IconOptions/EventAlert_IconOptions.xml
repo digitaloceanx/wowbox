@@ -3,7 +3,7 @@
 	<Script file="EventAlert_IconOptions.lua" />
 	<Frame name="EA_Icon_Options_Frame" hidden="true" parent="EA_Options_Frame" toplevel="true" movable="true" frameStrata="HIGH" enableMouse="true" enableKeyboard="true">
 		<Size>
-			<AbsDimension x="325" y="600" />
+			<AbsDimension x="370" y="600" />
 		</Size>
 		<Anchors>
 			<Anchor relativepoint="RIGHT" point="LEFT" />
@@ -93,7 +93,7 @@
 						self:SetValueStep(5.0);
 					</OnLoad>
 					<OnValueChanged>
-						EA_Config.IconSize = self:GetValue();
+						EA_Config.IconSize = floor(self:GetValue())
 						_G[self:GetName().."Text"]:SetText(EA_XICON_ICONSIZE.."("..EA_Config.IconSize..")");
 						EventAlert_Icon_Options_Frame_AdjustTimerFontSize();
 						EventAlert_Icon_Options_Frame_PaintAlertFrame();
@@ -124,7 +124,7 @@
 						self:SetValueStep(5.0);
 					</OnLoad>
 					<OnValueChanged>
-						EA_Position.xOffset = self:GetValue();
+						EA_Position.xOffset = floor(self:GetValue()) 
 						_G[self:GetName().."Text"]:SetText(EA_XICON_HORSPACE.."("..(EA_Position.xOffset+100)..")");
 						EventAlert_Icon_Options_Frame_PaintAlertFrame();
 					</OnValueChanged>
@@ -154,7 +154,7 @@
 						self:SetValueStep(5.0);
 					</OnLoad>
 					<OnValueChanged>
-						EA_Position.yOffset = self:GetValue();
+						EA_Position.yOffset = floor(self:GetValue())
 						_G[self:GetName().."Text"]:SetText(EA_XICON_VERSPACE.."("..EA_Position.yOffset..")");
 						EventAlert_Icon_Options_Frame_PaintAlertFrame();
 					</OnValueChanged>
@@ -184,7 +184,7 @@
 						self:SetValueStep(1.0);
 					</OnLoad>
 					<OnValueChanged>
-						EA_Position.RedDebuff = (self:GetValue() + 50) / 100;
+						EA_Position.RedDebuff = (floor(self:GetValue()) + 50) / 100
 						_G[self:GetName().."Text"]:SetText(EA_XICON_REDDEBUFF.."("..(100 - 100*EA_Position.RedDebuff).."%)");
 						EventAlert_Icon_Options_Frame_PaintAlertFrame();
 					</OnValueChanged>
@@ -214,7 +214,7 @@
 						self:SetValueStep(1.0);
 					</OnLoad>
 					<OnValueChanged>
-						EA_Position.GreenDebuff = (self:GetValue() + 50) / 100;
+						EA_Position.GreenDebuff = (floor(self:GetValue()) + 50) / 100
 						_G[self:GetName().."Text"]:SetText(EA_XICON_GREENDEBUFF.."("..(100 - 100*EA_Position.GreenDebuff).."%)");
 						EventAlert_Icon_Options_Frame_PaintAlertFrame();
 					</OnValueChanged>
@@ -638,11 +638,64 @@
 					<OnClick>
 						
 						EA_Config.SpecPowerCheck.Maelstrom  = self:GetChecked()
+						
 						EventAlert_SpecialFrame_Update();
 					</OnClick>
 					<OnEnter>
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 						GameTooltip:SetText(EA_TTIP_SPECFLAG_CHECK_MAELSTROM);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parent_SpecFlag_Runes" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_SpecFlag_Maelstrom" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="100" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(EA_XOPT_SPECFLAG_RUNES);
+					</OnLoad>
+					<OnClick>
+						
+						EA_Config.SpecPowerCheck.Runes  = self:GetChecked()						
+						EventAlert_SpecialFrame_Update();
+					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(EA_TTIP_SPECFLAG_CHECK_RUNES);
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="$parent_SpecFlag_Fury" inherits="OptionsCheckButtonTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_SpecFlag_RunicPower" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="100" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						_G[self:GetName().."Text"]:SetText(EA_XOPT_SPECFLAG_FURY);
+					</OnLoad>
+					<OnClick>
+						
+						EA_Config.SpecPowerCheck.Fury = self:GetChecked()						
+						EventAlert_SpecialFrame_Update();
+					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(EA_TTIP_SPECFLAG_CHECK_FURY);
 					</OnEnter>
 					<OnLeave>
 						GameTooltip:Hide();
