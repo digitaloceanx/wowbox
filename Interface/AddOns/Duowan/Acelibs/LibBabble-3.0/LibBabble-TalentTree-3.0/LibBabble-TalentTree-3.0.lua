@@ -1,6 +1,6 @@
 --[[
 Name: LibBabble-TalentTree-3.0
-Revision: $Rev: 70 $
+Revision: $Rev: 80 $
 Maintainers: ckknight, nevcairiel, Ackis
 Website: http://www.wowace.com/projects/libbabble-talenttree-3-0/
 Dependencies: None
@@ -8,7 +8,7 @@ License: MIT
 ]]
 
 local MAJOR_VERSION = "LibBabble-TalentTree-3.0"
-local MINOR_VERSION = 90000 + tonumber(("$Rev: 70 $"):match("%d+"))
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 80 $"):match("%d+"))
 
 if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
 local lib = LibStub("LibBabble-3.0"):New(MAJOR_VERSION, MINOR_VERSION)
@@ -37,6 +37,7 @@ lib:SetBaseTranslations {
 	Frost = "Frost",
 	Fury = "Fury",
 	Guardian = "Guardian",
+	Havoc = "Havoc",
 	Holy = "Holy",
 	Hybrid = "Hybrid",
 	Marksmanship = "Marksmanship",
@@ -48,6 +49,7 @@ lib:SetBaseTranslations {
 	Subtlety = "Subtlety",
 	Survival = "Survival",
 	Unholy = "Unholy",
+	Vengeance = "Vengeance",
 	Windwalker = "Windwalker",
 }
 
@@ -63,23 +65,24 @@ elseif GAME_LOCALE == "deDE" then
 	Balance = "Gleichgewicht",
 	["Beast Mastery"] = "Tierherrschaft",
 	Blood = "Blut",
-	Brewmaster = "Braumeister", -- Needs review
+	Brewmaster = "Braumeister",
 	Combat = "Kampf",
 	Demonology = "Dämonologie",
 	Destruction = "Zerstörung",
 	Discipline = "Disziplin",
 	Elemental = "Elementar",
 	Enhancement = "Verstärkung",
-	Feral = "Wildheit", -- Needs review
+	Feral = "Wildheit",
 	["Feral Combat"] = "Wilder Kampf",
 	Fire = "Feuer",
 	Frost = "Frost",
 	Fury = "Furor",
-	Guardian = "Wächter", -- Needs review
+	Guardian = "Wächter",
+	Havoc = "Verwüstung",
 	Holy = "Heilig",
 	Hybrid = "Hybride",
 	Marksmanship = "Treffsicherheit",
-	Mistweaver = "Nebelwirker", -- Needs review
+	Mistweaver = "Nebelwirker",
 	Protection = "Schutz",
 	Restoration = "Wiederherstellung",
 	Retribution = "Vergeltung",
@@ -87,7 +90,8 @@ elseif GAME_LOCALE == "deDE" then
 	Subtlety = "Täuschung",
 	Survival = "Überleben",
 	Unholy = "Unheilig",
-	Windwalker = "Windläufer", -- Needs review
+	Vengeance = "Rachsucht",
+	Windwalker = "Windläufer",
 }
 elseif GAME_LOCALE == "frFR" then
 	lib:SetCurrentTranslations {
@@ -111,6 +115,7 @@ elseif GAME_LOCALE == "frFR" then
 	Frost = "Givre",
 	Fury = "Fureur",
 	Guardian = "Gardien",
+	-- Havoc = "",
 	Holy = "Sacré",
 	Hybrid = "Hybride",
 	Marksmanship = "Précision",
@@ -122,6 +127,7 @@ elseif GAME_LOCALE == "frFR" then
 	Subtlety = "Finesse",
 	Survival = "Survie",
 	Unholy = "Impie",
+	-- Vengeance = "",
 	Windwalker = "Marche-vent",
 }
 elseif GAME_LOCALE == "koKR" then
@@ -146,6 +152,7 @@ elseif GAME_LOCALE == "koKR" then
 	Frost = "냉기",
 	Fury = "분노",
 	Guardian = "수호",
+	-- Havoc = "",
 	Holy = "신성",
 	Hybrid = "하이브리드",
 	Marksmanship = "사격",
@@ -157,6 +164,7 @@ elseif GAME_LOCALE == "koKR" then
 	Subtlety = "잠행",
 	Survival = "생존",
 	Unholy = "부정",
+	-- Vengeance = "",
 	Windwalker = "풍운",
 }
 elseif GAME_LOCALE == "esES" then
@@ -181,6 +189,7 @@ elseif GAME_LOCALE == "esES" then
 	Frost = "Escarcha",
 	Fury = "Furia",
 	Guardian = "Guardián", -- Needs review
+	-- Havoc = "",
 	Holy = "Sagrado",
 	Hybrid = "Híbrido",
 	Marksmanship = "Puntería",
@@ -192,6 +201,7 @@ elseif GAME_LOCALE == "esES" then
 	Subtlety = "Sutileza",
 	Survival = "Supervivencia",
 	Unholy = "Profano",
+	-- Vengeance = "",
 	Windwalker = "Viajero del viento", -- Needs review
 }
 elseif GAME_LOCALE == "esMX" then
@@ -216,6 +226,7 @@ elseif GAME_LOCALE == "esMX" then
 	Frost = "Escarcha",
 	Fury = "Furia",
 	Guardian = "Guardián",
+	-- Havoc = "",
 	Holy = "Sagrado",
 	Hybrid = "Híbrido",
 	Marksmanship = "Puntería",
@@ -227,6 +238,7 @@ elseif GAME_LOCALE == "esMX" then
 	Subtlety = "Sutileza",
 	Survival = "Supervivencia",
 	Unholy = "Profano",
+	-- Vengeance = "",
 	Windwalker = "Viajero del viento",
 }
 elseif GAME_LOCALE == "ptBR" then
@@ -251,6 +263,7 @@ elseif GAME_LOCALE == "ptBR" then
 	Frost = "Gelo",
 	Fury = "Fúria",
 	Guardian = "Guardião",
+	-- Havoc = "",
 	Holy = "Sagrado",
 	Hybrid = "Híbrido",
 	Marksmanship = "Precisão",
@@ -262,6 +275,7 @@ elseif GAME_LOCALE == "ptBR" then
 	Subtlety = "Subterfúgio",
 	Survival = "Sobrevivência",
 	Unholy = "Profano",
+	-- Vengeance = "",
 	Windwalker = "Andarilho do Vento",
 }
 elseif GAME_LOCALE == "itIT" then
@@ -286,6 +300,7 @@ elseif GAME_LOCALE == "itIT" then
 	Frost = "Ghiaccio",
 	Fury = "Furia",
 	Guardian = "Guardiano Ferino",
+	-- Havoc = "",
 	Holy = "Sacro",
 	Hybrid = "Ibrido",
 	Marksmanship = "Precisione di tiro",
@@ -297,6 +312,7 @@ elseif GAME_LOCALE == "itIT" then
 	Subtlety = "Scaltrezza",
 	Survival = "Sopravvivenza",
 	Unholy = "Empietà",
+	-- Vengeance = "",
 	Windwalker = "Impeto",
 }
 elseif GAME_LOCALE == "ruRU" then
@@ -321,6 +337,7 @@ elseif GAME_LOCALE == "ruRU" then
 	Frost = "Лед",
 	Fury = "Неистовство",
 	Guardian = "Страж",
+	-- Havoc = "",
 	Holy = "Свет",
 	Hybrid = "Гибрид",
 	Marksmanship = "Стрельба",
@@ -332,6 +349,7 @@ elseif GAME_LOCALE == "ruRU" then
 	Subtlety = "Скрытность",
 	Survival = "Выживание",
 	Unholy = "Нечестивость",
+	-- Vengeance = "",
 	Windwalker = "Танцующий с ветром",
 }
 elseif GAME_LOCALE == "zhCN" then
@@ -356,6 +374,7 @@ elseif GAME_LOCALE == "zhCN" then
 	Frost = "冰霜",
 	Fury = "狂怒",
 	Guardian = "守护",
+	Havoc = "浩劫",
 	Holy = "神圣",
 	Hybrid = "混合",
 	Marksmanship = "射击",
@@ -367,6 +386,7 @@ elseif GAME_LOCALE == "zhCN" then
 	Subtlety = "敏锐",
 	Survival = "生存技能",
 	Unholy = "邪恶",
+	Vengeance = "复仇",
 	Windwalker = "踏风",
 }
 elseif GAME_LOCALE == "zhTW" then
@@ -391,6 +411,7 @@ elseif GAME_LOCALE == "zhTW" then
 	Frost = "冰霜",
 	Fury = "狂怒",
 	Guardian = "守護者",
+	-- Havoc = "",
 	Holy = "神聖",
 	Hybrid = "混合",
 	Marksmanship = "射擊",
@@ -402,6 +423,7 @@ elseif GAME_LOCALE == "zhTW" then
 	Subtlety = "敏銳",
 	Survival = "生存",
 	Unholy = "穢邪",
+	-- Vengeance = "",
 	Windwalker = "御風",
 }
 
