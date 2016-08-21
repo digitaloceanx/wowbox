@@ -4,12 +4,16 @@
 !/Interface/AddOns/
 Interface/AddOns/Blizzard_*
 Interface/AddOns/GladiatorosSA_zhCN
+Interface/AddOns/DBM-*
+!/Interface/AddOns/DBM-SpellTimers
+!/Interface/AddOns/DBM-RaidLeadTools
 *.mp3
 *.ogg
 *.tga
 *.blp
 *.wav
 *.ttf
+*.bmp
 !wow.exe
 !wow-64.exe
 !.gitignore
