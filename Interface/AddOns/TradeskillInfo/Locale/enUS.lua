@@ -11,8 +11,6 @@ if not L then return end
 
 
 -- Core Translations
-L["Hide Minimap Button"] = "Hide Minimap Button"
-L["Open Panel"] = "TradeskillInfo"
 L["Alchemy"] = true
 L["Alliance"] = true
 L["Alliance Quest"] = true
@@ -64,6 +62,7 @@ L["Gathered"] = true
 L["Gnomish Engineer"] = true
 L["Goblin Engineer"] = true
 L["Herbalism"] = true
+L["Hide Minimap Button"] = true
 L["HIGH"] = true
 L["Horde"] = true
 L["Horde Quest"] = true
@@ -152,6 +151,7 @@ L["Trade Skill Window options"] = true
 L["Trainer"] = true
 L["Trainer Window"] = true
 L["Trainer Window options"] = true
+L["Turn on debug info output"] = true
 L["UI"] = true
 L["UI Options"] = true
 L["UI Scale"] = true

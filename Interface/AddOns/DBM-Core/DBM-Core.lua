@@ -41,7 +41,7 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 15128 $"):sub(12, -3)),
+	Revision = tonumber(("$Revision: 15149 $"):sub(12, -3)),
 	DisplayVersion = "7.0.3 alpha", -- the string that is shown as version
 	ReleaseRevision = 15117 -- the revision of the latest stable version that is available
 }
@@ -275,7 +275,7 @@ DBM.DefaultOptions = {
 	CRT_Enabled = false,
 	ShowRespawn = true,
 	ShowQueuePop = true,
-	HelpMessageVersion = 2,
+	HelpMessageVersion = 3,
 	NewsMessageShown = 4,
 	MoviesSeen = {},
 	MovieFilter = "AfterFirst",
@@ -450,6 +450,7 @@ DBM.DefaultOptions.ShowMinimapButton = false
 DBM.DefaultOptions.HideObjectivesFrame = false
 DBM.DefaultOptions.MovieFilter = "Never"
 
+
 -----------------
 --  Libraries  --
 -----------------
@@ -480,7 +481,7 @@ local UnitExists, UnitIsDead, UnitIsFriend, UnitIsUnit, UnitIsAFK = UnitExists, 
 local GetSpellInfo, EJ_GetSectionInfo, GetSpellTexture, GetSpellCooldown = GetSpellInfo, EJ_GetSectionInfo, GetSpellTexture, GetSpellCooldown
 local EJ_GetEncounterInfo, EJ_GetCreatureInfo, GetDungeonInfo = EJ_GetEncounterInfo, EJ_GetCreatureInfo, GetDungeonInfo
 local GetInstanceInfo = GetInstanceInfo
-local UnitPosition, GetCurrentMapDungeonLevel, GetMapInfo, GetCurrentMapZone, SetMapToCurrentZone = UnitPosition, GetCurrentMapDungeonLevel, GetMapInfo, GetCurrentMapZone, SetMapToCurrentZone
+local UnitPosition, GetCurrentMapDungeonLevel, GetMapInfo, GetCurrentMapZone, SetMapToCurrentZone, GetPlayerMapAreaID = UnitPosition, GetCurrentMapDungeonLevel, GetMapInfo, GetCurrentMapZone, SetMapToCurrentZone, GetPlayerMapAreaID
 local GetSpecialization, GetSpecializationInfo, GetSpecializationInfoByID = GetSpecialization, GetSpecializationInfo, GetSpecializationInfoByID
 local UnitDetailedThreatSituation = UnitDetailedThreatSituation
 local GetPartyAssignment, UnitGroupRolesAssigned, UnitIsGroupLeader, UnitIsGroupAssistant, UnitRealmRelationship = GetPartyAssignment, UnitGroupRolesAssigned, UnitIsGroupLeader, UnitIsGroupAssistant, UnitRealmRelationship
@@ -2096,6 +2097,7 @@ do
 		if DBM.RangeCheck:IsShown() then
 			DBM.RangeCheck:Hide(true)
 		else
+			DBM:AddMsg(DBM_CORE_NO_RANGE_SOON)
 			if r and (r < 201) then
 				DBM.RangeCheck:Show(r, nil, true, nil, reverse)
 			else
@@ -2153,13 +2155,13 @@ do
 			end
 			if v.displayVersion and not v.bwversion then--DBM, no BigWigs
 				if self.Options.ShowAllVersions then
-					self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY:format(name, "DBM "..v.displayVersion, v.revision, v.VPVersion or ""), false)--Only display VP version if not running two mods
+					self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY:format(name, "DBM "..v.displayVersion, "r"..v.revision, v.VPVersion or ""), false)--Only display VP version if not running two mods
 				end
 				if notify and v.revision < self.ReleaseRevision then
 					SendChatMessage(chatPrefixShort..DBM_CORE_YOUR_VERSION_OUTDATED, "WHISPER", nil, v.name)
 				end
 			elseif self.Options.ShowAllVersions and v.displayVersion and v.bwversion then--DBM & BigWigs
-				self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY_TWO:format(name, "DBM "..v.displayVersion, v.revision, DBM_BIG_WIGS, versionResponseString:format(v.bwversion, v.bwhash)), false)
+				self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY_TWO:format(name, "DBM "..v.displayVersion, "r"..v.revision, DBM_BIG_WIGS, versionResponseString:format(v.bwversion, v.bwhash)), false)
 			elseif self.Options.ShowAllVersions and not v.displayVersion and v.bwversion then--BigWigs, No DBM
 				self:AddMsg(DBM_CORE_VERSIONCHECK_ENTRY:format(name, DBM_BIG_WIGS, versionResponseString:format(v.bwversion, v.bwhash), ""), false)
 			else
@@ -2410,7 +2412,7 @@ do
 		elseif arg == "localizersneeded" then
 			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG, "http://www.deadlybossmods.com/forum/viewtopic.php?f=3&t=5")
 		elseif arg1 == "forumsnews" then
-			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG_NEWS, "http://www.deadlybossmods.com/forum/viewtopic.php?f=7&t=10")
+			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG_NEWS, "http://www.deadlybossmods.com/forum/viewtopic.php?f=3&p=171#p171")
 		elseif arg1 == "forums" then
 			DBM:ShowUpdateReminder(nil, nil, DBM_FORUMS_COPY_URL_DIALOG)
 		elseif arg1 == "showRaidIdResults" then
@@ -2760,17 +2762,17 @@ do
 	function DBM:GetNumRealPlayersInZone()
 		if not IsInGroup() then return 1 end
 		local total = 0
-		local currentMapId = select(4, UnitPosition("player"))
+		local currentMapId = GetPlayerMapAreaID("player") or 0
 		if IsInRaid() then
 			for i = 1, GetNumGroupMembers() do
-				if select(4, UnitPosition("raid"..i)) == currentMapId then
+				if (GetPlayerMapAreaID("raid"..i) or 0) == currentMapId then
 					total = total + 1
 				end
 			end
 		else
 			total = 1--add player/self for "party" count
 			for i = 1, GetNumSubgroupMembers() do
-				if select(4, UnitPosition("party"..i)) == currentMapId then
+				if (GetPlayerMapAreaID("party"..i) or 0) == currentMapId then
 					total = total + 1
 				end
 			end
@@ -2874,11 +2876,11 @@ function DBM:GetNumRealGroupMembers()
 	if not IsInInstance() then--Not accurate outside of instances (such as world bosses)
 		return IsInGroup() and GetNumGroupMembers() or 1--So just return regular group members.
 	end
-	local currentMapId = select(4, UnitPosition("player"))
+	local currentMapId = GetPlayerMapAreaID("player") or 0
 	local realGroupMembers = 0
 	if IsInGroup() then
 		for uId in self:GetGroupMembers() do
-			if select(4, UnitPosition(uId)) == currentMapId then
+			if (GetPlayerMapAreaID(uId) or 0) == currentMapId then
 				realGroupMembers = realGroupMembers + 1
 			end
 		end
@@ -3870,7 +3872,7 @@ do
 		if LastInstanceType == "none" and (not UnitAffectingCombat("player") or #inCombat > 0) then--world boss
 			local senderuId = DBM:GetRaidUnitId(sender)
 			if not senderuId then return end--Should never happen, but just in case. If happens, MANY "C" syncs are sent. losing 1 no big deal.
-			local playerZone, senderZone = select(4, UnitPosition("player")), select(4, UnitPosition(senderuId))
+			local playerZone, senderZone = GetPlayerMapAreaID("player") or 0, GetPlayerMapAreaID(senderuId) or 0
 			if playerZone ~= senderZone then return end--not same zone
 			local range = DBM.RangeCheck:GetDistance("player", senderuId)--Same zone, so check range
 			if not range or range > 120 then return end
@@ -6340,12 +6342,12 @@ do
 		if month == 4 and day == 1 then--April 1st
 			self:Schedule(180 + math.random(0, 600) , self.AprilFools, self)
 		end
-		if GetLocale() == "ptBR" or GetLocale() == "frFR" or GetLocale() == "esES" or GetLocale() == "esMX" or GetLocale() == "itIT" then
-			C_TimerAfter(10, function() if self.Options.HelpMessageVersion < 3 then self.Options.HelpMessageVersion = 3 self:AddMsg(DBM_CORE_NEED_LOCALS) end end)
+		if GetLocale() == "ptBR" or GetLocale() == "frFR" or GetLocale() == "itIT" then
+			C_TimerAfter(10, function() if self.Options.HelpMessageVersion < 4 then self.Options.HelpMessageVersion = 4 self:AddMsg(DBM_CORE_NEED_LOCALS) end end)
 		end
 		C_TimerAfter(20, function() if not self.Options.ForumsMessageShown then self.Options.ForumsMessageShown = self.ReleaseRevision self:AddMsg(DBM_FORUMS_MESSAGE) end end)
 		C_TimerAfter(30, function() if not self.Options.SettingsMessageShown then self.Options.SettingsMessageShown = true self:AddMsg(DBM_HOW_TO_USE_MOD) end end)
-		C_TimerAfter(40, function() if self.Options.NewsMessageShown < 6 then self.Options.NewsMessageShown = 6 self:AddMsg(DBM_CORE_WHATS_NEW) end end)
+		C_TimerAfter(40, function() if self.Options.NewsMessageShown < 7 then self.Options.NewsMessageShown = 7 self:AddMsg(DBM_CORE_WHATS_NEW_LINK) end end)
 		if type(RegisterAddonMessagePrefix) == "function" then
 			if not RegisterAddonMessagePrefix("D4") then -- main prefix for DBM4
 				self:AddMsg("Error: unable to register DBM addon message prefix (reached client side addon message filter limit), synchronization will be unavailable") -- TODO: confirm that this actually means that the syncs won't show up
@@ -7320,7 +7322,7 @@ end
 function bossModPrototype:CheckNearby(range, targetname)
 	local uId = DBM:GetRaidUnitId(targetname)
 	if uId then
-		local inRange = DBM.RangeCheck:GetDistance("player", uId)
+		local inRange = DBM.RangeCheck:GetDistance(uId)
 		if inRange and inRange < range then
 			return true
 		end
@@ -7401,18 +7403,15 @@ do
 			end
 			if uId then--Now we have a valid uId
 				if UnitIsUnit(uId, "player") then return true end--If "player" is target, avoid doing any complicated stuff
-				local x, y = UnitPosition(uId)
-				if not x then--Failed to pull coords. This is likely a pet or a guardian or an NPC.
+				if not UnitIsPlayer(uId) then--probably a pet or NPC
 					local inRange2, checkedRange = UnitInRange(uId)--Use an API that works on pets and some NPCS (npcs that get a party/raid/pet ID)
-					if inRange2 and checkedRange then
-					end
-					if checkedRange and not inRange2 then--checkedRange only returns true if api worked, so if we get false, true then we are not near npc
-						return false
+					if checkedRange then--checkedRange only returns true if api worked, so if we get false, true then we are not near npc
+						return inRange2 and true or false
 					else--Its probably a totem or just something we can't assess. Fall back to no filtering
 						return true
 					end
 				end
-				local inRange = DBM.RangeCheck:GetDistance("player", x, y)--We check how far we are from the tank who has that boss
+				local inRange = DBM.RangeCheck:GetDistance("player", uId)--We check how far we are from the tank who has that boss
 				rangeCache[cidOrGuid] = inRange
 				rangeUpdated[cidOrGuid] = GetTime()
 				if inRange and (inRange > distance) then--You are not near the person tanking boss

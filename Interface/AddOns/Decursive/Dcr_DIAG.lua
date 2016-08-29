@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
 
-    Decursive (v 2.7.4.7-1-g0548d4f) add-on for World of Warcraft UI
+    Decursive (v 2.7.4.7-3-ga9c60fa) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
     Starting from 2009-10-31 and until said otherwise by its author, Decursive
@@ -17,7 +17,7 @@
     Decursive is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY.
 
-    This file was last updated on 2016-08-10T09:13:36Z
+    This file was last updated on 2016-08-14T12:49:05Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ local DebugTextTable    = T._DebugTextTable;
 local Reported          = {};
 
 local UNPACKAGED = "@pro" .. "ject-version@";
-local VERSION = "2.7.4.7-1-g0548d4f";
+local VERSION = "2.7.4.7-3-ga9c60fa";
 
 T._LoadedFiles = {};
 T._LoadedFiles["Dcr_DIAG.lua"] = false; -- here for consistency but useless in this particular file
@@ -109,6 +109,7 @@ T._LoadOrderedFiles = { -- {{{
     "load.xml",
 
     "enUS.lua",
+
     "zhCN.lua",
     "zhTW.lua",
 
@@ -263,7 +264,7 @@ do
         _Debug(unpack(TIandBI));
 
 
-        DebugHeader = ("%s\n2.7.4.7-1-g0548d4f  %s(%s)  CT: %0.4f D: %s %s %s BDTHFAd: %s nDrE: %d Embeded: %s W: %d LA: %d TA: %d NDRTA: %d BUIE: %d TI: [dc:%d, lc:%d, y:%d, LEBY:%d, LB:%d, TTE:%u] (%s, %s, %s, %s)"):format(instructionsHeader, -- "%s\n
+        DebugHeader = ("%s\n2.7.4.7-3-ga9c60fa  %s(%s)  CT: %0.4f D: %s %s %s BDTHFAd: %s nDrE: %d Embeded: %s W: %d LA: %d TA: %d NDRTA: %d BUIE: %d TI: [dc:%d, lc:%d, y:%d, LEBY:%d, LB:%d, TTE:%u] (%s, %s, %s, %s)"):format(instructionsHeader, -- "%s\n
         tostring(DC.MyClass), tostring(UnitLevel("player") or "??"), NiceTime(), date(), GetLocale(), -- %s(%s)  CT: %0.4f D: %s %s
         BugGrabber and "BG" .. (T.BugGrabber and "e" or "") or "NBG", -- %s
         tostring(T._BDT_HotFix1_applyed), -- BDTHFAd: %s
@@ -650,24 +651,23 @@ end
 
 T._ShowNotice = function (notice)
 
-	--by eui.cc 
-    -- if not StaticPopupDialogs["DECURSIVE_NOTICE_FRAME"] then
-        -- -- the beautiful notice popup : {{{ -
-        -- StaticPopupDialogs["DECURSIVE_NOTICE_FRAME"] = {
-            -- text = "|cFFFF0000Decursive Notice:|r\n%s",
-            -- button1 = "OK",
-            -- OnAccept = function()
-                -- return false;
-            -- end,
-            -- timeout = 0,
-            -- whileDead = 1,
-            -- hideOnEscape = false,
-            -- showAlert = 1,
-            -- preferredIndex = 3,
-        -- }; -- }}}
-    -- end
+ --   if not StaticPopupDialogs["DECURSIVE_NOTICE_FRAME"] then
+        -- the beautiful notice popup : {{{ -
+ --       StaticPopupDialogs["DECURSIVE_NOTICE_FRAME"] = {
+ --           text = "|cFFFF0000Decursive Notice:|r\n%s",
+ --           button1 = "OK",
+ --           OnAccept = function()
+ --               return false;
+--            end,
+  --          timeout = 0,
+  --          whileDead = 1,
+  --          hideOnEscape = false,
+  --          showAlert = 1,
+  --          preferredIndex = 3,
+ --       }; -- }}}
+ --   end
 
-    -- StaticPopup_Show ("DECURSIVE_NOTICE_FRAME", notice);
+    StaticPopup_Show ("DECURSIVE_NOTICE_FRAME", notice);
 end
 
 
@@ -769,8 +769,8 @@ do
             ["AceAddon-3.0"] = 12,
             ["AceComm-3.0"] = 9,
             ["AceConsole-3.0"] = 7,
-            ["AceDB-3.0"] = 25,
-            ["AceDBOptions-3.0"] = 14,
+            ["AceDB-3.0"] = 26,
+            ["AceDBOptions-3.0"] = 15,
             ["AceEvent-3.0"] = 3,
             ["AceHook-3.0"] = 8,
             ["AceLocale-3.0"] = 6,
@@ -779,12 +779,12 @@ do
             ["AceGUI-3.0"] = 34,
             ["AceConfig-3.0"] = 2,
             ["AceConfigCmd-3.0"] = 13,
-            ["AceConfigDialog-3.0"] = 59,
-            ["AceConfigRegistry-3.0"] = 15,
+            ["AceConfigDialog-3.0"] = 61,
+            ["AceConfigRegistry-3.0"] = 16,
 
             ["LibDataBroker-1.1"] = 4,
             ["LibDBIcon-1.0"] = 34,
-            ["LibQTip-1.0"] = 42,
+            ["LibQTip-1.0"] = 44,
             ["CallbackHandler-1.0"] = 6,
         };
 
@@ -981,4 +981,4 @@ do
     end
 end
 
-T._LoadedFiles["Dcr_DIAG.lua"] = "2.7.4.7-1-g0548d4f";
+T._LoadedFiles["Dcr_DIAG.lua"] = "2.7.4.7-3-ga9c60fa";

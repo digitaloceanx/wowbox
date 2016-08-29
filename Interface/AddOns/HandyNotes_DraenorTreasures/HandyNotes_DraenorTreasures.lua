@@ -218,8 +218,8 @@ nodes["BladespireFortress"] = {
 	[53102790]={ "35368", "巨魔的战利品", "金钱", "剑刃堡垒的第一层; 需要爬上一些木箱才能到达", "default", "treasure_ffr_bsf",""},
 	[49106790]={ "35369", "巨魔的战利品", "金钱", "剑刃堡垒的第一层; 需要爬上一些木箱才能到达", "default", "treasure_ffr_bsf",""},
 	[46201560]={ "35371", "巨魔的战利品", "金钱", "剑刃堡垒的第二层; 需要爬上一些木箱才能到达", "default", "treasure_ffr_bsf",""},
-	[51301790]={ "35373", "巨魔的战利品", "金钱", "剑刃堡垒的第二层; 需要爬上一些木箱才能到达", "default", "treasure_ffr_bsf",""},
-	[36402880]={ "35567", "巨魔的战利品", "要塞资源", "剑刃堡垒的第二层", "default", "treasure_ffr_bsf","824"},
+	[51301790]={ "35567", "巨魔的战利品", "金钱", "剑刃堡垒的第二层; 需要爬上一些木箱才能到达", "default", "treasure_ffr_bsf",""},
+	[52605200]={ "35373", "巨魔的战利品", "要塞资源", "剑刃堡垒的第二层", "default", "treasure_ffr_bsf","824"},
 	[76806220]={ "35568", "巨魔的战利品", "要塞资源", "剑刃堡垒的第二层", "default", "treasure_ffr_bsf","824"},
 	[70506780]={ "35569", "巨魔的战利品", "要塞资源", "剑刃堡垒的第二层", "default", "treasure_ffr_bsf","824"},
 	[44706450]={ "35570", "巨魔的战利品", "金钱", "剑刃堡垒的第一层", "default", "treasure_ffr_bsf",""},
@@ -776,6 +776,50 @@ nodes["garrisonffhorde_tier3"] = {
 	[74505620]={ "34937", "塞娜小姐的备用物资", "要塞资源", "", "default", "treasure_ffr","824"},
 }
 
+nodes["MardumtheShatteredAbyss"] = {
+	[34857020]={ "39970", "小宝箱", "", "", "default", "treasure_dh", "129210"},
+	[45017785]={ "39971", "小宝箱", "可重复使用", "", "default", "treasure_dh", "129192"},
+	[41763761]={ "40759", "小宝箱", "", "", "default", "treasure_dh", "129196"},
+	[51135079]={ "40743", "小宝箱", "", "", "default", "treasure_dh", "129210"},
+	[76243899]={ "40338", "小宝箱", "", "cave entrance at 77.0 to 41.4", "default", "treasure_dh", "129210"},
+	[82075043]={ "40820", "小宝箱", "", "", "default", "treasure_dh", "129196"},
+	[78755047]={ "40274", "小宝箱", "", "", "default", "treasure_dh", "129210"},
+	[73494892]={ "39975", "小宝箱", "", "", "default", "treasure_dh", "129195"},
+	[42194916]={ "40223", "小宝箱", "", "", "default", "treasure_dh", "129210"},
+	[23065389]={ "40797", "小宝箱", "", "cave entrance at 23.6 to 54.2", "default", "treasure_dh", "129210"},
+	[66922767]={ "39974", "小宝箱", "", "", "default", "treasure_dh", "129210"},
+	[74285453]={ "39977", "小宝箱", "", "cave entrance at 70.7 to 54.0", "default", "treasure_dh", "129210"},
+	[69704240]={ "39976", "小宝箱", "", "", "default", "treasure_dh", "129210"},
+	
+	[68852759]={ "40234", "General Volroth", "", "", "skull_grey", "rare_dh", "128947"},
+	[81034124]={ "40233", "Overseer Brutarg", "", "", "skull_grey", "rare_dh", "133580"},
+	[74475731]={ "40232", "King Voras", "", "", "skull_grey", "rare_dh", "128944"},
+}
+
+nodes["CrypticHollow"] = {
+	[48761530]={ "39972", "小宝箱", "", "", "default", "treasure_dh", "129196"},
+	[54855845]={ "39973", "小宝箱", "", "", "default", "treasure_dh", "128946"},
+}
+
+nodes["SoulEngine"] = {
+	[50304964]={ "40772", "小宝箱", "", "", "default", "treasure_dh", "129210"},
+	[51235740]={ "40231", "Count Nefarious", "", "", "skull_grey", "rare_dh", "128948"},
+}
+
+nodes["VaultOfTheWardensDH"] = {
+	[58693475]={ "40909", "小宝箱", "", "First Stage", "default", "treasure_dh", "129210"},
+	[47325464]={ "38690", "小宝箱", "", "First Stage", "default", "treasure_dh", "129210"},
+	[32104817]={ "40911", "小宝箱", "", "Second Stage", "default", "treasure_dh", "129196"},
+	[41506361]={ "40914", "小宝箱", "", "Second Stage", "default", "treasure_dh", "129196"},
+	[56994013]={ "40913", "小宝箱", "", "Second Stage", "default", "treasure_dh", "129210"},
+	[41413287]={ "40912", "小宝箱", "", "Second Stage", "default", "treasure_dh", "129210"},
+	[24421005]={ "40915", "小宝箱", "", "Third Stage", "default", "treasure_dh", "129210"},
+	[23268157]={ "40916", "小宝箱", "", "Third Stage", "default", "treasure_dh", "129210"},
+	
+	[68743628]={ "40301", "Wrath-Lord Lekos", "", "", "skull_grey", "rare_dh", "128958"},
+	[49543284]={ "40251", "Kethrazor", "", "", "skull_grey", "rare_dh", "128945"},
+}
+
 if (PlayerFaction == "Alliance") then
 	nodes["ShadowmoonValleyDR"][29600620]={ "35281", "Bahameye", "火焰菊石", "", "skull_grey", "rare_smv","111666"}
 	nodes["Gorgrond"][60805400]={ "36502", "拜奥兰特", "加经验值的任务物品", "在这个元素从地图去除前，您必须完成任务", "skull_grey", "rare_gg","116159"}
@@ -798,7 +842,6 @@ if (PlayerFaction == "Horde") then
 	nodes["Gorgrond"][51804160]={ "35807", "暴虐的艾罗萨恩", "加经验值的任务物品", "在这个元素从地图去除前，您必须完成任务", "skull_green", "rare_gg","113444"}
 	nodes["Gorgrond"][58006360]={ "35814", "真菌守卫者", "加经验值的任务物品", "在这个元素从地图去除前，您必须完成任务", "skull_grey", "rare_gg","113454"}
 	nodes["Gorgrond"][52406580]={ "35819", "吞噬者卡加克斯", "加经验值的任务物品", "在这个元素从地图去除前，您必须完成任务", "skull_grey", "rare_gg","113460"}
-	nodes["Gorgrond"][51206360]={ "35818", "“天空魔王”洛尔丹", "加经验值的任务物品", "周围很多的苍蝇, 坐标只是在他的路线中的一处！在这个元素从地图去除前，您必须完成任务", "skull_green", "rare_gg","113459"}
 	nodes["Talador"][61107170]={ "34116", "Norana的宝箱", "i564 敏捷项链", "", "default", "treasure_td","117563"}
 	nodes["Gorgrond"][51206360]={ "35818", "'天空魔王'洛尔丹", "加经验值的任务物品", "周围很多的苍蝇, 坐标只是在他的路线中的一处！在这个元素从地图去除前，您必须完成任务", "skull_grey", "rare_gg","113459"}
 end

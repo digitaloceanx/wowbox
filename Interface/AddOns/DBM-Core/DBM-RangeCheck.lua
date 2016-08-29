@@ -571,7 +571,7 @@ do
 			radarFrame.text:SetText(DBM_CORE_RANGERADAR_HEADER:format(activeRange, mainFrame.redCircleNumPlayers))
 		end
 
-		local playerX, playerY, _, playerMapId = UnitPosition("player")
+		local playerMapId = GetPlayerMapAreaID("player") or 0
 
 		rotation = pi2 - GetPlayerFacing()
 		local sinTheta = sin(rotation)
@@ -585,12 +585,10 @@ do
 		for i = 1, numPlayers do
 			local uId = unitList[i]
 			local dot = dots[i]
-			local x, y, _, mapId = UnitPosition(uId)
+			local mapId = GetPlayerMapAreaID(uId) or 0
 			if UnitExists(uId) and playerMapId == mapId and not UnitIsUnit(uId, "player") and not UnitIsDeadOrGhost(uId) and UnitIsConnected(uId) and UnitInPhase(uId) and (not filter or filter(uId)) then
-				local cy = x - playerX
-				local cx = y - playerY
-				local range = (cx * cx + cy * cy) ^ 0.5
-				--local range = UnitDistanceSquared(uId) ^ 0.5
+				--local range = (cx * cx + cy * cy) ^ 0.5
+				local range = UnitDistanceSquared(uId) ^ 0.5
 				local inRange = false
 				if range < (activeRange+0.5) then
 					closePlayer = closePlayer + 1
@@ -610,6 +608,10 @@ do
 					textFrame:AddLine(text, color.r, color.g, color.b)
 				end
 				if rEnabled then
+					local playerX, playerY = UnitPosition("player")
+					local x, y = UnitPosition(uId)
+					local cy = x - playerX
+					local cx = y - playerY
 					dot.x = -cx
 					dot.y = -cy
 					dot.range = range
@@ -682,14 +684,24 @@ end)
 -----------------------
 local getDistanceBetween
 do
+	--TODO, add some check in 7.1 to return before calling UnitPosition, if in restricted area.
 	function getDistanceBetween(uId, x, y)
-		-- alternative arguments: uId, uId2
-		if type(x) == "string" then
-			local uId2 = x
-			x, y = UnitPosition(uId2)
-			if not x then
-				print("getDistanceBetween failed for: " .. uId .. " (" .. tostring(UnitExists(uId)) .. ") and " .. uId2 .. " (" .. tostring(UnitExists(uId2)) .. ")")
-				return
+		if not x then--If only one arg then 2nd arg is always assumed to be player
+			return UnitDistanceSquared(uId) ^ 0.5
+		end
+		if type(x) == "string" and UnitExists(x) then -- arguments: uId, uId2
+			--First attempt to avoid UnitPosition if any of args is player UnitDistanceSquared should work
+			if UnitIsUnit("player", uId) then
+				return UnitDistanceSquared(x) ^ 0.5
+			elseif UnitIsUnit("player", x) then
+				return UnitDistanceSquared(uId) ^ 0.5
+			else--Neither unit is player, no way to avoid UnitPosition
+				local uId2 = x
+				x, y = UnitPosition(uId2)
+				if not x then
+					print("getDistanceBetween failed for: " .. uId .. " (" .. tostring(UnitExists(uId)) .. ") and " .. uId2 .. " (" .. tostring(UnitExists(uId2)) .. ")")
+					return
+				end
 			end
 		end
 		local startX, startY = UnitPosition(uId)
@@ -717,6 +729,7 @@ function rangeCheck:Show(range, filter, forceshow, redCircleNumPlayers, reverse,
 		textFrame:Show()
 		textFrame:SetOwner(UIParent, "ANCHOR_PRESERVE")
 	end
+	--TODO, add check for restricted area here so we can prevent radar frame loading.
 	if (DBM.Options.RangeFrameFrames == "radar" or DBM.Options.RangeFrameFrames == "both") and not radarFrame.isShown then
 		radarFrame.isShown = true
 		radarFrame:Show()

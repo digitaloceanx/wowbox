@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
     
-    Decursive (v 2.7.4.7-1-g0548d4f) add-on for World of Warcraft UI
+    Decursive (v 2.7.4.7-3-ga9c60fa) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT
     teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
@@ -74,7 +74,7 @@ T._LoadedFiles["zhTW.lua"] = false;
 local L = LibStub("AceLocale-3.0"):NewLocale("Decursive", "zhTW");
 
 if not L then
-    T._LoadedFiles["zhTW.lua"] = "2.7.4.7-1-g0548d4f";
+    T._LoadedFiles["zhTW.lua"] = "2.7.4.7-3-ga9c60fa";
     return;
 end;
 
@@ -480,10 +480,10 @@ L["TOC_VERSION_EXPIRED"] = [=[你的Decursive版本已經過期。當前魔獸�
 此訊息將每兩天提示一次。]=] -- Needs review
 L["TOOFAR"] = "太遠"
 L["TOO_MANY_ERRORS_ALERT"] = [=[你的UI有太多LUA錯誤 (%d)。你的遊戲體驗正受到影響。關閉或更新產生錯誤的UI以關閉此訊息並重新取得正常的禎數。
-你可開啟LUA錯誤報告來辨別產生錯誤的UI (遊戲選項>介面>協助)。]=] -- Needs review
+你可開啟LUA錯誤報告來辨別產生錯誤的UI (/console scriptErrors 1)。]=]
 L["UNITSTATUS"] = "玩家狀態: "
 L["UNSTABLERELEASE"] = "不穩定釋出版"
 
 
 
-T._LoadedFiles["zhTW.lua"] = "2.7.4.7-1-g0548d4f";
+T._LoadedFiles["zhTW.lua"] = "2.7.4.7-3-ga9c60fa";

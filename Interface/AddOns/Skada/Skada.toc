@@ -6,7 +6,7 @@
 ## Notes-zhCN: |cff00ff00Skada|r
 ## Notes-zhTW: |cff00ff00Skada|r
 ## Author: Zarnivoop
-## Version: r647
+## Version: r670
 ## SavedVariables: SkadaDB
 ## SavedVariablesPerCharacter: SkadaPerCharDB
 ## X-DuowanAddon: 团队副本

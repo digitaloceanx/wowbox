@@ -298,6 +298,8 @@ TITAN_ALL_SAVED_VARIABLES = {
 	GlobalProfileName = TITAN_PROFILE_NONE,
 	-- Silent Load
 	Silenced = false,
+	-- OrderHallCommandBar Status
+	OrderHall = false,
 };
 
 -- The skins released with Titan

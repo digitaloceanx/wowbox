@@ -31,8 +31,6 @@ local HereBeDragons = LibStub("HereBeDragons-1.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Archy", false)
 local LDBI = LibStub("LibDBIcon-1.0")
 
-local debugger -- Only defined if needed.
-
 local DatamineTooltip = _G.CreateFrame("GameTooltip", "ArchyScanTip", nil, "GameTooltipTemplate")
 DatamineTooltip:SetOwner(_G.UIParent, "ANCHOR_NONE")
 
@@ -64,35 +62,35 @@ local LorewalkersMap = {
 	spellID = 126957
 }
 
+-- If fishing pole detection breaks in a future patch due to indices changing, uncomment the below code to find the correct values:
+--do
+--	COMPILED_ITEM_CLASSES = {}
+--	local classIndex = 0
+--	local className = _G.GetItemClassInfo(classIndex)
+--
+--	while className and className ~= "" do
+--		COMPILED_ITEM_CLASSES[classIndex] = {
+--			name = className,
+--			subClasses = {},
+--		}
+--
+--		local subClassIndex = 0
+--		local subClassName = _G.GetItemSubClassInfo(classIndex, subClassIndex)
+--
+--		while subClassName and subClassName ~= "" do
+--			COMPILED_ITEM_CLASSES[classIndex].subClasses[subClassIndex] = subClassName
+--
+--			subClassIndex = subClassIndex + 1
+--			subClassName = _G.GetItemSubClassInfo(classIndex, subClassIndex)
+--		end
+--
+--		classIndex = classIndex + 1
+--		className = _G.GetItemClassInfo(classIndex)
+--	end
+--end
+
 local FISHING_POLE_ITEM_TYPE_NAME
 do
-	-- If this breaks in a future patch due to indices changing, uncomment the below code to find the correct values:
-	--	do
-	--		COMPILED_ITEM_CLASSES = {}
-	--		local classIndex = 0
-	--		local className = _G.GetItemClassInfo(classIndex)
-	--
-	--		while className and className ~= "" do
-	--			COMPILED_ITEM_CLASSES[classIndex] = {
-	--				name = className,
-	--				subClasses = {},
-	--			}
-	--
-	--			local subClassIndex = 0
-	--			local subClassName = _G.GetItemSubClassInfo(classIndex, subClassIndex)
-	--
-	--			while subClassName and subClassName ~= "" do
-	--				COMPILED_ITEM_CLASSES[classIndex].subClasses[subClassIndex] = subClassName
-	--
-	--				subClassIndex = subClassIndex + 1
-	--				subClassName = _G.GetItemSubClassInfo(classIndex, subClassIndex)
-	--			end
-	--
-	--			classIndex = classIndex + 1
-	--			className = _G.GetItemClassInfo(classIndex)
-	--		end
-	--	end
-
 	local ITEM_CLASS_WEAPON = 2
 	local ITEM_SUBCLASS_FISHING_POLE = 20
 
@@ -134,32 +132,44 @@ local surveyLocation = {
 
 local prevTheme
 
--------------------------------------------------------------------------------
+-----------------------------------------------------------------------
 -- Debugger.
--------------------------------------------------------------------------------
-local function CreateDebugFrame()
-	if debugger then
-		return
+-----------------------------------------------------------------------
+local Debug, DebugPour, GetDebugger
+do
+	local TextDump = LibStub("LibTextDump-1.0")
+
+	local DEBUGGER_WIDTH = 750
+	local DEBUGGER_HEIGHT = 800
+
+	local debugger
+
+	function Debug(...)
+		if not debugger then
+			debugger = TextDump:New(("%s Debug Output"):format(FOLDER_NAME), DEBUGGER_WIDTH, DEBUGGER_HEIGHT)
+		end
+
+		local message = string.format(...)
+		debugger:AddLine(message, "%X")
+
+		return message
 	end
-	debugger = LibStub("LibTextDump-1.0"):New(("%s Debug Output"):format(FOLDER_NAME), 640, 480)
-end
 
-local function Debug(...)
-	if not debugger then
-		CreateDebugFrame()
+	function DebugPour(...)
+		Archy:Pour(Debug(...), 1, 1, 1)
 	end
-	local message = ("[%s] %s"):format(date("%X"), string.format(...))
 
-	debugger:AddLine(message)
-	return message
+	function GetDebugger()
+		if not debugger then
+			debugger = TextDump:New(("%s Debug Output"):format(FOLDER_NAME), DEBUGGER_WIDTH, DEBUGGER_HEIGHT)
+		end
+
+		return debugger
+	end
+
+	private.Debug = Debug
+	private.DebugPour = DebugPour
 end
-
-local function DebugPour(...)
-	Archy:Pour(Debug(...), 1, 1, 1)
-end
-
-private.Debug = Debug
-private.DebugPour = DebugPour
 
 -----------------------------------------------------------------------
 -- Function upvalues
@@ -571,7 +581,6 @@ function UpdateAllSites()
 					local blobID = _G.ArcheologyGetVisibleBlobID(landmarkIndex)
 					local message = ([[Missing dig site data: ["%s"] = { blobID = %d, mapID = 0, typeID = RaceID.Unknown } -- %s]]):format(siteKey, blobID, landmarkName)
 
-					Archy:Printf(message)
 					DebugPour(message)
 				end
 			end
@@ -955,9 +964,7 @@ local SUBCOMMAND_FUNCS = {
 		ArtifactFrame:SetBackdropBorderColor(1, 1, 1, 0.5)
 	end,
 	debug = function()
-		if not debugger then
-			CreateDebugFrame()
-		end
+		local debugger = GetDebugger()
 
 		if debugger:Lines() == 0 then
 			debugger:AddLine("Nothing to report.")
@@ -965,6 +972,7 @@ local SUBCOMMAND_FUNCS = {
 			debugger:Clear()
 			return
 		end
+
 		debugger:Display()
 	end,
 	-- @alpha@

@@ -2,7 +2,7 @@
 ## Title: [Duowan] HandyNotes_DraenorTreasures
 ## Title-zhCN: [多玩] 地图标记-德拉诺宝藏模块
 ## Title-zhTW: [多玩] 地圖標記-德拉諾定期模塊
-## Version: 1.16a
+## Version: 1.20
 ## Notes: Shows location of treasures and rares in Draenor
 ## Author: Katjes (Coronet - Dun Morogh(EU))
 ## OptionalDeps: Ace3

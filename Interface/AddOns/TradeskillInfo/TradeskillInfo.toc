@@ -7,13 +7,13 @@
 ## Notes-zhCN: 完整的商业技能百科
 ## Notes-esES: Informarcion Completa de las Habilidades de Comercio
 ## Author: Ethan Centaurai
-## Version: v2.3.10-8-g555d2c0
+## Version: v2.3.11-8-g4a4280c
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibBabble-SubZone-3.0, LibBabble-Faction-3.0, Auc-Advanced
 ## SavedVariables: TradeSkillInfoDB
 ## X-Credits: Dys, wmrojer, Evenue, Fieroivan, Viruscamp, CMTitan
 ## X-Icon: Interface\Icons\INV_Elemental_SpiritOfHarmony_2
 ## X-Category: Professions
-## X-Curse-Packaged-Version: v2.3.10-8-g555d2c0
+## X-Curse-Packaged-Version: v2.3.11-8-g4a4280c
 ## X-Curse-Project-Name: TradeSkillInfo
 ## X-Curse-Project-ID: tradeskill-info
 ## X-Curse-Repository-ID: wow/tradeskill-info/mainline

@@ -9,7 +9,7 @@
 ## X-Credits: TitanMod, Dark Imakuni, Adsertor, Titan Dev Team
 ## SavedVariables: Valor_Settings, TitanAll, TitanSettings, TitanSkins, ServerTimeOffsets, ServerHourFormat, GoldArray
 ## SavedVariablesPerCharacter: TitanPerSetting
-## Version: 5.7.3.70000
+## Version: 5.7.4.70000
 ## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibQTip-1.0
 ## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0, LibQTip-1.0
 ## X-Credits: TitanMod, Dark Imakuni, Adsertor, Titan Dev Team

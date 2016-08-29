@@ -4,8 +4,6 @@ if not L then return end
 
 
 -- Core Translations
-L["Hide Minimap Button"] = "隱藏小地圖按鈕"
-L["Open Panel"] = "商業技能庫"
 L["Alchemy"] = "鍊金術"
 L["Alliance"] = "聯盟"
 L["Alliance Quest"] = "聯盟任務"
@@ -57,6 +55,7 @@ L["Gathered"] = "採集"
 L["Gnomish Engineer"] = "地精工程學"
 L["Goblin Engineer"] = "哥布林工程師"
 L["Herbalism"] = "草藥學"
+-- L["Hide Minimap Button"] = ""
 L["HIGH"] = "高"
 L["Horde"] = "部落"
 L["Horde Quest"] = "部落任務"
@@ -145,6 +144,7 @@ L["Trade Skill Window options"] = "專業技能視窗選項"
 L["Trainer"] = "訓練師"
 L["Trainer Window"] = "訓練師視窗"
 L["Trainer Window options"] = "訓練師視窗選項"
+-- L["Turn on debug info output"] = ""
 L["UI"] = true
 L["UI Options"] = "UI 設定"
 L["UI Scale"] = "ui介面伸縮"

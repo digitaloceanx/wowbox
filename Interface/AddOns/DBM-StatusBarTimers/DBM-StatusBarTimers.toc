@@ -12,11 +12,12 @@
 ## LoadOnDemand: 0
 ## DefaultState: enabled
 ## X-Website: http://www.deadlybossmods.com
-## X-Curse-Packaged-Version: 7.0.0-1-g27263f6
+## X-Curse-Packaged-Version: 7.0.2-31-g5ff831b
 ## X-Curse-Project-Name: Deadly Boss Mods
 ## X-Curse-Project-ID: deadly-boss-mods
 ## X-Curse-Repository-ID: wow/deadly-boss-mods/mainline
 ## X-DuowanAddon: 团队副本
 ## X-Revision: Duowan
+
 DBT-Template.xml
 DBT.lua

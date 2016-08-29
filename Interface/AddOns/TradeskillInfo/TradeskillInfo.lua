@@ -157,6 +157,8 @@ function TradeskillInfo:OnInitialize()
 
 			-- minimap options
 			hide = true,
+
+			DebugMode = false,
 		},
 		realm = {
 			["*"] = { -- stores all known characters
@@ -167,8 +169,44 @@ function TradeskillInfo:OnInitialize()
 
 	self:RegisterChatCommand("tsi", "ChatCommand")
 	self:RegisterChatCommand("tradeskillinfo", "ChatCommand")
-	dwAsynCall("Blizzard_TradeSkillUI", "TradeskillInfo_CreateButton");	-- dugu@wowbox
 	self:BuildWhereUsed()
+end
+
+-- blatently stolen from Xruptor's BagSync, who also gave credit to Tuller
+local function hookTip(tooltip)
+	local modified = false
+
+	tooltip:HookScript("OnTooltipCleared", function(self)
+		modified = false
+	end)
+
+	tooltip:HookScript("OnTooltipSetItem", function(self)
+		if modified then return end
+
+		modified = true
+
+		local name, link = self:GetItem()
+		local owner = self:GetOwner()
+
+		if name == "" then -- a Blizzard bug breaks merchant recipe links, so let's work around it
+			if owner and owner.link then
+				link = owner.link
+			else
+				return
+			end
+		end
+
+		TradeskillInfo:AddTooltipInfo(self, link)
+	end)
+
+	tooltip:HookScript("OnTooltipSetSpell", function(self)
+		if modified then return end
+
+		modified = true
+
+		local name, _, id = self:GetSpell()
+		TradeskillInfo:AddTooltipInfo(self, spell)
+	end)
 end
 
 function TradeskillInfo:OnEnable()
@@ -183,27 +221,15 @@ function TradeskillInfo:OnEnable()
 	self:SecureHook("ChatFrame_OnHyperlinkShow")
 	self:HookAuctionUI()
 
-	self:RegisterEvent("TRADE_SKILL_SHOW", "OnTradeShow")
+	self:RegisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED", "OnTradeSkillDataSourceChanged")
 	self:RegisterEvent("CHAT_MSG_SKILL", "OnSkillUpdate")
 	self:RegisterEvent("ADDON_LOADED", "OnAddonLoaded")
 
 	-- merchant colouring
 	self:SecureHook("MerchantFrame_UpdateMerchantInfo")
 
-	for _, method in pairs({
-		"SetAuctionItem", "SetAuctionSellItem",
-		"SetExistingSocketGem", "SetSocketGem", "SetSpellByID",
-		"SetHyperlink", "SetAction", "SetQuestLogSpecialItem",
-		"SetBagItem", "SetGuildBankItem", "SetInventoryItem",
-		"SetTradePlayerItem", -- "SetTradeSkillItem",
-		"SetLootItem", "SetLootRollItem",
-		"SetMerchantItem", "SetBuybackItem",
-		"SetSendMailItem", "SetInboxItem",
-	}) do
-		self:SecureHook(GameTooltip, method, "AddTooltipInfo")
-	end
-
-	self:SecureHook("SetItemRef")
+	hookTip(GameTooltip)
+	hookTip(ItemRefTooltip)
 
 	LibStub("AceConfig-3.0"):RegisterOptionsTable("TradeSkillInfo", TradeskillInfo.CreateConfig)
 	self.OptionsPanel = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("TradeSkillInfo", "TradeSkillInfo")
@@ -213,10 +239,14 @@ function TradeskillInfo:OnEnable()
 	if DBI then
 		DBI:Register("TradeSkillInfo", object, self.db.profile)
 	end
+
+	if self.db.profile.DebugMode then
+		self:FindSkillsUnknownInCombines();
+	end
 end
 
 
-function TradeskillInfo:OnTradeShow()
+function TradeskillInfo:OnTradeSkillDataSourceChanged()
 	if IsTradeSkillReady() then
 		if not IsTradeSkillLinked() and not IsTradeSkillGuild() and not IsNPCCrafting() and GetTradeSkillLine() ~= "UNKNOWN" then
 			self:ScheduleTimer("UpdateKnownRecipes", 1)
@@ -423,7 +453,9 @@ function TradeskillInfo:UpdateKnownTradeRecipes(startLine, endLine)
 	end
 ]]
 
---	self:Print("Scan complete.")
+	if self.db.profile.DebugMode then
+		self:Print("Scan complete. ",  #recipes, " recipes scanned")
+	end
 end
 
 ----------------------------------------------------------------------
@@ -712,6 +744,9 @@ function TradeskillInfo:GetCombineComponents(id, getVendorPrice, getAuctioneerPr
 		c.name,c.cost,c.source,c.aucMvCost,c.aucMvSeen = self:GetComponent(c.id, getVendorPrice, getAuctioneerPrice)
 		c.link, c.quality, c.itemString, c.texture = getItemLink(c.id)
 		table.insert(components,c)
+		if self.db.profile.DebugMode and not c.name then
+			self:Print("Unknown combine component: " .. c.id);
+		end
 	end
 	return components
 end
@@ -1424,15 +1459,12 @@ function TradeskillInfo:SetItemRef()
 end
 
 
-function TradeskillInfo:AddTooltipInfo(tooltip)
+function TradeskillInfo:AddTooltipInfo(tooltip, id)
 	if InCombatLockdown() then return end
 
-	local _, link = tooltip:GetItem()
-	local _, _, id = tooltip:GetSpell()
-
-	if link then -- it's an item!
-		id = tonumber( link:match("item:(%d+):") )
-	elseif id then -- it's a spell!
+	if type(id) == "string" then -- it's an item!
+		id = tonumber( id:match("item:(%d+):") )
+	elseif type(id) == "number" then -- it's a spell!
 		id = -id
 	else return end -- it's an empty bag slot!
 
@@ -1852,6 +1884,19 @@ function TradeskillInfo:PopulateProfessionNames()
 		self.vars.specializationnames[name] = l
 	end
 end
+
+function TradeskillInfo:FindSkillsUnknownInCombines()
+	self:BuildWhereUsed()
+
+	for pname, pdata in pairs(self.db.realm) do
+		for id, _ in pairs(pdata.knownRecipes) do
+			if not self:CombineExists(id) then
+				self:Print("No combine for " .. self:GetCombineName(id) .. " " .. id);
+			end
+		end
+	end
+end
+
 
 ----------------------------
 -- Duowan Interface

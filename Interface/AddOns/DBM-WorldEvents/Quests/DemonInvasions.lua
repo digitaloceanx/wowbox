@@ -1,18 +1,18 @@
 local mod	= DBM:NewMod("DemonInvasions", "DBM-WorldEvents", 2)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15128 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15142 $"):sub(12, -3))
 mod:SetZone(DBM_DISABLE_ZONE_DETECTION)
 
 mod:RegisterEvents(
-	"SPELL_CAST_START 223420 219469 219441 219112 219110 224067 213890 216916",
+	"SPELL_CAST_START 223420 219469 219441 219112 219110 224067 213890 216916 217958",
 	"SPELL_CAST_SUCCESS 218639 218659",
 	"SPELL_SUMMON 213861",
 	"SPELL_AURA_APPLIED 218625 218657 224044",
 	"SPELL_AURA_REMOVED 218657 224044",
 	"SPELL_PERIODIC_DAMAGE 219367 207576",
 	"SPELL_PERIODIC_MISSED 219367 207576",
-	"SCENARIO_UPDATE"
+	"SCENARIO_COMPLETED"
 )
 mod.noStatistics = true
 
@@ -35,11 +35,12 @@ local specWarnShadowNova			= mod:NewSpecialWarningRun(219110, nil, nil, nil, 4, 
 local specWarnCarrionSwarm			= mod:NewSpecialWarningRun(213890, nil, nil, nil, 4, 2)
 local specWarnLegionInfernals		= mod:NewSpecialWarningSwitch(213861, "RangedDps", nil, nil, 1, 2)
 local specWarnWavesofDread			= mod:NewSpecialWarningDodge(216916, nil, nil, nil, 2, 2)
+local specWarnChaosWave				= mod:NewSpecialWarningDodge(217958, nil, nil, nil, 2, 2)
 
-local timerDestructiveFlamesCD		= mod:NewCDTimer(45, 218639, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
+local timerDestructiveFlamesCD		= mod:NewCDTimer(30, 218639, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerEyeofDarknessCD			= mod:NewCDTimer(34, 219112, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)
 local timerShadowNovaCD				= mod:NewCDTimer(34, 219110, nil, nil, nil, 2)
-local timerCarrionSwarmCD			= mod:NewCDTimer(32.5, 213890, nil, nil, nil, 2)
+local timerCarrionSwarmCD			= mod:NewCDTimer(29.8, 213890, nil, nil, nil, 2)
 local timerLegionInfernalsCD		= mod:NewCDTimer(28.5, 213861, nil, nil, nil, 1)
 local timerCharredFlesh				= mod:NewBuffFadesTimer(17, 218657, nil, nil, nil, 3)
 
@@ -54,6 +55,7 @@ local voiceShadowNova				= mod:NewVoice(219110)--runout
 local voiceCarrionSwarm				= mod:NewVoice(213890)--runout
 local voiceLegionInfernals			= mod:NewVoice(213861, "RangedDps")--killmob
 local voiceWavesofDread				= mod:NewVoice(216916)--watchwave
+local voiceChaosWave				= mod:NewVoice(217958)--watchwave
 --local voiceWakeofBlood			= mod:NewVoice(224067)--keepmove
 
 mod:RemoveOption("HealthFrame")
@@ -85,6 +87,9 @@ function mod:SPELL_CAST_START(args)
 	elseif spellId == 216916 and self:AntiSpam(8, 6) then
 		specWarnWavesofDread:Show()
 		voiceWavesofDread:Play("watchwave")
+	elseif spellId == 217958 then
+		specWarnChaosWave:Show()
+		voiceChaosWave:Play("watchwave")
 	end
 end
 
@@ -159,14 +164,10 @@ do
 	mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 end
 
---"<480.50 21:31:36> [SCENARIO_UPDATE] #newStep#true#Info#Invasion: Tanaris#0#0#0#false#false#true#0#0#4#Tanaris#StepInfo#nil#nil#0#false#false#false#0#nil#nil#nil", -- [14820]
-function mod:SCENARIO_UPDATE()
-	local stageName, stageDescription, numCriteria, completed = C_Scenario.GetStepInfo()
-	if completed then
-		timerShadowNovaCD:Stop()
-		timerEyeofDarknessCD:Stop()
-		timerDestructiveFlamesCD:Stop()
-		timerCarrionSwarmCD:Stop()
-		timerLegionInfernalsCD:Stop()
-	end
+function mod:SCENARIO_COMPLETED()
+	timerShadowNovaCD:Stop()
+	timerEyeofDarknessCD:Stop()
+	timerDestructiveFlamesCD:Stop()
+	timerCarrionSwarmCD:Stop()
+	timerLegionInfernalsCD:Stop()
 end
