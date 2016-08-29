@@ -31,6 +31,7 @@ local DWC_ColorTable={
 	WARRIOR="cffC79C6E",
 	DEATHKNIGHT="cffC41F3B", 
 	MONK="cff00ff96", 
+	DEMONHUNTER="cffa33049",
 } 
 
 local DWC_FILENAME={
@@ -44,6 +45,8 @@ local DWC_FILENAME={
 	[L.Warlock]="WARLOCK",
 	[L.Warrior]="WARRIOR",
 	[L.DeathKnight]="DEATHKNIGHT",
+	[L.Demonhunter]="DEMONHUNTER",
+	[L.Monk]="MONK",
 } 
 
 local db

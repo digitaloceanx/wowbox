@@ -78,6 +78,8 @@ L.Shaman ="萨满祭司"
 L.Warlock ="术士"
 L.Warrior ="战士"
 L.DeathKnight="死亡骑士"
+L.Demonhunter="恶魔猎手"
+L.Monk="武僧"
 
 --channels
 L["Guild"]="公会"

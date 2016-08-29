@@ -44,6 +44,7 @@ L.Shaman ="薩滿祭司"
 L.Warlock ="術士"
 L.Warrior ="戰士"
 L.DeathKnight="死亡騎士"
+L.Demonhunter="恶魔猎手"
 
 --channels
 L["Guild"]="公會"

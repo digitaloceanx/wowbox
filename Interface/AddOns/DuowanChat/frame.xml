@@ -246,7 +246,60 @@
 		<PushedTexture file="Interface\AddOns\DuowanChat\icon\dungeon_push_frame"/>
 		<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 	</Button>
+	
+	<Button name="DWCLegendButton" frameStrata="MEDIUM" parent="UIParent" toplevel="true" hidden="false">
+		<Size>
+			<AbsDimension x="24" y="24"/>
+		</Size>
+		<ButtonText name="$parentText" font="DWCFontNormal">
+			<Anchors>
+				<Anchor point="CENTER">
+					<Offset>
+						<AbsDimension x="-1.5" y="0.5"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</ButtonText>
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="DWCRandomButton" relativePoint="RIGHT">
+				<Offset><AbsDimension x="1" y="0"/></Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				self:SetAlpha(0.8)
+				self:RegisterForClicks("LeftButtonDown", "RightButtonDown");
+				self:RegisterForDrag("LeftButton");
+			</OnLoad>
+			<OnDragStart>
+				if DWCChatFrame:IsMovable() then
+					DWCChatFrame:StartMoving();
+				end
+			</OnDragStart>
+			<OnClick>
+				--DWCLFGButton_OnClick(self, button);
+			</OnClick>
+			<OnDragStop>
+				if DWCChatFrame:IsMovable() then
+					DWCChatFrame:StopMovingOrSizing();
+				end
+			</OnDragStop>
+		</Scripts>
+		<NormalTexture  file="Interface\AddOns\DuowanChat\icon\text_nor_frame" />		
+		<PushedTexture  file="Interface\AddOns\DuowanChat\icon\text_push_frame" />
+		<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+	</Button>
 
+	<Frame name="DW_ArtifactMenu" inherits="UIMenuTemplate" hidden="true" clampedToScreen="true" parent="UIParent">
+		<Anchors>
+			<Anchor point="BOTTOMLEFT" relativeTo="DWCLegendButton" relativePoint="TOPRIGHT"/>
+		</Anchors>
+		<Scripts>
+			<OnLoad function="DW_ArtifactMenu_OnLoad"/>
+			<OnShow function="DW_ArtifactMenu_Show"/>
+		</Scripts>
+	</Frame>
+	
 	<Button name="DWCIconFrame" frameStrata="MEDIUM" parent="UIParent" hidden="true" enableKeyBoard="true" enableMouse="true">
 		<Size>
 			<AbsDimension x="260" y="160"/>
