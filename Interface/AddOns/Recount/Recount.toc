@@ -1,5 +1,5 @@
 ## Interface: 70000
-## Version: v7.0.3e release
+## Version: v7.0.3g release
 ## Title: Recount
 ## Notes: Records Damage and Healing for Graph Based Display
 ## Title-zhCN: [多玩] 伤害统计 Recount

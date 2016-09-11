@@ -5,6 +5,7 @@ if (GetLocale() == "zhCN") then
 	GARRISON_MOD_TITLE = "要塞助手";
 	MasterPlan_ENABLE_TEXT = "启用追随者助手";
 	HandyNotes_DraenorTreasures_ENABLE_TEXT = "德拉诺宝箱显示";
+	HandyNotes_LegionRaresTreasures_ENABLE_TEXT = "破碎群岛宝箱显示";
 	Broker_Garrison_ENABLE_TEXT = "启用要塞资讯";
 	HandyNotes_DraenorTreasures_Open_Cfg = "打开宝箱设置"
 	DWBODYGUARDAWAY_ENABLE = "隐藏保镖对话框"
@@ -13,6 +14,7 @@ elseif (GetLocale() == "zhTW") then
 	GARRISON_MOD_TITLE = "要塞助手";
 	MasterPlan_ENABLE_TEXT = "啟用追隨者助手";	
 	HandyNotes_DraenorTreasures_ENABLE_TEXT = "德拉諾寶箱顯示";
+	HandyNotes_LegionRaresTreasures_ENABLE_TEXT = "破碎群島寶箱顯示";
 	Broker_Garrison_ENABLE_TEXT = "啓用要塞資訊";
 	HandyNotes_DraenorTreasures_Open_Cfg = "打開寶箱設置"
 	DWBODYGUARDAWAY_ENABLE = "隱藏保鏢對話方塊"
@@ -21,6 +23,7 @@ else
 	GARRISON_MOD_TITLE = "DuowanGarrison";
 	MasterPlan_ENABLE_TEXT = "Enable DuowanGarrison";	
 	HandyNotes_DraenorTreasures_ENABLE_TEXT = "Draenor Treasures";
+	HandyNotes_LegionRaresTreasures_ENABLE_TEXT = "LegionRares Treasures";
 	Broker_Garrison_ENABLE_TEXT = "Enable Broker_Garrison";
 	HandyNotes_DraenorTreasures_Open_Cfg = "Open HandyNotes_DraenorTreasures Cfg";
 	DWBODYGUARDAWAY_ENABLE = "隐藏保镖对话框"
@@ -124,6 +127,43 @@ if dwIsConfigurableAddOn("HandyNotes_DraenorTreasures") and dwIsConfigurableAddO
 		HandyNotes_DraenorTreasures_Open_Cfg, 
 		function()			
 			if (dwIsAddOnLoaded("HandyNotes_DraenorTreasures")) then
+				ACD:Open("HandyNotes");
+			end
+		end, 
+		1
+	);	
+end
+
+if dwIsConfigurableAddOn("HandyNotes_LegionRaresTreasures") and dwIsConfigurableAddOn("HandyNotes") then
+	dwRegisterCheckButton(
+		"Garrison",
+		HandyNotes_LegionRaresTreasures_ENABLE_TEXT,
+		nil,
+		"EnableLegionRaresTreasures",
+		0,
+		function (arg)
+			if ( arg == 1 ) then
+				if not dwLoadAddOn("HandyNotes") then
+					dwLoadAddOn("HandyNotes");
+				end
+				if not dwIsAddOnLoaded("HandyNotes_LegionRaresTreasures") then
+					dwLoadAddOn("HandyNotes_LegionRaresTreasures");
+					if not HandyNotes.plugins["LegionRaresTreasures"] then
+						LegionRaresTreasures:RegisterWithHandyNotes();
+					end
+				end
+			else
+				if dwIsAddOnLoaded("HandyNotes_LegionRaresTreasures") then
+					dwRequestReloadUI(nil);
+				end
+			end
+		end
+	);
+	dwRegisterButton(
+		"Garrison",
+		HandyNotes_DraenorTreasures_Open_Cfg, 
+		function()			
+			if (dwIsAddOnLoaded("HandyNotes_LegionRaresTreasures")) then
 				ACD:Open("HandyNotes");
 			end
 		end, 

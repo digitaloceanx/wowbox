@@ -5,6 +5,9 @@ main.name = "JamPlates Accessories"
 
 	local Profile_OnChange = {}
 	
+
+	local SpellListUpdate
+	
 --optional
 --[[
 if IsAddOnLoaded('JamPlates') then
@@ -427,8 +430,19 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		local function ToggleFeature(self)
 			core:CallbackKey('Toggle', self.key)
 		end
+		
+		local EnableDefaultAuras = CreateCheckButton(at.L['Enable Default Auras'], self, 'aura', 'defaultEnabled', {at.L["Display default auras."]}, 100, 8)
+		EnableDefaultAuras:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -16)
+		EnableDefaultAuras.key = 'aura'
+		EnableDefaultAuras:HookScript('OnClick', ToggleFeature)
+		
+		--local EnableDefaultTimers = CreateCheckButton(at.L['Enable Default Aura Timers'], self, 'aura', 'defaultTimers', {at.L["Display default aura timers."]}, 100, 8)
+		--EnableDefaultTimers:SetPoint('LEFT', EnableDefaultAuras.label, 'RIGHT', 10, 0)
+		--EnableDefaultTimers.key = 'aura'
+		--EnableDefaultTimers:HookScript('OnClick', ToggleFeature)
+		
 		local EnableAuras = CreateCheckButton(at.L['Enable Auras'], self, 'aura', 'enabled', {at.L["Display auras."]}, 100, 8)
-		EnableAuras:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -16)
+		EnableAuras:SetPoint('TOPLEFT', EnableDefaultAuras, 'BOTTOMLEFT', 0, -12)
 		EnableAuras.key = 'aura'
 		EnableAuras:HookScript('OnClick', ToggleFeature)
 		
@@ -437,13 +451,8 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		EnableTrack.key = 'tracker'
 		EnableTrack:HookScript('OnClick', ToggleFeature)
 		
-		local EnableCP = CreateCheckButton(at.L['Enable Combo Points'], self, 'cp', 'enabled', {at.L["Display combo points."]}, 100, 8)
-		EnableCP:SetPoint('TOPLEFT', EnableTrack, 'BOTTOMLEFT', 0, -12)
-		EnableCP.key = 'cp'
-		EnableCP:HookScript('OnClick', ToggleFeature)
-		
 		local EnableThreat = CreateCheckButton(at.L['Enable Threat'], self, 'threat', 'enabled', {at.L["Display threat eye indicator."]}, 100, 8)
-		EnableThreat:SetPoint('TOPLEFT', EnableCP, 'BOTTOMLEFT', 0, -12)
+		EnableThreat:SetPoint('TOPLEFT', EnableTrack, 'BOTTOMLEFT', 0, -12)
 		EnableThreat.key = 'threat'
 		EnableThreat:HookScript('OnClick', ToggleFeature)
 		
@@ -606,34 +615,6 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		totalHeight = totalHeight + 220
 	end)
 	
-	CreateContainer(at.L['Combo Points'], function(self)
-		local Anchor = CreateDropDownMenu(at.L['Anchor'], self, 'cp', 'anchor', anchorTip, 180, 8)
-		Anchor:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -16)
-		
-		local FrameAnchor = CreateDropDownMenu(at.L['Relative'], self, 'cp', 'relative', relativeTip, 180, 8)
-		FrameAnchor:SetPoint('TOPLEFT', Anchor, 'TOPLEFT', 0, -32)
-		
-		local StartX = CreateTextField('X', self, 'cp', 'x', xTip, 100, 8)
-		StartX:SetPoint('TOPLEFT', FrameAnchor, 'TOPLEFT', 0, -32)
-		
-		local StartY = CreateTextField('Y', self, 'cp', 'y', yTip, 100, 8)
-		StartY:SetPoint('LEFT', StartX, 'RIGHT', 136, 0)
-		
-
-		local Width = CreateTextField(at.L['Point Width'], self, 'cp', 'width', {at.L["Combo point width."]}, 100, 8)
-		Width:SetPoint('TOPLEFT', StartX, 'BOTTOMLEFT', 0, -22)
-
-		local Height = CreateTextField(at.L['Point Height'], self, 'cp', 'height', {at.L["Combo point height."]}, 100, 8)
-		Height:SetPoint('LEFT', Width, 'RIGHT', 136, 0)
-
-		local Scale = CreateSlider(at.L['Point Scale'], self, 'cp', 'scale', {at.L["Combo point scale."]})
-		Scale:SetPoint('TOPLEFT', Width, 'BOTTOMLEFT', 0, -22)
-		
-		
-		self:SetHeight(200)
-		totalHeight = totalHeight + 200
-	end)
-	
 	
 	CreateContainer(at.L['Profiles'], function(self)
 		local ProfileDropDown = CreateDropDownMenu(at.L['Load Profile'], self, 'aura', 'load profile', {at.L["Load a profile from another character."], at.L["Default is not default settings, they are user defined defaults to be used by multiple characters."]}, 180, 8)
@@ -672,6 +653,7 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		end
 		FilterFrame:HookScript("OnShow", FF_OnShow)
 		FF_OnShow(FilterFrame)
+		SpellListUpdate = function() FF_OnShow(FilterFrame) end
 		
 		local warning = scrollFrame:CreateFontString( nil, 'ARTWORK', 'GameFontNormal' )
 		warning:SetPoint('TOPLEFT', scrollFrame, 'TOPRIGHT', 32, -16)
@@ -1062,6 +1044,8 @@ InterfaceOptions_AddCategory( main )
 _G['SLASH_' .. addonName .. 1] = "/jamplates"
 SlashCmdList[addonName] = function()
 	if InCombatLockdown() then return print(at.L['Commands disabled in combat.']) end
+	--   -_-  Blizzard make it more broken... me hit with hammer and make work smarter
 	InterfaceOptionsFrame_Show() -- this appears to work 100% of the time...
 	InterfaceOptionsFrame_OpenToCategory(main.name)
+	SpellListUpdate()
 end

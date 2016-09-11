@@ -172,8 +172,26 @@ local options = {
 		},
 	}
 }
-LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA", options, true)
-LibStub("AceConfigDialog-3.0"):SetDefaultSize("oRA", 760, 600)
+
+local GetOptions
+do
+	local registy = {}
+	function addon:RegisterModuleOptions(name, opts)
+			if type(opts) == "function" then
+				registy[name] = opts
+			else
+				options.args.general.args[name] = opts
+			end
+	end
+	function GetOptions()
+		for name, opts in next, registy do
+			options.args.general.args[name] = opts()
+		end
+		return options
+	end
+end
+LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("oRA", GetOptions, true)
+LibStub("AceConfigDialog-3.0"):SetDefaultSize("oRA", 770, 600)
 
 -------------------------------------------------------------------------------
 -- Event handling
@@ -290,10 +308,6 @@ function addon:OnInitialize()
 	self.OnInitialize = nil
 end
 
-function addon:RegisterModuleOptions(name, optionTbl)
-	options.args.general.args[name] = optionTbl
-end
-
 function addon:OnEnable()
 	-- Roster Status Events
 	self:RegisterEvent("GUILD_ROSTER_UPDATE")
@@ -357,6 +371,30 @@ end
 -----------------------------------------------------------------------
 -- Guild and group roster
 --
+
+do
+	local partyUnits = {"player", "party1", "party2", "party3", "party4"}
+
+	local raidUnits = {}
+	for i = 1, _G.MAX_RAID_MEMBERS do
+		raidUnits[#raidUnits + 1] = ("raid%d"):format(i)
+	end
+
+	function addon:IterateGroup()
+		local i = 0
+		local size = GetNumGroupMembers()
+		if size == 0 then size = 1 end
+
+		local function iter(a)
+			i = i + 1
+			if i <= size then
+				return a[i], i
+			end
+		end
+
+		return iter, (IsInRaid() and raidUnits or partyUnits)
+	end
+end
 
 do
 	local playerCache = {}
@@ -648,7 +686,7 @@ local function setupGUI()
 	toplefticon:SetWidth(60)
 	toplefticon:SetHeight(60)
 	toplefticon:SetPoint("TOPLEFT", 7, -6)
-	SetPortraitToTexture(toplefticon, "Interface\\WorldMap\\Gear_64Grey")
+	SetPortraitToTexture(toplefticon, 311226) --"Interface\\WorldMap\\Gear_64Grey"
 
 	local topright = frame:CreateTexture(nil, "ARTWORK")
 	topright:SetTexture(136559) --"Interface\\PaperDollInfoFrame\\UI-Character-General-TopRight"
@@ -731,9 +769,9 @@ local function setupGUI()
 	check.module = consumables
 
 	local opt = CreateFrame("Button", "oRA3OptionsButton", frame)
-	opt:SetNormalTexture("Interface\\Worldmap\\Gear_64")
+	opt:SetNormalTexture(311225) --"Interface\\Worldmap\\Gear_64"
 	opt:GetNormalTexture():SetTexCoord(0, 0.5, 0, 0.5)
-	opt:SetHighlightTexture("Interface\\Worldmap\\Gear_64")
+	opt:SetHighlightTexture(311225) --"Interface\\Worldmap\\Gear_64"
 	opt:GetHighlightTexture():SetTexCoord(0, 0.5, 0, 0.5)
 	opt:SetSize(16, 16)
 	opt:SetPoint("RIGHT", title, "RIGHT")
@@ -1144,7 +1182,7 @@ local function createHighlights( secure )
 		end
 		list[i]:SetWidth(contentFrame.scrollFrame:GetWidth())
 		list[i]:SetHeight(16)
-		list[i]:SetHighlightTexture("Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar")
+		list[i]:SetHighlightTexture(131128) --"Interface\\FriendsFrame\\UI-FriendsFrame-HighlightBar"
 		list[i].isSecure = secure
 		list[i]:Hide()
 	end

@@ -2,6 +2,7 @@ local addonName, at = ...
 local core = at.core
 
 core:AddCallback('Initialize', 'threat', function(self, ...)
+--print('loaded')
 	local tab = {}
 
 	tab.enabled = false
@@ -24,8 +25,8 @@ local threatStates = {
 	-- TODO: maybe change color
 	[1] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_Low",
 	[2] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_Medium",
-	[3] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_Medium",
-	[4] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_High",
+	--[3] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_Medium",
+	[3] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_High",
 }
 local function Frame_SetTexture(self, state)
 	self.texture:SetTexture(threatStates[state])
@@ -71,35 +72,23 @@ local function RecyctableThreat(tab)
 end
 
 
-local function Nameplate_OnUpdate(self, state, red, green, blue, alpha)
-	--if self.threatFrame then
-		if self.threat:IsShown() then
-			red, green, blue, alpha = self.threat:GetVertexColor()
-
-			if red > 0 then
-				if green > 0 then
-					if blue > 0 then
-						state = 2
-					else
-						state = 3
-					end
-				else
-					state = 4
-				end
-			else
-				state = 1
-			end
-			if state ~= self.threatState then
-				self.threatFrame:SetThreatTexture(state)
-			end
-			self.threatState = state
-
-		elseif self.threatState then
+local function Nameplate_OnUpdate(self, event, token)
+	--isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, mobUnit) or UnitDetailedThreatSituation("name", mobUnit)
+		local _, _, scaledPercent, _, _ = UnitDetailedThreatSituation('player', token)
+		
+		if scaledPercent > 90 then
+			state = 3
+		elseif scaledPercent > 50 then
+			state = 2
+		elseif scaledPercent > 10 then
+			state = 1
+		else
 			self.threatFrame:Hide()
-			self.threatState = nil
-
+			state = nil
 		end
-	--end
+		if state then
+			self.threatFrame:SetThreatTexture(state)
+		end
 end
 
 core:AddCallback('Toggle', 'threat', function(self, ...)
@@ -117,29 +106,30 @@ core:AddCallback('Toggle', 'threat', function(self, ...)
 		end
 	end
 	
-	self[state](self, 'NameplateOnShow', 'threat', function(self, frame)
+	self[state](self, 'NAME_PLATE_UNIT_ADDED', 'threat', function(self, frame, token)
 		local tab = adapted[frame]
 		tab.threatFrame = RecyctableThreat()
 		tab.threatFrame:SetParent(frame)
 		tab.threatFrame:SetPoint(self.db.threat.anchor, frame, self.db.threat.relative, self.db.threat.x, self.db.threat.y)
 		
 		adapted[frame] = tab
+		tab:RegisterUnitEvent('UNIT_THREAT_LIST_UPDATE', token)
 	end)
 	
-	self[state](self, 'NameplateOnHide', 'threat', function(self, frame)
-		adapted[frame].threatFrame = RecyctableThreat(adapted[frame].threatFrame)
-		adapted[frame].threatState = nil
+	self[state](self, 'NAME_PLATE_UNIT_REMOVED', 'threat', function(self, frame, token)
+		local tab = adapted[frame]
+		tab.threatFrame = RecyctableThreat(tab.threatFrame)
+		tab.threatState = nil
+		tab:UnregisterEvent('UNIT_THREAT_LIST_UPDATE')
 	end)
 	
 end)
 
 core:AddCallback('VariablesLoaded', 'threat', function(self, frame)
-	self:AddCallback('NameplateAdded', 'threat', function(self, frame, _, threat)
+	self:AddCallback('NAME_PLATE_CREATED', 'threat', function(self, frame, _, threat)
 		local sub = CreateFrame('Frame', nil, frame)
-		sub.threat = threat
-		local visibility = self.db.threat.enabled and self.Show or self.Hide
-		visibility(sub)
-		sub:HookScript('OnUpdate', Nameplate_OnUpdate)
+		sub:Hide()
+		sub:HookScript('OnEvent', Nameplate_OnUpdate)
 		adapted[frame] = sub
 	end)
 end)

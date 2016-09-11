@@ -339,7 +339,7 @@ function Quester:OnInitialize()
 
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("Quester", getOptionsTable)
 	local optFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Quester", "Quester")
-
+	self.optFrame = optFrame;
 	self:RegisterChatCommand("quester", function() InterfaceOptionsFrame_OpenToCategory(optFrame) end)
 
 	self:RestoreTrackerPosition()

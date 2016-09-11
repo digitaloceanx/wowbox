@@ -33,6 +33,11 @@ OverlayedSpellID["ROGUE"] = {
 	26679,
 	1943,
 	73651,
+	193316,
+	199804,
+	196819,
+	195452,
+	206237
 };
 
 -- 德鲁伊
@@ -43,6 +48,31 @@ OverlayedSpellID["DRUID"] = {
 	22570,
 };
 
+local function GetMaxPoints()
+	local MAX_POINTS
+	local _, _, classID = UnitClass("player")
+	
+	if classID == 4 then
+		if IsPlayerSpell(193531) then
+			MAX_POINTS = 6
+	--	elseif IsPlayerSpell(114015) then
+	--		MAX_POINTS = 8
+		elseif IsPlayerSpell(14983) then
+			MAX_POINTS = 5
+		else
+			MAX_POINTS = 5
+		end
+	elseif classID == 11 then
+		if IsPlayerSpell(202157) or IsPlayerSpell(197490) or IsPlayerSpell(202155) or GetSpecialization() == 2 then
+			MAX_POINTS = 5
+		else
+			MAX_POINTS = 0
+		end
+	else
+		MAX_POINTS = 0
+	end
+	return MAX_POINTS
+end
 
 local function IsOverlayedSpell(spellID)
 	local _, class = UnitClass("player");
@@ -61,12 +91,12 @@ local function comboEventFrame_OnUpdate(self, elapsed)
 	local countTime = self.countTime - elapsed;
 	if (countTime <= 0) then
 		local parent = self:GetParent();
-		local points = GetComboPoints(PlayerFrame.unit, "target");
-		if (self.isAlert and points ~= 5) then
+		local points = UnitPower("player", SPELL_POWER_COMBO_POINTS)
+		if (self.isAlert and points ~= GetMaxPoints()) then
 			self:SetScript("OnUpdate", nil);
 			ActionButton_HideOverlayGlow(parent);
 			self.countTime = 0;
-		end		
+		end
 
 		self.countTime = TOOLTIP_UPDATE_TIME;
 	end
@@ -74,7 +104,7 @@ end
 
 local function comboEventFrame_OnEvent(self, event, ...)
 	local parent = self:GetParent();
-	local points = GetComboPoints(PlayerFrame.unit, "target");	
+	local points = UnitPower("player", SPELL_POWER_COMBO_POINTS)
 	local spellType, id, subType  = GetActionInfo(parent.action);
 
 	-- 如果是系统自身的提示，就不再处理

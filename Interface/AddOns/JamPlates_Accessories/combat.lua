@@ -7,10 +7,10 @@ core:AddCallback('Initialize', 'combat', function(self, ...)
 	local tab = {}
 
 	tab.enabled = true
-	tab.anchor = 'BOTTOM'
-	tab.relative = 'BOTTOM'
+	tab.anchor = 'LEFT'
+	tab.relative = 'RIGHT'
 	tab.x = 0
-	tab.y = -4
+	tab.y = 0
 	tab.width = 25
 	tab.height = 25
 	tab.scale = 1
@@ -19,15 +19,11 @@ core:AddCallback('Initialize', 'combat', function(self, ...)
 end)
 
 local adapted = {}
-
 local function Combat_OnShow(self)
 	local db = core.db.combat
-	local tab = adapted[self]
-	local frame = tab.combat
+	local frame = adapted[self]
 	frame:SetSize(db.width, db.height)
 	frame:SetScale(db.scale)
-	frame:ClearAllPoints()
-	frame:SetPoint(db.anchor, tab.parent, db.relative, db.x, db.y)
 end
 
 core:AddCallback('Toggle', 'combat', function(self, ...)
@@ -38,24 +34,33 @@ core:AddCallback('Toggle', 'combat', function(self, ...)
 		ref = 'RegisterEvent'
 	end
 	
-	self[state](self, 'NameplateOnHide', 'combatindicator', function(self, frame, hastarget)
-		adapted[frame].combat:Hide()
+	self[state](self, 'NAME_PLATE_UNIT_REMOVED', 'combatindicator', function(self, plate, hastarget)
+		--adapted[plate]:UnregisterEvent('UNIT_COMBAT')
+		adapted[plate]:UnregisterEvent('UNIT_POWER')
+		adapted[plate]:Hide()
 	end)
 
-	self[state](self, 'NameplateOnTargetUpdate', 'combatindicator', function(self, frame)
-		adapted[frame].combat:SetShown(UnitAffectingCombat('target'))
-		Combat_OnShow(frame)
-	end)
-
-	self[state](self, 'NameplateOnMouseover', 'combatindicator', function(self, frame)
-		adapted[frame].combat:SetShown(UnitAffectingCombat('mouseover'))
-		Combat_OnShow(frame)
+	self[state](self, 'NAME_PLATE_UNIT_ADDED', 'combatindicator', function(self, plate, namePlateUnitToken)
+		adapted[plate]:SetShown(UnitAffectingCombat(namePlateUnitToken))
+		--adapted[plate]:RegisterUnitEvent('UNIT_COMBAT', namePlateUnitToken)
+		adapted[plate]:RegisterUnitEvent('UNIT_POWER', namePlateUnitToken)
+		Combat_OnShow(plate)
 	end)
 	
 end)
 core:AddCallback('VariablesLoaded', 'combatindicator', function(self, frame)
-	self:AddCallback('NameplateAdded', 'combatindicator', function(self, plate, hp, threat, overlay, name)
+	self:AddCallback('NAME_PLATE_CREATED', 'combatindicator', function(self, plate, hp, threat, overlay, name)
+		local db = self.db.combat
 		local frame = CreateFrame('Frame', nil, plate)
+		frame:ClearAllPoints()
+		frame:SetPoint(db.anchor, plate.UnitFrame.healthBar, db.relative, db.x, db.y)
+		frame:SetSize(db.width, db.height)
+		frame:SetScale(db.scale)
+		
+		frame:SetScript('OnEvent', function(self, _, token)
+			adapted[self:GetParent()]:SetShown(UnitAffectingCombat(token))
+			Combat_OnShow(self:GetParent())
+		end)
 		
 		local texture = frame:CreateTexture()
 		texture:SetAllPoints()
@@ -63,13 +68,10 @@ core:AddCallback('VariablesLoaded', 'combatindicator', function(self, frame)
 		texture:SetTexCoord(0.5, 1.0, 0, 0.5)
 		frame:Hide()
 		
-		local tab = {}
-		tab.combat = frame
-		tab.parent = plate
-		adapted[plate] = tab
+		adapted[plate] = frame
 		
 		frame:SetFrameStrata('HIGH')
 		
-		Combat_OnShow(plate)
+		--Combat_OnShow(plate)
 	end)
 end)

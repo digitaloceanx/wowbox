@@ -219,7 +219,7 @@ function LA:SPELL_UPDATE_COOLDOWN()
       self:UpdateButton(button)
     --elseif button.kind == "MOUNT" or button.kind == "CRITTER" then
     --  local start, duration, enable = GetCompanionCooldown(button.kind, button:GetID())
-    --  CooldownFrame_SetTimer(button.cooldown, start, duration, enable);
+    --  CooldownFrame_Set(button.cooldown, start, duration, enable);
     --end
   end
 end

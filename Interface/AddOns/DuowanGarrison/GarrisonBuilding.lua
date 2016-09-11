@@ -129,7 +129,7 @@ local function GarrisonBuilding_UpdateBuildings()
       if buildingID then
          local plotID = building.plotID
          local id, name, texPrefix, icon, description, rank, currencyID, currencyQty, goldQty, buildTime, needsPlan, isPrebuilt, possSpecs, upgrades, canUpgrade, isMaxLevel, hasFollowerSlot, knownSpecs, currSpec, specCooldown, isBuilding, startTime, buildDuration, timeLeftStr, canActivate = C_Garrison.GetOwnedBuildingInfo(plotID)
-         if hasFollowerSlot and (buildingID ~= 27) and (buildingID ~= 28) then --by eui.cc ºöÂÔ±øÓª
+         if hasFollowerSlot then
             building_follower_slot[plotID] = true
             building_icons[plotID] = "|T" .. icon .. ":0|t"
             building_names[plotID] = name

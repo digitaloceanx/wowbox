@@ -48,6 +48,15 @@ local talentCooldowns = {
 	[22022] = function(info) -- Lingering Apparition
 		addMod(info.guid, 212552, 15) -- Wraith Walk
 	end,
+	-- Demon Hunter
+	[21870] = function(info) -- Unleashed Power
+		addMod(info.guid, 179057, 20) -- Chaos Nova
+	end,
+	-- Demon Hunter
+	[22511] = function(info) -- Quickened Sigils
+		addMod(info.guid, 202137, 12) -- Sigil of Silence
+		addMod(info.guid, 207684, 12) -- Sigil of Misery
+	end,
 	-- Druid
 	[22424] = function(info) -- Guardian: Guttural Roars
 		addMod(info.guid, 106898, 60) -- Stampeding Roar
@@ -84,34 +93,13 @@ local talentCooldowns = {
 		addMod(info.guid, 498, 20) -- Divine Protection
 		addMod(info.guid, 633, 200) -- Lay on Hands
 	end,
-	[22433] = function(info) -- Protection: Blessing of Spellwarding
-		-- Replaces Blessing of Protection. Set a fake talent so we can
-		-- hide BoP for Protection, but leave the other specs alone.
-		info.talents[100] = true
-	end,
 	-- Priest
-	[22487] = function(info) -- Shadow: Mind Bomb
-		-- Hacky hack hack
-		info.talents[100] = true
-	end,
 	[22094] = function(info) -- Disc/Shadow: Psychic Voice
 		addMod(info.guid, 8122, 30)
-	end,
-	[21718] = function(info) -- Shadow: Power Infusion
-		-- Actually 16, but we need it to be 14.
-		info.talents[14] = true
-	end,
-	[21720] = function(info) -- Shadow: Mendbender
-		-- Actually 18, but we need it to be 12.
-		info.talents[12] = true
 	end,
 	-- Shaman
 	[22492] = function(info) -- Resto: Graceful Spirit
 		addMod(info.guid, 79206, 60) -- Spiritwalker's Grace
-	end,
-	[22139] = function(info) -- Elemental: Ancestral Guidance
-		-- Actually 5, but we need it to be 11.
-		info.talents[11] = true
 	end,
 	-- Warlock
 	[21182] = function(info) -- Grimoire of Supremacy
@@ -125,19 +113,12 @@ local talentCooldowns = {
 	[22627] = function(info) -- Bounding Stride
 		addMod(info.guid, 52174, 15) -- Heroic Leap
 	end,
-	[15760] = function(info) -- Protection: Shockwave
-		-- Protection has the talent in a different tier than Arms/Fury
-		-- Fortunately, the talent ids are different and we don't use
-		-- this talent index.
-		info.talents[4] = true
-	end,
-	[15759] = function(info) -- Protection: Storm Bolt
-		-- Actually 2, but we need it to be 5.
-		info.talents[5] = true
-	end,
 }
 
 -- { cd, level, spec id, talent index }
+-- spec id can be a table of specs
+-- talent index can be negative to indicate a talent replaces the spell
+--   and can be a hash of spec=index for talents in different locations
 local spells = {
 	DEATHKNIGHT = {
 		[221562] = {45, 55, 250}, -- Asphyxiate
@@ -147,9 +128,9 @@ local spells = {
 		[43265] = {30, 56, {250, 252}}, -- Death and Decay
 		[49028] = {180, 57, 250}, -- Dancing Rune Weapon
 		[47568] = {180, 57, 251, -8}, -- Empower Rune Weapon
-		[51271] = {60, 57, 251}, -- Pillar of Frost
+		[51271] = {60, 57, 251}, -- Pillar of Frost XXX (7) Your Frost Strike, Frostscythe, and Obliterate critical strikes reduce the remaining cooldown  by 1 sec.
 		[196770] = {20, 57, 251}, -- Remorseless Winder
-		[55233] = {90, 57, 250}, -- Vampiric Blood
+		[55233] = {90, 57, 250}, -- Vampiric Blood XXX (11) Spending Runic Power will decrease the remaining cooldown by 2 sec per 10 Runic Power.
 		[212552] = {60, 60}, -- Wraith Walk
 		[47528] = {15, 62}, -- Mind Freeze
 		[108199] = {180, 64, 250}, -- Gorefiend's Grasp
@@ -162,7 +143,7 @@ local spells = {
 		[206931] = {30, 56, 250, 3}, -- Blooddrinker
 		[207317] = {10, 57, 252, 4}, -- Epidemic (3 charges)
 		[57330] = {30, 57, 251, 6}, -- Horn of Winter
-		[221699] = {60, 58, 250, 8}, -- Blood Tap (2 charges)
+		[221699] = {60, 58, 250, 8}, -- Blood Tap (2 charges) XXX Recharge time reduced by 1 sec whenever a Bone Shield charge is consumed.
 		[207127] = {180, 58, 251, 8}, -- Hungering Rune Weapon
 		[108194] = {45, 60, 252, 11}, -- Asphyxiate
 		[207319] = {60, 75, 252, 14}, -- Corpse Shield
@@ -175,8 +156,26 @@ local spells = {
 		[194913] = {15, 100, 251, 21}, -- Glacial Advance
 		[130736] = {45, 100, 252, 21}, -- Soul Reaper
 	},
+	DEMONHUNTER = {
+		-- [198589] = {60, 1, 577, -10}, -- Blur XXX No SPELL_CAST_SUCCESS
+		[183752] = {15, 1}, -- Consume Magic
+		[179057] = {60, 1, 577}, -- Chaos Nova
+		[196718] = {180, 1, 577}, -- Darkness
+		[218256] = {20, 100, 581}, -- Empower Wards
+		[204021] = {60, 1, 581}, -- Fiery Brand
+		[200166] = {300, 1, 577}, -- Metamorphosis (Havoc)
+		[187827] = {180, 1, 581}, -- Metamorphosis (Vengeance)
+		[207684] = {60, 100, 581}, -- Sigil of Misery
+		[202137] = {60, 100, 581}, -- Sigil of Silence
+
+		[211881] = {35, 102, nil, {[577]=14,[581]=9}}, -- Fel Eruption, 106 Havoc / 102 Vengeance
+		[196555] = {90, 104, 577, 0000}, -- Netherwalk
+		[202138] = {120, 106, 581, 14}, -- Sigil of Chains
+		[207810] = {120, 110, 581, 20}, -- Nether Bond
+		[227225] = {20, 110, 581, 21}, -- Soul Barrier
+	},
 	DRUID = {
-		[5217]  = {30, 12, 103}, -- Tiger's Fury
+		[5217]  = {30, 12, 103}, -- Tiger's Fury XXX (1) The cooldown resets when a target dies with one of your Bleed effects active.
 		[18562] = {30, 12, 105}, -- Swiftmend
 		[1850]  = {180, 24}, -- Dash
 		[20484] = {600, 56}, -- Rebirth
@@ -225,15 +224,15 @@ local spells = {
 	HUNTER = {
 		[136] = {10, 1}, -- Mend Pet
 		[186257] = {180, 5}, -- Aspect of the Cheetah
-		[781] = {20, 14, {253, 254}}, -- Disengage
+		[781] = {20, 14, {253, 254}}, -- Disengage XXX (8) Your ability critical strikes have a 10% chance to reset the remaining cooldown.
 		[193530] = {120, 18, 253}, -- Aspect of the Wild
 		[186387] = {30, 22, 254}, -- Bursting Shot
-		[190925] = {20, 22, 255}, -- Harpoon
+		[190925] = {20, 22, 255}, -- Harpoon XXX (8) Your ability critical strikes have a 10% chance to reset the remaining cooldown.
 		[147362] = {24, 24, {253, 254}}, -- Counter Shot
 		[187707] = {15, 24, 255}, -- Muzzle
 		[187650] = {30, 28, 255, -12}, -- Freezing Trap
 		[5384]  = {30, 32}, -- Feign Death
-		[109304] = {120, 36, {253, 255}}, -- Exhilaration
+		[109304] = {120, 36, {253, 255}}, -- Exhilaration XXX (marks) After you kill a target, the remaining cooldown is reduced by 30 sec.
 		[1543] = {20, 38}, -- Flare
 		[61648] = {180, 40}, -- Aspect of the Chameleon
 		[19574] = {90, 40, 253}, -- Bestial Wrath
@@ -244,8 +243,7 @@ local spells = {
 		[191433] = {30, 48, 255}, -- Explosive Trap
 		[186265] = {180, 50}, -- Aspect of the Turtle
 
-		[206505] = {60, 30, 255, 4}, -- A Murder of Crows
-		-- [194599] = {15, 30, 254, 5}, -- Black Arrow
+		[206505] = {60, 30, 255, 4}, -- A Murder of Crows XXX If the target dies while under attack, the cooldown is reset.
 		[201078] = {90, 30, 255, 6}, -- Snake Hunter
 		[212431] = {30, 60, 254, 10}, -- Explosive Shot
 		[194277] = {15, 60, 255, 10}, -- Caltrops
@@ -256,7 +254,7 @@ local spells = {
 		[19386] = {45, 75, {253, 254}, 11}, -- Wyvern Sting
 		[19577] = {60, 75, 253, 12}, -- Intimidation
 		[191241] = {60, 75, {254, 255}, 15}, -- Camouflage
-		[131894] = {60, 90, {253, 254}, 16}, -- A Murder of Crows
+		[131894] = {60, 90, {253, 254}, 16}, -- A Murder of Crows XXX If the target dies while under attack, the cooldown is reset.
 		[120360] = {20, 90, {253, 254}, 17}, -- Barrage
 		[194855] = {30, 90, 255, 17}, -- Dragonsfire Grenade
 		[194386] = {90, 90, {253, 254}, 18}, -- Volley
@@ -335,14 +333,14 @@ local spells = {
 		[152173] = {90, 100, 269, 21}, -- Serenity
 	},
 	PALADIN = {
-		[853] = {60, 5}, -- Hammer of Justice
-		[31935] = {15, 10, 66}, -- Avenger's Shield
+		[853] = {60, 5}, -- Hammer of Justice XXX (7) Holy Power spenders (ret)/Judgement reduce the remaining cooldown by 8 sec.
+		[31935] = {15, 10, 66}, -- Avenger's Shield XXX When you avoid a melee attack or use Hammer of the Righteous, you have a 15% chance to reset the remaining cooldown.
 		[642] = {300, 18}, -- Divine Shield
 		[633] = {600, 22}, -- Lay on Hands
 		[1044] = {25, 52}, -- Blessing of Freedom
 		[498] = {60, 26, {65, 66}}, -- Divine Protection
 		[96231] = {15, 36, {66, 70}}, -- Rebuke
-		[1022] = {300, 48, nil, -100}, -- Blessing of Protection (-100 for Spellwarding check)
+		[1022] = {300, 48, nil, {[66]=-10}}, -- Blessing of Protection
 		[6940] = {150, 56, {65, 66}}, -- Blessing of Sacrifice
 		[31821] = {180, 65, 65}, -- Aura Mastery
 		[31850] = {120, 65, 66}, -- Ardent Defender
@@ -354,7 +352,6 @@ local spells = {
 		[20066] = {15, 45, nil, 8}, -- Repentance
 		[115750] = {90, 30, nil, 9}, -- Blinding Light
 		[204018] = {180, 60, 66, 10}, -- Blessing of Spellwarding
-		[204013] = {60, 60, 66, 11}, -- Blessing of Salvation
 		[105809] = {120, 75, 65, 14}, -- Holy Avenger
 		[114165] = {20, 75, 65, 15}, -- Holy Prism
 		[205191] = {60, 75, 70, 14}, -- Eye for an Eye
@@ -362,13 +359,13 @@ local spells = {
 		[152262] = {30, 100, 66, 20}, -- Seraphim
 	},
 	PRIEST = {
-		[8122]  = {60, 12, {256, 258}, -100}, -- Psychic Scream (-100 for Psychic Voice check)
+		[8122]  = {60, 12, {256, 258}, {[258]=-7}}, -- Psychic Scream
 		[586]   = {30, 38}, -- Fade
 		[32375] = {15, 72}, -- Mass Dispel
-		[34433] = {180, 40, {256, 258}, -12}, -- Shadowfiend
+		[34433] = {180, 40, {256, 258}, {[256]=-12,[258]=-18}}, -- Shadowfiend
 		[47536] = {120, 50, 256}, -- Rapture
 		[15487] = {45, 50, 258}, -- Silence
-		[47788] = {240, 54, 257}, -- Guardian Spirit
+		[47788] = {240, 54, 257}, -- Guardian Spirit XXX (11) When Guardian Spirit expires without saving the target from death, reduce its remaining cooldown to 120 seconds.
 		[33206] = {240, 56, 256}, -- Pain Suppression
 		[47585] = {120, 58, 258}, -- Dispersion
 		[62618] = {180, 65, 256}, -- Power Word: Barrier
@@ -379,13 +376,12 @@ local spells = {
 		[19236] = {90, 30, 257, 6}, -- Desperate Prayer
 		[204263] = {60, 45, {256, 257}, 7}, -- Shining Force
 		[205369] = {30, 45, 258, 7}, -- Mind Bomb
-		[123040] = {60, 60, {256, 258}, 12}, -- Mindbender (Disc: 60, Shadow: 90)
-		[64901] = {360, 60, 257, 12}, -- Hymn of Hope
-		[10060] = {120, 75, nil, 14}, -- Power Infusion (Disc: 75, Shadow: 90)
+		[123040] = {60, 60, {256, 258}, {[256]=12,[258]=18}}, -- Mindbender (Disc: 60, Shadow: 90)
 		[200174] = 123040, -- Mindbender (Shadow)
+		[64901] = {360, 60, 257, 12}, -- Hymn of Hope
+		[10060] = {120, 75, {256, 258}, {[256]=14,[258]=16}}, -- Power Infusion (Disc: 75, Shadow: 90)
 		[120517] = {40, 90, {256, 257}, 18}, -- Halo
 		[200183] = {180, 100, 257, 19}, -- Apotheosis
-
 	},
 	ROGUE = {
 		[5277]  = {120, 8, {259, 261}}, -- Evasion
@@ -408,7 +404,7 @@ local spells = {
 		[185767] = {60, 90, 260, 16}, -- Cannonball Barrage
 		[200806] = {45, 90, 259, 18}, -- Exsanguinate
 		[51690] = {120, 90, 260, 18}, -- Killing Spree
-		[137619] = {60, 100, nil, 20}, -- Marked for Death
+		[137619] = {60, 100, nil, 20}, -- Marked for Death XXX Cooldown reset if the target dies within 1 min.
 	},
 	SHAMAN = {
 		[51514] = {39, 42, nil, -9}, -- Hex
@@ -428,7 +424,7 @@ local spells = {
 
 		[201898] = {45, 15, 263, 1}, -- Windsong
 		[192063] = {15, 30, {262, 264}, 4}, -- Gust of Wind
-		[108281] = {120, 30, {262, 264}, 5}, -- Ancestral Guidance (Ele: 30, Resto: 60)
+		[108281] = {120, 30, {262, 264}, {[262]=5, [264]=11}}, -- Ancestral Guidance (Ele: 30, Resto: 60)
 		[196884] = {30, 30, 263, 5}, -- Feral Lunge
 		[192077] = {120, 30, nil, 6}, -- Wind Rush Totem
 		[192058] = {45, 45, nil, 7}, -- Lightning Surge Totem
@@ -463,10 +459,9 @@ local spells = {
 		[108416] = {60, 75, nil, 15}, -- Dark Pact
 		-- Pet
 		[19647]  = {24, 50}, -- Felhunter Spell Lock (Normal, originates from pet)
-		[119910] = 19647, -- Felhunter Spell Lock (via Command Demon, originates from player)
-		[115781] = 19647, -- Observer Optical Blast (Normal, originates from pet)
-		[119911] = 19647, -- Observer Optical Blast (via Command Demon, originates from player)
-		[171140] = 19647, -- Doomguard Shadow Lock (via Command Demon, originates from player)
+		[119910] = 19647,    -- Felhunter Spell Lock (via Command Demon, originates from player)
+		[171138] = 19647,    -- Doomguard Shadow Lock (Normal, originates from pet)
+		[171140] = 19647,    -- Doomguard Shadow Lock (via Command Demon, originates from player)
 	},
 	WARRIOR = {
 		[100]   = {20, 3}, -- Charge
@@ -485,10 +480,11 @@ local spells = {
 		[227847] = {90, 75, 71, -21}, -- Bladestorm
 		[97462] = {180, 83, {71, 72}}, -- Commanding Shout
 
-		[46968] = {40, 30, nil, 4}, -- Shockwave -- XXX -20s if hits 3 targets
-		[107570] = {30, 30, nil, 5}, -- Storm Bolt
+		[46968] = {40, 30, nil, {[71]=4,[72]=4,[73]=1}}, -- Shockwave -- XXX -20s if hits 3 targets
+		[107570] = {30, 30, nil, {[71]=5,[72]=5,[73]=2}}, -- Storm Bolt
 		[107574] = {90, 45, nil, 9}, -- Avatar
 		[12292] = {30, 90, 72, 16}, -- Bloodbath
+		-- XXX (19) Anger Management: Every 10 Rage you spend reduces the remaining cooldown on Battle Cry, Last Stand, and Shield Wall by 1 sec.
 		[46924] = {90, 100, 72, 19}, -- Bladestorm
 		[152277] = {60, 100, {71, 73}, 21}, -- Ravager
 		[228920] = 152277, -- Ravager (Prot)
@@ -561,6 +557,13 @@ function module:IsSpellUsable(guid, spellId)
 	if not data then return false end
 
 	local _, level, spec, talent = unpack(data)
+	if type(talent) == "table" then
+		talent = talent[info.spec]
+		-- we already matched the spec, so just decide based on talent
+		if talent ~= nil then
+			spec = nil
+		end
+	end
 	local usable = (info.level >= level) and
 		(not talent or ((talent > 0 and info.talents[talent]) or (talent < 0 and not info.talents[-talent]))) and -- handle talents replacing spells (negative talent index)
 		(not spec or spec == info.spec or (type(spec) == "table" and tContains(spec, info.spec)))
@@ -1686,13 +1689,13 @@ do
 		return pet, guid
 	end
 
-	local function resetCooldown(guid, player, spellId, duration, charges)
+	local function resetCooldown(guid, player, spellId, remaining, charges)
 		local class = classLookup[spellId]
 		callbacks:Fire("oRA3CD_StopCooldown", guid, spellId)
-		if duration then
+		if remaining and remaining > 0 then
 			if not spellsOnCooldown[spellId] then spellsOnCooldown[spellId] = {} end
-			spellsOnCooldown[spellId][guid] = GetTime() + duration
-			callbacks:Fire("oRA3CD_StartCooldown", guid, player, class, spellId, duration)
+			spellsOnCooldown[spellId][guid] = GetTime() + remaining
+			callbacks:Fire("oRA3CD_StartCooldown", guid, player, class, spellId, remaining)
 		else
 			if spellsOnCooldown[spellId] and spellsOnCooldown[spellId][guid] then
 				spellsOnCooldown[spellId][guid] = nil
@@ -1705,8 +1708,17 @@ do
 	end
 
 	combatLogHandler.userdata = {}
-	local scratch = combatLogHandler.userdata
+	-- local scratch = combatLogHandler.userdata
 	local specialEvents = {
+		SPELL_CAST_SUCCESS = {
+			[200166] = function(srcGUID, source) -- Metamorphosis (Havoc)
+				local info = infoCache[srcGUID]
+				if info and info.talents[18] then -- Demon Reborn
+					resetCooldown(srcGUID, source, 179057) -- Chaos Nova
+					resetCooldown(srcGUID, source, 198589) -- Blur
+				end
+			end,
+		}
 	}
 
 	local inEncounter = nil
@@ -1766,16 +1778,9 @@ do
 		end
 
 		-- Special cooldown conditions
-		if event == "SPELL_DISPEL" then
-			local extraSpellId = ...
-			if extraSpellId == 3674 then -- Black Arrow
-				resetCooldown(destGUID, destName, extraSpellId)
-			end
-		else
-			local func = specialEvents[event] and specialEvents[event][spellId]
-			if func then
-				func(srcGUID, source, ...)
-			end
+		local func = specialEvents[event] and specialEvents[event][spellId]
+		if func then
+			func(srcGUID, source, spellId, ...)
 		end
 	end)
 

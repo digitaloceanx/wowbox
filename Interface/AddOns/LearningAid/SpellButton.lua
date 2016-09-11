@@ -232,7 +232,7 @@ function LA:ClearButtonIndex(index)
     cooldown.duration = nextCooldown.duration
     cooldown.enable = nextCooldown.enable
     if cooldown.start and cooldown.duration and cooldown.enable then 
-      CooldownFrame_SetTimer(cooldown, cooldown.start, cooldown.duration, cooldown.enable)
+      CooldownFrame_Set(cooldown, cooldown.start, cooldown.duration, cooldown.enable)
     else
       cooldown:Hide()
     end
@@ -312,7 +312,7 @@ function LA:UpdateButton(button)
     spellName = item.SpecName
     subSpellName = item.SpecSubName
     local start, duration, enable = GetSpellCooldown(id)
-    -- CooldownFrame_SetTimer(cooldown, start, duration, enable)
+    -- CooldownFrame_Set(cooldown, start, duration, enable)
     cooldown.start = start
     cooldown.duration = duration
     cooldown.enable = enable

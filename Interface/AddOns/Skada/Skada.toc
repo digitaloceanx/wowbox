@@ -6,9 +6,13 @@
 ## Notes-zhCN: |cff00ff00Skada|r
 ## Notes-zhTW: |cff00ff00Skada|r
 ## Author: Zarnivoop
-## Version: r670
+## Version: r676
 ## SavedVariables: SkadaDB
 ## SavedVariablesPerCharacter: SkadaPerCharDB
+## X-Curse-Packaged-Version: r676
+## X-Curse-Project-Name: Skada Damage Meter
+## X-Curse-Project-ID: skada
+## X-Curse-Repository-ID: wow/skada/mainline
 ## X-DuowanAddon: 团队副本
 ## Dependencies: Duowan
 ## X-Revision: Duowan
@@ -17,6 +21,7 @@
 lib\SpecializedLibBars-1.0\SpecializedLibBars-1.0.lua
 
 locale\enUS.lua
+
 locale\zhCN.lua
 locale\zhTW.lua
 

@@ -502,7 +502,7 @@ function A:UpdateAspectCooldown()
 		cooldown = _G[button:GetName() .. "Cooldown"];
 		start, duration, enable = self:GetShapeshiftFormCooldown(i);
 		if (cooldown and start and duration) then
-			CooldownFrame_SetTimer(cooldown, start, duration, enable);
+			CooldownFrame_Set(cooldown, start, duration, enable);
 		end
 	end
 end
@@ -794,7 +794,7 @@ function A:UIParent_ManageFramePositions()
 	if ( MultiBarBottomLeft:IsShown() ) then			
 		hasBottomLeft = 1;
 	end
-	local YOffset = hasBottomLeft and 42 or 0;
+	local YOffset = hasBottomLeft and 47 or 0;
 	if ( ReputationWatchBar:IsShown() and MainMenuExpBar:IsShown() ) then
 		YOffset = YOffset + 10;
 	end

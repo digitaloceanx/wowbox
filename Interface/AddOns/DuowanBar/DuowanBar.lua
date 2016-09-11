@@ -1157,7 +1157,7 @@ function D:UpdateCooldown(button)
 	end
 
 	if (start and duration and enable) then
-		CooldownFrame_SetTimer(button.cooldown, start, duration, enable);	
+		CooldownFrame_Set(button.cooldown, start, duration, enable);	
 	end	
 end
 

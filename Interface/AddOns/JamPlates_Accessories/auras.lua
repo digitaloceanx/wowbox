@@ -8,6 +8,10 @@ core:AddCallback('Initialize', nil, function(self, ...)
 	local tab = {}
 
 	tab.enabled = true
+	
+	tab.defaultEnabled = false
+	--tab.defaultTimers = true -- maybe some day
+	
 	tab.invert = false
 	tab.ShowPet = true
 	tab.ShowBorder = true
@@ -26,7 +30,8 @@ core:AddCallback('Initialize', nil, function(self, ...)
 		--[21562] = true, -- priest: Power word: fortitude
 	}
 	
-	self.db.aura = self:CopyTable(tab)
+	--self.db.aura = self:CopyTable(tab)
+	self.db.aura = tab
 
 	self:AddCallback('VariablesLoaded', 'aura', function(self)
 		self.spells = JamPlatesAccessoriesDB.spells or {}
@@ -87,16 +92,6 @@ local SystemFont_Shadow_Med1 = SystemFont_Shadow_Med1
 
 
 -- functions
---[[
-	Draws both the timer and spiral on every frame update.
-
-		Rather than create a giant iteration over a giant table,
-		creating a stop gap method, I draw things on their individual
-		updates.  That means it will only do things when visible(no
-		need for giant IF/ELSEIF statements) with no iteration over
-		multiple tables.
-
---]]
 local function Cooldown_OnUpdate(self, elapsed)
 	-- make sure it even needs a timer
 	if self.time then
@@ -118,81 +113,8 @@ local function Cooldown_OnUpdate(self, elapsed)
 			self.time = nil
 			self.Parent:Hide()
 		end
-
-		-- get a radial to determine rotational position of spiral
-		-- this also determines if the solid half is displayed
-		local p = ( elapsed /1e3) / (self.duration /1e3)
-		if p > 0.5 then
-		  if self.inverse then
-			self.stationary:Hide()
-			self.scrollframe:ClearAllPoints()
-			self.scrollframe:SetPoint('LEFT', self, 'CENTER')
-			self.inverse = false
-		  end
-
-		else
-		  if not self.inverse then
-			self.stationary:Show()
-			self.scrollframe:ClearAllPoints()
-			self.scrollframe:SetPoint('RIGHT', self, 'CENTER')
-			self.inverse = true
-		  end
-		  
-		end
-
-		self.rotatable:SetRotation(rad(180*(p*2)))
 	end
 end
-local function Cooldown_OnHide(self, elapsed)
-	self.stationary:Hide()
-	self.scrollframe:ClearAllPoints()
-	self.scrollframe:SetPoint('LEFT', self, 'CENTER')
-	self.inverse = false
-end
-
---[[
-	Create a CoolDown Frame of my own design.
-	Using a scroll frame to hide components that fall outside its region
-		makes the rotating block appear to only affect the visible area.
-		Zork inspired this with his take on Ring Thoery on
-		WoWInterface.com.
---]]
-local function CreateCooldown(frame)
-	local main = CreateFrame('Frame', nil, frame)
-	main:SetAllPoints(frame)
-
-	local scrollFrame = CreateFrame("ScrollFrame", nil, main)
-	scrollFrame:SetSize(core.db.aura.width/2, core.db.aura.height)
-	scrollFrame:SetPoint('LEFT', frame, 'CENTER')
-	main.scrollframe = scrollFrame
-
-	local scrollChild = CreateFrame("Frame", nil, scrollFrame)
-	scrollChild:SetAllPoints(frame)
-	scrollFrame:SetScrollChild(scrollChild)
-	main.scrollchild = scrollChild
-
-	local half_1 = scrollChild:CreateTexture()
-	half_1:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Media\\simple_cooldown")
-	half_1:SetBlendMode('BLEND')
-	half_1:SetAllPoints(frame)
-	half_1:SetVertexColor(0, 0, 0, 0.6)
-	main.rotatable = half_1
-
-
-	local half_2 = main:CreateTexture()
-	half_2:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Media\\simple_cooldown")
-	half_2:SetBlendMode('BLEND')
-	half_2:SetAllPoints(frame)
-	half_2:SetVertexColor(0, 0, 0, 0.6)
-	half_2:SetRotation( math.rad(180) )
-	half_2:Hide()
-	main.stationary = half_2
-
-	main.inverse = false
-
-	return main
-end
-
 
 -- font objects
 local TIMER_FONT = CreateFont(addonName.. "AuraTimerFont_Shadowed")
@@ -217,7 +139,7 @@ local function RecyctableAuras(tab)
 
 			frame.border:SetSize(core.db.aura.width +3, core.db.aura.height +2)
 
-			frame.cooldown.scrollframe:SetSize(core.db.aura.width/2, core.db.aura.height)
+			--frame.cooldown.scrollframe:SetSize(core.db.aura.width/2, core.db.aura.height)
 		end
 		core.auras[#core.auras +1] = tab
 		return nil
@@ -243,7 +165,7 @@ local function RecyctableCCs(tab)
 
 			frame.border:SetSize(core.db.tracker.width +3, core.db.tracker.height +2)
 
-			frame.cooldown.scrollframe:SetSize(core.db.tracker.width/2, core.db.tracker.height)
+			--frame.cooldown.scrollframe:SetSize(core.db.tracker.width/2, core.db.tracker.height)
 		end
 		core.tracker[#core.tracker +1] = tab
 		return nil
@@ -284,13 +206,15 @@ local function CreateButton()
 	timer:SetJustifyH('CENTER')
 	frame.timer = timer
 
-	-- keep this, in case they decide to make it work
-	--local cooldown = CreateFrame('Cooldown', nil, frame, "CooldownFrameTemplate")
-	--cooldown:SetAllPoints(frame)
-	local cooldown = CreateCooldown(frame)
+	-- finally
+	local cooldown = CreateFrame('Cooldown', nil, frame, "CooldownFrameTemplate")
+	cooldown:SetAllPoints(frame)
+	cooldown.noCooldownCount = true -- TODO: is this a variable Tuller uses to
+	cooldown:SetReverse(true)
+	--local cooldown = CreateCooldown(frame)
 	cooldown.timer = timer
 	cooldown:HookScript('OnUpdate', Cooldown_OnUpdate)
-	cooldown:HookScript('OnHide', Cooldown_OnHide)
+	--cooldown:HookScript('OnHide', Cooldown_OnHide)
 	cooldown.Parent = frame
 	frame.cooldown = cooldown
 
@@ -338,6 +262,7 @@ local function AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expi
 
 		frame.cooldown.time = expirationTime
 		frame.cooldown.duration = duration
+		frame.cooldown:SetCooldown(expirationTime -duration, duration)
 
 	else
 		frame.cooldown:Hide()
@@ -345,7 +270,7 @@ local function AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expi
 
 		frame.cooldown.time = nil
 		frame.cooldown.duration = nil
-		frame.cooldown.inverse = false
+		--frame.cooldown.inverse = false
 
 	end
 end
@@ -522,22 +447,19 @@ end
 local function ShowOtherDebuffsOnly(IsHarmful, IsInverted, IsEnemy, IsPlayerCaster)
 	if IsHarmful and IsInverted and IsEnemy and not IsPlayerCaster then
 		return true
-	else
-		return false
 	end
-	--return false
+	return false
 end
 
 local function ShowOtherBuffsOnly(IsHarmful, IsInverted, IsEnemy, IsPlayerCaster)
 	if IsEnemy or IsHarmful or not IsInverted or IsPlayerCaster then
 		return false
-	else
-		return true
 	end
-	--return true
+	return true
 end
 
 local function ScanAuras(self, nameplate, token)
+	if not token then return end -- apparently I need this...
 	local tab = self.plates[nameplate]
 	local aura = self.db.aura
 	local trac = self.db.tracker
@@ -604,94 +526,56 @@ local function ScanAuras(self, nameplate, token)
 end
 
 
--- update target auras by triggering a target update
-main.UNIT_AURA = core.PLAYER_TARGET_CHANGED
-
-
--- a dummy frame just to ensure there's no overlapping of events
-local dub = CreateFrame('Frame', nil, UIParent)
-dub:SetScript('OnEvent', core.UPDATE_MOUSEOVER_UNIT)
-
-
--- the list of applicable CLEU events and corresponding functions
-local CLEU_Filter = {
-	--[subevent] = function,
-	['SPELL_AURA_APPLIED'] = AddAura,
-	['SPELL_AURA_REFRESH'] = RefreshAura,
-	['SPELL_AURA_APPLIED_DOSE'] = DoseAura,
-	['SPELL_AURA_REMOVED_DOSE'] = DoseAura,
-	['SPELL_AURA_STOLEN'] = RemoveAura,
-	['SPELL_AURA_REMOVED'] = RemoveAura,
-	['SPELL_AURA_BROKEN'] = RemoveAura,
-	['SPELL_AURA_BROKEN_SPELL'] = RemoveAura,
-}
-
-local function OnCLEU(self, plate, timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcFlags2, destGUID, destName, destFlags, destFlags2, spellID, spellName, spellFlag, auraType, count)
-	if CLEU_Filter[event] then
-		local flag = self.db.aura.invert
-		if (flag and srcGUID ~= self.PLAYER_GUID) or (not flag and (srcGUID == self.PLAYER_GUID or (self.db.aura.ShowPet and srcGUID == self.PET_GUID))) then
-			if not self.db.aura.filter[spellID] then
-				local spell = self.spells[spellID]
-				if spell then
-					CLEU_Filter[event](self, plate, self.db.tracker.filter[spellID], spellID, spell.icon, spell.debuffType, spell.duration, GetTime() + spell.duration, count)
-				end
-			end
-		end
+local UnitAurasEventFrames = {}
+core:AddCallback('NAME_PLATE_CREATED', 'aura', function(self, plate)
+	UnitAurasEventFrames[plate] = CreateFrame('Frame', nil, plate)
+	UnitAurasEventFrames[plate]:SetScript('OnEvent', function()
+		ScanAuras(self, plate, plate.namePlateUnitToken)
+	end)
+	if self.db.aura.defaultEnabled then
+		plate.UnitFrame.BuffFrame:Show()
+	else
+		plate.UnitFrame.BuffFrame:Hide()
 	end
-end
+end)
 
 local function ToggleEvents(self)
-	local state = core.db.aura.enabled or core.db.tracker.enabled
+	local state = self.db.aura.enabled or self.db.tracker.enabled
+	local visible = self.db.aura.defaultEnabled
 	if state then
 		state = 'AddCallback'
-		main:RegisterUnitEvent('UNIT_AURA', 'target')
-		dub:RegisterUnitEvent('UNIT_AURA', 'mouseover')
+		for x, v in pairs(UnitAurasEventFrames) do
+			v:RegisterEvent('UNIT_AURA')
+		end
 	else
 		state = 'RemoveCallback'
-		main:UnregisterEvent('UNIT_AURA')
-		dub:UnregisterEvent('UNIT_AURA')
+		for x, v in pairs(UnitAurasEventFrames) do
+			v:UnregisterEvent('UNIT_AURA')
+		end
 	end
 	
-	self[state](self, 'NameplateOnTargetUpdate', 'aura', function(self, frame)
-		ScanAuras(self, frame, 'target')
-	end)
+	visible = visible and main.Show or main.Hide
+	for x, v in pairs(self.plates) do
+		visible(x.UnitFrame.BuffFrame)
+	end
 	
-	self[state](self, 'NameplateOnMouseover', 'aura', function(self, frame)
-		ScanAuras(self, frame, 'mouseover')
+	self[state](self, 'NAME_PLATE_UNIT_ADDED', 'aura', function(self, plate, token)
+		UnitAurasEventFrames[plate]:RegisterEvent('UNIT_AURA')
+		self.plates[plate].auras = RecyctableAuras()
+		self.plates[plate].tracker = RecyctableCCs()
 	end)
-	self[state](self, 'COMBAT_LOG_EVENT_UNFILTERED', 'aura', OnCLEU)
+	self[state](self, 'NAME_PLATE_UNIT_REMOVED', 'aura', function(self, plate, token)
+		self.plates[plate].auras = RecyctableAuras(self.plates[plate].auras)
+		self.plates[plate].tracker = RecyctableCCs(self.plates[plate].tracker)
+		UnitAurasEventFrames[plate]:UnregisterEvent('UNIT_AURA')
+	end)
 end
 
 
 core:AddCallback('Toggle', 'aura', function(self, ...)
-	local state = 'RemoveCallback'
-	if self.db.aura.enabled then
-		state = 'AddCallback'
-	end
 	ToggleEvents(self)
-	
-	self[state](self, 'NameplateOnShow', 'aura', function(self, frame)
-		self.plates[frame].auras = RecyctableAuras()
-	end)
-
-	self[state](self, 'NameplateOnHide', 'aura', function(self, frame)
-		self.plates[frame].auras = RecyctableAuras(self.plates[frame].auras)
-	end)
 end)
 
 core:AddCallback('Toggle', 'tracker', function(self, ...)
-	local state = 'RemoveCallback'
-	if self.db.tracker.enabled then
-		state = 'AddCallback'
-	end
 	ToggleEvents(self)
-	
-	
-	self[state](self, 'NameplateOnShow', 'tracker', function(self, frame)
-		self.plates[frame].tracker = RecyctableCCs()
-	end)
-
-	self[state](self, 'NameplateOnHide', 'tracker', function(self, frame)
-		self.plates[frame].tracker = RecyctableCCs(self.plates[frame].tracker)
-	end)
 end)

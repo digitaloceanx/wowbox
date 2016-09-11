@@ -39,6 +39,7 @@ GarrisonMissionManager.lua
 SharedMissionUI.lua
 MissionUI.lua
 ShipyardUI.lua
+OrderHallUI.lua
 GarrisonBuilding.lua
 Broker.lua
 

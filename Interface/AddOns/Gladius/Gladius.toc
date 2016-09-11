@@ -5,7 +5,7 @@
 ## Notes-zhCN: 显示竞技场中敌对玩家头像
 ## Title-zhTW: [多玩] 競技場大師 Gladius
 ## Notes-zhTW: 顯示競技場中敵對玩家頭像
-## Version: 5.0.1
+## Version: 5.0.2
 ## Notes: Arena enemy unit frames.
 ## Author: Resike and Firebunny. Original author: Proditor
 ## SavedVariables: Gladius2DB

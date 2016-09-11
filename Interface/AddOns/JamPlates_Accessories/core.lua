@@ -191,7 +191,7 @@ local function ScanFrames(num, ...)
 end
 
 
-core:RegisterEvent('PLAYER_TARGET_CHANGED')-- fires before the nameplates are updated
+--core:RegisterEvent('PLAYER_TARGET_CHANGED')-- fires before the nameplates are updated
 function core:PLAYER_TARGET_CHANGED(var)
 	-- since UNIT_AURA also fires this we can ignore it by checking for a variable
 	local guid
@@ -209,7 +209,7 @@ function core:PLAYER_TARGET_CHANGED(var)
 	end
 end
 
-core:RegisterEvent('UPDATE_MOUSEOVER_UNIT')-- may fire after the nameplates are updated
+--core:RegisterEvent('UPDATE_MOUSEOVER_UNIT')-- may fire after the nameplates are updated
 function core:UPDATE_MOUSEOVER_UNIT(var)
 	local guid
 	
@@ -240,6 +240,46 @@ function core:LoadVariables()
 			self.db.id = self.PLAYER_GUID
 			JamPlatesAccessoriesDB[core.PLAYER_GUID] = self:CopyTable(self.db)
 		end
+		
+		self:RegisterEvent('NAME_PLATE_CREATED')
+		function self:NAME_PLATE_CREATED(...)
+			local frame = ...
+			local unitFrame = frame.UnitFrame
+			local tab = {}
+			--local overlay = unitFrame.Highlight
+			local threat = unitFrame.aggroHighlight
+			local name = unitFrame.name
+			local hp = unitFrame.healthBar
+			--tab.overlay = overlay
+			tab.threat = threat
+			tab.name = name
+			tab.hp = hp
+			
+			self.plates[frame] = tab
+			self:Callback('NAME_PLATE_CREATED', frame, hp, threat, overlay, name)
+
+			--OnShow(frame)
+			--OnUpdate(frame)
+			--frame:HookScript('OnShow', OnShow)
+			--frame:HookScript('OnHide', OnHide)
+			--frame:HookScript('OnUpdate', OnUpdate)
+		end
+		
+		self:RegisterEvent('NAME_PLATE_UNIT_ADDED')
+		function self:NAME_PLATE_UNIT_ADDED(...)
+			local namePlateUnitToken = ...
+			local plate = C_NamePlate.GetNamePlateForUnit(namePlateUnitToken)
+			self.plates[plate].isPlayer = UnitPlayerControlled(namePlateUnitToken)
+			self.plates[plate].canAttack = UnitCanAttack('player', namePlateUnitToken)
+			self:Callback('NAME_PLATE_UNIT_ADDED', plate, namePlateUnitToken)
+		end
+		
+		self:RegisterEvent('NAME_PLATE_UNIT_REMOVED')
+		function self:NAME_PLATE_UNIT_REMOVED(...)
+			local namePlateUnitToken = ...
+			local plate = C_NamePlate.GetNamePlateForUnit(namePlateUnitToken)
+			self:Callback('NAME_PLATE_UNIT_REMOVED', plate, namePlateUnitToken)
+		end
 
 		self:CallOnce('VariablesLoaded')
 		self:Callback('Toggle')
@@ -251,20 +291,6 @@ end
 -- these 3 events WoW uses to tell addons that certain variables are loaded
 core:RegisterEvent('PLAYER_ENTERING_WORLD')
 function core:PLAYER_ENTERING_WORLD()
-	if IsAddOnLoaded('JamPlates') then
-		hooksecurefunc("JamPlates_ScanFrames", function(num, ...)
-			ScanFrames(num, ...)
-			numWorldChildren = GetNumChildren(WorldFrame)
-		end)
-	else
-		WorldFrame:HookScript('OnUpdate', function(self, num)
-			num = GetNumChildren(self)
-			if num ~= numWorldChildren then
-				ScanFrames(num, GetChildren(self))
-				numWorldChildren = num
-			end
-		end)
-	end
 	
 	self.db = {}
 	self.db.name = 'default'
@@ -305,28 +331,6 @@ function core:PLAYER_LOGOUT()
 	end
 end
 
-core:RegisterUnitEvent('UNIT_PET', 'player')
-function core:UNIT_PET()
-	self.PET_GUID = UnitGUID('pet')
-end
-
-local unpack = unpack
-core.CLEU_Filter = {}
-core:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-function core:COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcFlags2, destGUID, destName, destFlags, destFlags2, spellID, spellName, spellFlag, auraType, count)
-	--local timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcFlags2, destGUID, destName, destFlags, destFlags2, spellID, spellName, spellFlag, auraType, count = ...
-	
-	--if destGUID == self.PLAYER_GUID then print(event, spellID) end
-	-- EVERYBODY but yourself, your pet, your target and your mouseover
-	if destGUID ~= self.TARGET_GUID and destGUID ~= self.PLAYER_GUID and destGUID ~= self.PET_GUID then
-		local nameplate = self.units[destGUID]
-		if nameplate then
-			self:Callback('COMBAT_LOG_EVENT_UNFILTERED', nameplate, timestamp, event, hideCaster, srcGUID, srcName, srcFlags, srcFlags2, destGUID, destName, destFlags, destFlags2, spellID, spellName, spellFlag, auraType, count)
-		end
-	end
-end
-
-		
 function JamPlatesAccessories_Toggle(toggle) --by eui.cc
 	if toggle == 1 then
 		toggle = true
@@ -336,12 +340,12 @@ function JamPlatesAccessories_Toggle(toggle) --by eui.cc
 	core.db.aura.enabled = toggle
 	core.db.tracker.enabled = toggle
 	core.db.threat.enabled = toggle
-	core.db.cp.enabled = toggle
+--	core.db.cp.enabled = toggle
 	core.db.combat.enabled = toggle
-		
+
 	core:CallbackKey('Toggle', 'aura')
 	core:CallbackKey('Toggle', 'tracker')
-	core:CallbackKey('Toggle', 'cp')
+--	core:CallbackKey('Toggle', 'cp')
 	core:CallbackKey('Toggle', 'threat')
 	core:CallbackKey('Toggle', 'combat')
 end

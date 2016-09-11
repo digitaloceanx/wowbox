@@ -47,9 +47,11 @@ local function btnOnClick(self)
 	if HandyNotes:IsEnabled() then
 		db.enabled = false
 		HandyNotes:Disable()
+		if MapMarkToggleEnable then MapMarkToggleEnable(false) end
 	else
 		db.enabled = true
 		HandyNotes:Enable()
+		if MapMarkToggleEnable then MapMarkToggleEnable(true) end
 	end	
 	SetIconTexture()
 end

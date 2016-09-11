@@ -61,7 +61,11 @@ local uprade_item_strength = {
 }
 
 local upgrade_item_buttons = {}
-local upgrade_item_normal_textures = {}
+local upgrade_item_normal_textures = setmetatable({}, { __index = function(t, key)
+   local u = upgrade_item_buttons[key]
+   local result = u:GetNormalTexture()
+   return result
+end})
 local upgrade_item_quantity = {}
 local upgrade_buttons_parent = CreateFrame("Frame", nil, FollowerTab.ItemWeapon)
 local function UpdateUpgradeItemStates(frame, followerID, followerInfo)
@@ -117,11 +121,9 @@ local function UpdateUpgradeItemStates(frame, followerID, followerInfo)
          else
             upgrade_item_quantity[item_id]:SetText(nil)
             local texture = upgrade_item_normal_textures[item_id]
-            if texture then -- by eui.cc
-				texture:SetDesaturated(true)
-				texture:SetAlpha(0.3)
-				texture:SetVertexColor(1, 1, 1)
-			end
+            texture:SetDesaturated(true)
+            texture:SetAlpha(0.3)
+            texture:SetVertexColor(1, 1, 1)
          end
       end
    end
@@ -173,6 +175,7 @@ local template_upgrade_button = {
    --    BlendMode = "ADD",
    -- },
 }
+
 for item_type = 1, #upgrade_items do
    local item_list = upgrade_items[item_type]
    local prev = item_list.parent
@@ -196,7 +199,6 @@ for item_type = 1, #upgrade_items do
          u:SetAttribute("item", "item:" .. item_id)
       end
 
-      upgrade_item_normal_textures[item_id] = u:GetNormalTexture()
       upgrade_item_quantity[item_id] = Widget{"FontString", u, "NumberFontNormal", BOTTOMRIGHT = true }
 
       upgrade_item_buttons[item_id] = u

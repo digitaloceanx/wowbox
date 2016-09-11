@@ -3407,7 +3407,7 @@ function EventAlert_GroupFrameCheck_OnEvent(self, event, ...)
 				iSubChecks = GC_IndexOfGroupFrame[event][iGroupIndex][iIndex].SubChecks;
 				SubCheck = self.GC.Spells[iSpells].Checks[iChecks].SubChecks[iSubChecks];
 				if (sUnitType == SubCheck.UnitType or SubCheck.UnitType == "all") then -- "player"
-					iComboPoints = GetComboPoints("player", sUnitType);
+					iComboPoints = UnitPower("player", SPELL_POWER_COMBO_POINTS)
 					fShowResult = true;
 					if (fShowResult) then
 						if (SubCheck.CheckCD ~= nil) then

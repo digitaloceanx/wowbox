@@ -725,9 +725,9 @@ end
 
 function TrinketMenu.UpdateWornCooldowns(maybeGlobal)
 	local start, duration, enable = GetInventoryItemCooldown("player", 13)
-	CooldownFrame_SetTimer(TrinketMenu_Trinket0Cooldown, start, duration, enable)
+	CooldownFrame_Set(TrinketMenu_Trinket0Cooldown, start, duration, enable)
 	start, duration, enable = GetInventoryItemCooldown("player", 14)
-	CooldownFrame_SetTimer(TrinketMenu_Trinket1Cooldown, start, duration, enable)
+	CooldownFrame_Set(TrinketMenu_Trinket1Cooldown, start, duration, enable)
 	if not maybeGlobal then
 		TrinketMenu.WriteWornCooldowns()
 	end
@@ -737,7 +737,7 @@ function TrinketMenu.UpdateMenuCooldowns()
 	local start,duration,enable
 	for i = 1, TrinketMenu.NumberOfTrinkets do
 		start,duration,enable = GetContainerItemCooldown(TrinketMenu.BaggedTrinkets[i].bag, TrinketMenu.BaggedTrinkets[i].slot)
-		CooldownFrame_SetTimer(_G["TrinketMenu_Menu"..i.."Cooldown"], start, duration, enable)
+		CooldownFrame_Set(_G["TrinketMenu_Menu"..i.."Cooldown"], start, duration, enable)
 	end
 	TrinketMenu.WriteMenuCooldowns()
 end

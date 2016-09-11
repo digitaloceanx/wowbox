@@ -102,7 +102,7 @@ function S:OnEnable()
 	self:RegisterEvent("PLAYER_REGEN_ENABLED");		
 	
 	if (self.class == "ROGUE" or self.class == "DRUID") then	
-		self:RegisterEvent("UNIT_COMBO_POINTS");		
+		self:RegisterEvent("UNIT_POWER");		
 	end
 
 	self.frame["player"]:Show();
@@ -131,7 +131,7 @@ function S:PLAYER_REGEN_ENABLED()
 	self:UpdateUnitFrame();
 end
 
-function S:UNIT_COMBO_POINTS(event, unit)
+function S:UNIT_POWER(event, unit)
 	if (unit == "player") then	
 		self:UpdateComboPoints();	
 	end
@@ -203,7 +203,7 @@ function S:UpdateUnitFrame()
 end
 
 function S:UpdateComboPoints()
-	local comboPoints = GetComboPoints(PlayerFrame.unit, "target");
+	local comboPoints = UnitPower("player", SPELL_POWER_COMBO_POINTS)
 	if (comboPoints and comboPoints > 0) then
 		self.Combo:Show();
 		for i=1, MAX_COMBO_POINTS do
@@ -813,8 +813,8 @@ function S:ConstructHitPoints()
 		self.hitPoint.hit:SetTextColor(1.0, 0.69, 0.0);
 
 		self.hitPoint:SetScript("OnEvent", function(frame, event, unit, ...)
-			if ( event == "PLAYER_TARGET_CHANGED" or (event == "UNIT_COMBO_POINTS" and unit == PlayerFrame.unit)) then
-				local point = GetComboPoints(PlayerFrame.unit, "target");
+			if ( event == "PLAYER_TARGET_CHANGED" or (event == "UNIT_POWER" and unit == PlayerFrame.unit)) then
+				local point = UnitPower("player", SPELL_POWER_COMBO_POINTS)
 				if (point > 0) then			
 					self.hitPoint.text:SetText(point);
 					self.hitPoint.hit:SetText("hit");
@@ -862,12 +862,12 @@ function S:ToggleHitPoint(switch)
 	self:ConstructHitPoints();
 	if (switch) then
 		self.hitPoint:RegisterEvent("PLAYER_TARGET_CHANGED");
-		self.hitPoint:RegisterEvent("UNIT_COMBO_POINTS");
+		self.hitPoint:RegisterEvent("UNIT_POWER");
 		self.hitPoint:Show();
 		self.Combo:SetAlpha(0);
 	else
 		self.hitPoint:UnregisterEvent("PLAYER_TARGET_CHANGED");
-		self.hitPoint:UnregisterEvent("UNIT_COMBO_POINTS");
+		self.hitPoint:UnregisterEvent("UNIT_POWER");
 		self.hitPoint:Hide();
 		self.Combo:SetAlpha(1);
 	end

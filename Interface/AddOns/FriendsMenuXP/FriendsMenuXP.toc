@@ -1,5 +1,5 @@
 ## Interface: 70000
-## Author: Warbaby-二区暗影之月<凌翼>
+## Author: Warbaby @ 网易有爱 w.163.com/163ui
 ## Title: [Duowan] FriendsMenuXP
 ## Notes: Hook extra menu to friend list, guild list and chat player
 ## Title-zhCN: [多玩] 右键菜单增强 FriendsMenuXP

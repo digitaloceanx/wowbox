@@ -36,6 +36,28 @@ end
 if (GetLocale() == "zhCN") then
 	HTML_BEGIN();
 		HTML_TITLE("更新日志:");
+		HTML_VER("2016-09-06(7.0.0.9)");
+		HTML_LOG("首领模块", "更新DBM语音版");
+		HTML_LOG("要塞模块", "要塞增强包更新支持职业大厅");
+		HTML_LOG("要塞模块", "增加破碎群岛宝箱模块")
+		HTML_LOG("泰坦信息条", "更新新版");
+		HTML_LOG("伤害统计", "更新Recount到最新版本");
+		HTML_LOG("考古助手", "更新考古助手");
+		HTML_LOG("多玩魔盒", "变形界面临时禁用姿态条");
+		HTML_LOG("便捷工具", "右键菜单增强更新");
+
+		HTML_VER("2016-08-30(7.0.0.8)");
+		HTML_LOG("首领模块", "更新DBM语音版");
+		HTML_LOG("伤害统计", "更新Skada到最新版本");
+		HTML_LOG("伤害统计", "更新Recount到最新版本");
+		HTML_LOG("姓名版增强", "更新支持7.0");
+		HTML_LOG("简易信息", "修正动作条高亮和连击点显示");
+		HTML_LOG("团队助手", "oRA3更新新版");
+		HTML_LOG("副本掉落", "更新V8.01.01");
+		HTML_LOG("采集助手", "采集助手更新");
+		HTML_LOG("竞技大师", "修正DH显示");
+		HTML_LOG("任务增强", "修正设置按钮无效");
+
 		HTML_VER("2016-08-23(7.0.0.7)");
 		HTML_LOG("首领模块", "更新DBM语音版");
 		HTML_LOG("泰坦信息条", "更新新版");

@@ -18,9 +18,9 @@ local options
 local defaults = {
 	profile = {
 		enabled       = true,
-		icon_scale    = 1.0,
+		icon_scale    = 0.9,
 		icon_alpha    = 1.0,
-		icon_scale_minimap = 1.0,
+		icon_scale_minimap = 0.9,
 		icon_alpha_minimap = 1.0,
 		enabledPlugins = {
 			['*'] = true,
@@ -37,7 +37,6 @@ local pairs, next, type = pairs, next, type
 local CreateFrame = CreateFrame
 local GetCurrentMapContinent, GetCurrentMapZone = GetCurrentMapContinent, GetCurrentMapZone
 local GetCurrentMapDungeonLevel = GetCurrentMapDungeonLevel
-local GetRealZoneText = GetRealZoneText
 local WorldMapButton, Minimap = WorldMapButton, Minimap
 
 

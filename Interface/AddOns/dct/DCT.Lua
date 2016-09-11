@@ -756,7 +756,7 @@ end
 
 function DCT_ProcCP(self, event, larg1)
 	if (larg1 == "player") then
-		dct_amount = GetComboPoints("player")
+		dct_amount = UnitPower("player", SPELL_POWER_COMBO_POINTS)
 		if dct_amount > 0 then
 			DCT_SSC_Format_DisableAll()
 			if dct_amount < 5 then

@@ -103,7 +103,7 @@ function M:RegisterAll()
 	self:Register("ACTIONBAR", "dwBottomRightBar", nil, nil, true);
 	self:Register("ACTIONBAR", "dwRightBar1", nil, nil, true);
 	self:Register("ACTIONBAR", "dwRightBar2", nil, nil, true);
-	self:Register("ACTIONBAR", "dwShapeShiftBar", nil, nil, true); --临时禁用，会造成游戏无法响应。待FIX.
+--	self:Register("ACTIONBAR", "dwShapeShiftBar", nil, nil, true); --临时禁用，会造成游戏无法响应。待FIX.
 	if (select(2, UnitClass("player")) == "SHAMAN") then
 	--	self:Register("ACTIONBAR", "dwMultiCastBar", nil, nil, true);
 	end
@@ -2050,7 +2050,7 @@ end
 function M:OnUnregisterdwExBar()	
 	UnregisterStateDriver(dwExBar, "visibility");
 	dwSecureCall(dwExBar.Hide, dwExBar);
-	ReputationWatchBar_Update();
+	MainMenuBar_UpdateExperienceBars();
 end
 
 --------------------------------
