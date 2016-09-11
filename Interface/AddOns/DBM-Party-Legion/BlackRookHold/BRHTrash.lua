@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("BRHTrash", "DBM-Party-Legion", 1, 740)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 14985 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15186 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -13,6 +13,8 @@ mod:RegisterEvents(
 	"SPELL_CAST_SUCCESS 200343 200345"
 )
 
+--TODO, add Etch? http://www.wowhead.com/spell=198959/etch
+--TODO, add Brutal Assault
 local warnSoulEchoes				= mod:NewTargetAnnounce(194966, 2)
 
 local specWarnBonebreakingStrike	= mod:NewSpecialWarningDodge(200261, "Tank", nil, nil, 1, 2)

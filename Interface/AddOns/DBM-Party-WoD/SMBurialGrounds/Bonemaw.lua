@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1140, "DBM-Party-WoD", 6, 537)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15003 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 6 $"):sub(12, -3))
 mod:SetCreatureID(75452)
 mod:SetEncounterID(1679)
 
@@ -44,7 +44,7 @@ mod.vb.inhaleActive = false
 
 function mod:OnCombatStart(delay)
 	self.vb.inhaleActive = false
-	timerBodySlamCD:Start(15-delay, UnitName("boss1"), UnitGUID("boss1"))
+	timerBodySlamCD:Start(15-delay, UnitName("boss1") or BOSS, UnitGUID("boss1"))
 	timerInhaleCD:Start(29-delay)
 	timerSubmergeCD:Start(-delay)
 end

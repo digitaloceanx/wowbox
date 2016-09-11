@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod("AuchTrash", "DBM-Party-WoD", 1)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 13843 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 7 $"):sub(12, -3))
 --mod:SetModelID(47785)
 mod:SetZone()
 
@@ -22,8 +22,10 @@ local specWarnArbitersHammer		= mod:NewSpecialWarningInterrupt(157797)
 
 mod:RemoveOption("HealthFrame")
 
+local isTrivial = mod:IsTrivial(110)
+
 function mod:SPELL_CAST_START(args)
-	if not self.Options.Enabled or self:IsDifficulty("normal5") then return end
+	if not self.Options.Enabled or self:IsDifficulty("normal5") or isTrivial then return end
 	local spellId = args.spellId
 	if spellId == 157173 then
 		specWarnFelStomp:Show()

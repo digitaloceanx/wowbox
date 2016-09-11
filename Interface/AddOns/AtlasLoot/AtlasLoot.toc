@@ -1,15 +1,19 @@
 ﻿## Interface: 70000
 ## Author: Hegarol
-## Version: v8.01.00
+## Version: v8.01.01
 ## SavedVariables: AtlasLootDB
 ## SavedVariablesPerCharacter: AtlasLootCharDB
 ## OptionalDeps: Ace3, LibStub, LibBabble-Boss-3.0, CallbackHandler-1.0, LibDataBroker-1.1
-## X-Curse-Packaged-Version: v8.01.00
+## X-Curse-Packaged-Version: v8.01.01
 ## X-Curse-Project-Name: AtlasLoot Enhanced
 ## X-Curse-Project-ID: atlasloot-enhanced
 ## X-Curse-Repository-ID: wow/atlasloot-enhanced/mainline
 
 ## Title: AtlasLoot
+## Title-deDE: AtlasLoot Enhanced
+## Title-frFR: AtlasLoot Enhanced
+## Title-esES: AtlasLoot Enhanced
+## Title-koKR: AtlasLoot Enhanced
 ## Title-zhCN: [多玩] 副本掉落-核心模块
 ## Title-zhTW: [多玩] 副本掉落-核心模塊
 ## RealTitle-zhCN: [地图]副本掉落物品查询
