@@ -5,7 +5,7 @@
 ## Title-zhCN: [多玩] 一键驱散 Decursive
 ## Title-zhTW: [多玩] 一鍵驅散 Decursive
 ## Notes-zhCN: 帮助有驱散技能的职业一键驱散诅咒，魔法，毒等DEBUFF，右键点击插件条弹出设置菜单。
-## Version:  2.7.4.7-3-ga9c60fa
+## Version:  2.7.4.7-9-gdc22693
 ## X-Max-Interface: 60000
 ## X-Min-Interface: 60000
 ## Author: John Wellesz

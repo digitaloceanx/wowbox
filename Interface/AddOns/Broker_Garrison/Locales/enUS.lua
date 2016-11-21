@@ -203,3 +203,22 @@ L["Seal of Inevitable Fate"] = true
 L["Icon: Seal of Inevitable Fate"] = true
 L["Follower Type (Garrison, Shipyard)"] = true
 L["Resource Cache Size"] = true
+
+L["Complete"] = true
+L["Active"] = true
+L["Inactive"] = true
+L["Unavailable"] = true
+L["Don't display inactive talents"] = true
+L["Hide inactive talents"] = true
+L["Icon: Order Resources"] = true
+L["Order Resources (Formatted)"] = true
+L["Order Resources (No icon)"] = true
+L["Order Resources (Current char)"] = true
+L["Garrison: Orderhall"] = true
+L["Orderhall"] = true
+L["OrderHalls not available"] = true
+
+L["Order Resources + Ancient Mana (Current char)"] = true
+L["Ancient Mana (Formatted)"] = true
+L["Icon: Ancient Mana"] = true
+L["Oil (Formatted)"] = true

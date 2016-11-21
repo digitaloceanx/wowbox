@@ -319,6 +319,15 @@ local node_ids = {
 		[NL["Suspiciously Glowing Chest"]]		= 549,
 		[NL["Radiating Apexis Shard"]]			= 550,
 		[NL["Gleaming Draenic Chest"]]			= 551,
+		-- suramar mana
+		[NL["Ancient Mana Shard"]]				= 552,
+		[NL["Ancient Mana Chunk"]]				= 553,
+		[NL["Ancient Mana Crystal"]]			= 554,
+		[NL["Leypetal Blossom"]]				= 555,
+		[NL["Leypetal Powder"]]					= 556,
+		[NL["Glowing Tome"]]					= 557,
+		[NL["Mana-Infused Gem"]]				= 558,
+		[NL["Twice-Fortified Arcwine"]]			= 559,
 	},
 	["Archaeology"] = {
 		-- cata archeolgy objects
@@ -332,12 +341,18 @@ local node_ids = {
 		[NL["Vrykul Archaeology Find"]]         = 608,
 		[NL["Tol'vir Archaeology Find"]]        = 609,
 		[NL["Other Archaeology Find"]]          = 610,
+		-- pandaria
 		[NL["Pandaren Archaeology Find"]]		= 611,
 		[NL["Mogu Archaeology Find"]]			= 612,
 		[NL["Mantid Archaeology Find"]]			= 613,
+		-- draenor
 		[NL["Arakkoa Archaeology Find"]]		= 614,
 		[NL["Draenor Clans Archaeology Find"]]	= 615,
 		[NL["Ogre Archaeology Find"]]			= 616,
+		-- legion
+		[NL["Demonic Archaeology Find"]]		= 617,
+		[NL["Highborne Archaeology Find"]]		= 618,
+		[NL["Highmountain Tauren Archaeology Find"]]	= 619,
 	},
 	["Logging"] = {
 		[NL["Small Timber"]]					= 701,
@@ -387,6 +402,8 @@ local rare_spawns = {
 	[478] = {[476]=true,[477]=true,[479]=true,[480]=true,[481]=true}, -- felwort
 	[254] = {[253]=true}, -- rich leystone deposit
 	[257] = {[256]=true}, -- rich feslate deposit
+	[553] = {[552]=true}, -- ancient mana chunk
+	[554] = {[552]=true,[553]=true}, -- ancient mana crystal
 }
 Collector.rareNodes = rare_spawns
 -- Format zone = { "Database", "new node id"}
@@ -712,6 +729,14 @@ local node_textures = {
 		[549] = icon_path.."Treasure\\treasure.tga",
 		[550] = icon_path.."Treasure\\treasure.tga",
 		[551] = icon_path.."Treasure\\treasure.tga",
+		[552] = icon_path.."Treasure\\ancient_mana.tga",
+		[553] = icon_path.."Treasure\\ancient_mana.tga",
+		[554] = icon_path.."Treasure\\ancient_mana.tga",
+		[555] = icon_path.."Treasure\\ancient_mana.tga",
+		[556] = icon_path.."Treasure\\ancient_mana.tga",
+		[557] = icon_path.."Treasure\\ancient_mana.tga",
+		[558] = icon_path.."Treasure\\ancient_mana.tga",
+		[559] = icon_path.."Treasure\\ancient_mana.tga",
 	},
 	["Archaeology"] = {
 		[601] = icon_path.."Archaeology\\shovel.tga",
@@ -730,6 +755,9 @@ local node_textures = {
 		[614] = icon_path.."Archaeology\\shovel.tga",
 		[615] = icon_path.."Archaeology\\shovel.tga",
 		[616] = icon_path.."Archaeology\\shovel.tga",
+		[617] = icon_path.."Archaeology\\shovel.tga",
+		[618] = icon_path.."Archaeology\\shovel.tga",
+		[619] = icon_path.."Archaeology\\shovel.tga",
 	},
 	["Logging"] = {
 		[701] = icon_path.."Logging\\timber.tga",

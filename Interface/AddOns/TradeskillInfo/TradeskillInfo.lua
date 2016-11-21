@@ -141,10 +141,12 @@ function TradeskillInfo:OnInitialize()
 
 			ColorAHRecipes = true,
 			ColorMerchantRecipes = true,
+			ColorBagRecipes = true,
 			AHColorLearnable	= { r = 1, g = 1, b = 1 },
 			AHColorAltLearnable	= { r = 0, g = 1, b = 0 },
-			AHColorWillLearn	= { r = 1, g = 0.75, b = 0 },
-			AHColorAltWillLearn	= { r = 0, g = 0.75, b = 1 },
+			AHColorWillLearn	= { r = 1, g = 0.5, b = 0.15 },
+			AHColorAltWillLearn	= { r = 1, g = 1, b = 0 },
+			AHColorKnown		= { r = 0, g = 0, b = 1 },
 			AHColorUnavailable	= { r = 1, g = 0, b = 0 },
 
 			RecipesOnly = false,
@@ -156,13 +158,13 @@ function TradeskillInfo:OnInitialize()
 			UIScale = 1,
 
 			-- minimap options
-			hide = true,
+			hide = false,
 
 			DebugMode = false,
 		},
 		realm = {
 			["*"] = { -- stores all known characters
-				knownRecipes = {}, skills = {},
+				knownRecipes = {}, skills = {}, skillIgnored = {}
 			},
 		},
 	}, "Default")
@@ -170,43 +172,6 @@ function TradeskillInfo:OnInitialize()
 	self:RegisterChatCommand("tsi", "ChatCommand")
 	self:RegisterChatCommand("tradeskillinfo", "ChatCommand")
 	self:BuildWhereUsed()
-end
-
--- blatently stolen from Xruptor's BagSync, who also gave credit to Tuller
-local function hookTip(tooltip)
-	local modified = false
-
-	tooltip:HookScript("OnTooltipCleared", function(self)
-		modified = false
-	end)
-
-	tooltip:HookScript("OnTooltipSetItem", function(self)
-		if modified then return end
-
-		modified = true
-
-		local name, link = self:GetItem()
-		local owner = self:GetOwner()
-
-		if name == "" then -- a Blizzard bug breaks merchant recipe links, so let's work around it
-			if owner and owner.link then
-				link = owner.link
-			else
-				return
-			end
-		end
-
-		TradeskillInfo:AddTooltipInfo(self, link)
-	end)
-
-	tooltip:HookScript("OnTooltipSetSpell", function(self)
-		if modified then return end
-
-		modified = true
-
-		local name, _, id = self:GetSpell()
-		TradeskillInfo:AddTooltipInfo(self, spell)
-	end)
 end
 
 function TradeskillInfo:OnEnable()
@@ -225,11 +190,19 @@ function TradeskillInfo:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SKILL", "OnSkillUpdate")
 	self:RegisterEvent("ADDON_LOADED", "OnAddonLoaded")
 
-	-- merchant colouring
+	-- Merchant/bank/bag colouring
 	self:SecureHook("MerchantFrame_UpdateMerchantInfo")
+	self:SecureHook("ContainerFrame_UpdateCooldown")
+	self:SecureHook("BankFrameItemButton_Update")
 
-	hookTip(GameTooltip)
-	hookTip(ItemRefTooltip)
+	local tooltipLib = LibStub("LibExtraTip-1", true)
+	if tooltipLib then
+		tooltipLib:AddCallback({type = "item", callback = TradeskillInfo.TooltipHandler})
+		tooltipLib:RegisterTooltip(GameTooltip)
+		tooltipLib:RegisterTooltip(ItemRefTooltip)
+		tooltipLib:RegisterTooltip(BattlePetTooltip)
+		tooltipLib:RegisterTooltip(FloatingBattlePetTooltip)
+	end
 
 	LibStub("AceConfig-3.0"):RegisterOptionsTable("TradeSkillInfo", TradeskillInfo.CreateConfig)
 	self.OptionsPanel = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("TradeSkillInfo", "TradeSkillInfo")
@@ -266,10 +239,12 @@ function TradeskillInfo:OnSkillUpdate()
 end
 
 function TradeskillInfo:OnAddonLoaded(_, addon)
-	if addon == "Blizzard_AuctionUI" then
+	if addon == "Blizzard_AuctionUI" or addon == "TradeSkillMaster" then
 		self:HookAuctionUI()
 	elseif addon == "Blizzard_TradeSkillUI" or addon == "AdvancedTradeSkillWindow" then
 --		self:HookTradeSkillUI()
+	elseif addon == "Blizzard_GuildBankUI" then
+		self:SecureHook("GuildBankFrame_Update")
 	end
 end
 
@@ -298,6 +273,11 @@ function TradeskillInfo:HookAuctionUI()
 		self:SecureHook("AuctionFrameBrowse_Update")
 		hookedAuctionUi = true
 	end
+
+	if TSMAPI and TSMAPI.GUI and TSMAPI.GUI.BuildFrame and (not self:IsHooked(TSMAPI.GUI, "BuildFrame")) then
+		self:RawHook(TSMAPI.GUI, "BuildFrame", "TsmBuildFrame")
+	end
+
 --	if Auc-Advanced and not self:IsHooked(Auc-Advanced, "lib.ListUpdate")
 --		self:Hook (Auc-Advanced, "lib.ListUpdate")
 --	end
@@ -788,7 +768,8 @@ function TradeskillInfo:GetCombineAvailability(id)
 	end
 
 	for name in pairs(self.db.realm) do
-		if name ~= self.vars.playername then
+		local ignored = TradeskillInfo:IsSkillIgnoredForChar(name, combineSkill)
+		if name ~= self.vars.playername and not ignored then
 			local skillLevel = self:GetCharSkillLevel(name,combineSkill)
 			local charSpec = self:GetCharSkillLevel(name,combineSpec)
 			if skillLevel and (combineSpec=="" or charSpec) then
@@ -1334,7 +1315,9 @@ function TradeskillInfo:IsCombineLearnableByChar(name,id)
 	local combineSkill,combineSpec,combineLevel = self:GetCombineSkill(id)
 	local charLevel = self:GetCharSkillLevel(name,combineSkill)
 	local charSpec = self:GetCharSkillLevel(name,combineSpec)
-	if charLevel and charLevel >= combineLevel and not self:IsCombineKnowByChar(name,id) and (combineSpec=="" or charSpec) then
+	local skillIgnored = self:IsSkillIgnoredForChar(name, combineSkill)
+	if charLevel and not skillIgnored
+		and charLevel >= combineLevel and not self:IsCombineKnowByChar(name,id) and (combineSpec=="" or charSpec) then
 		return charLevel
 	end
 end
@@ -1366,7 +1349,8 @@ function TradeskillInfo:IsCombineAvailableToChar(name, id)
 	local combineSkill,combineSpec,combineLevel = self:GetCombineSkill(id)
 	local charLevel = self:GetCharSkillLevel(name,combineSkill)
 	local charSpec = self:GetCharSkillLevel(name,combineSpec)
-	if charLevel and
+	local skillIgnored = self:IsSkillIgnoredForChar(name, combineSkill)
+	if charLevel and not skillIgnored and
 	   charLevel < combineLevel and
 	   (combineSpec=="" or charSpec) and
 	   not self:IsCombineKnowByChar(name, id) then
@@ -1450,14 +1434,36 @@ function TradeskillInfo:GetItemUsableBy(id, tooltip)
 	return text
 end
 
+function TradeskillInfo:GetCharsWithSkill(skill)
+	local chars = {}
+	for n,_ in pairs(self.db.realm) do
+		if self.db.realm[n].skills and self.db.realm[n].skills[skill] then
+			table.insert(chars, n)
+		end
+	end
+	return chars
+end
+
+function TradeskillInfo:IsSkillIgnoredForChar(name, skill)
+	local userData = self.db.realm[name]
+	return userData.skillIgnored and userData.skillIgnored[skill]
+end
+
+function TradeskillInfo:SetSkillIgnoreStatus(name, skill, ignored)
+	local userData = self.db.realm[name]
+	if not userData.skillIgnored then
+		userData.skillIgnored = {}
+	end
+	userData.skillIgnored[skill] = ignored
+end
+
 ----------------------------------------------------------------
 --  Tooltip Functions
 ----------------------------------------------------------------
 
-function TradeskillInfo:SetItemRef()
-	if not IsModifiedClick() then self:AddTooltipInfo(ItemRefTooltip) end
+function TradeskillInfo.TooltipHandler(frame, item, count)
+	TradeskillInfo:AddTooltipInfo(frame, item)
 end
-
 
 function TradeskillInfo:AddTooltipInfo(tooltip, id)
 	if InCombatLockdown() then return end
@@ -1467,6 +1473,8 @@ function TradeskillInfo:AddTooltipInfo(tooltip, id)
 	elseif type(id) == "number" then -- it's a spell!
 		id = -id
 	else return end -- it's an empty bag slot!
+
+	if not id then return end
 
 	local recipeId = self:GetRecipeItem(id)
 
@@ -1660,54 +1668,73 @@ function TradeskillInfo:AuctionFrameBrowse_Update()
 				index = button.id
 			end
 			local recipeLink = GetAuctionItemLink("list", index)
-			local recipeId = getIdFromLink(recipeLink)
-			local id = self:GetRecipeItem(recipeId)
-			--self:Print("Item: %d(%d) %d %s",i,index,recipeId,recipeLink)
-			if id then
-				local you,alt = self:GetCombineAvailability(id)
-				--self:Print("recipe: %s you %d alt %d",id,you,alt)
-				-- 0 = Unavailable, 1 = known, 2 = learnable, 3 = will be able to learn
-				if you == 2 then
-					local c = self.db.profile.AHColorLearnable
-					iconTexture:SetVertexColor(c.r, c.g, c.b)
-				elseif alt == 2 then
-					local c = self.db.profile.AHColorAltLearnable
-					iconTexture:SetVertexColor(c.r, c.g, c.b)
-				elseif you == 3 then
-					local c = self.db.profile.AHColorWillLearn
-					iconTexture:SetVertexColor(c.r, c.g, c.b)
-				elseif alt == 3 then
-					local c = self.db.profile.AHColorAltWillLearn
-					iconTexture:SetVertexColor(c.r, c.g, c.b)
-				else
-					local c = self.db.profile.AHColorUnavailable
-					iconTexture:SetVertexColor(c.r, c.g, c.b)
-				end
---				local knownBy = self:GetCombineKnownBy(id)
---				local learnableBy = self:GetCombineLearnableBy(id)
---				local availableTo = self:GetCombineAvailableTo(id)
---				if learnableBy then
---					iconTexture:SetVertexColor(1.0, 0.1, 0.1)
---				elseif availableTo then
---					iconTexture:SetVertexColor(1.0, 0.1, 0.1)
---				elseif knownBy then
---					iconTexture:SetVertexColor(1.0, 0.1, 0.1)
---				end
-			elseif button.id then  -- button.id is set only by Compact-UI we need to fix texture colors.
-				local _, _, _, _, canUse =  GetAuctionItemInfo("list", index)
-				if ( not canUse ) then
-					iconTexture:SetVertexColor(1.0, 0.1, 0.1)  -- item is not usable
-				else
-					iconTexture:SetVertexColor(1.0, 1.0, 1.0)  -- usable, non-recipe item
-				end
+
+			local c = self:ItemTextureColor(recipeLink)
+			if c then
+				iconTexture:SetVertexColor(c.r, c.g, c.b)
+			else
+				iconTexture:SetVertexColor(1.0, 1.0, 1.0)
 			end
 		end
 	end
 end
 
+function TradeskillInfo:ItemTextureColor(itemLinkOrId)
+	local recipeId
+	if type(itemLinkOrId) == "string" then
+		recipeId = getIdFromLink(itemLinkOrId)
+	elseif type(itemLinkOrId) == "number" then
+		recipeId = itemLinkOrId
+	end
+	local id = self:GetRecipeItem(recipeId)
+
+	if not id then return nil; end	-- non-recipe item
+
+	local you,alt = self:GetCombineAvailability(id)
+	--self:Print("recipe: %s you %d alt %d",id,you,alt)
+	-- 0 = Unavailable, 1 = known, 2 = learnable, 3 = will be able to learn
+	if you == 2 then
+		return self.db.profile.AHColorLearnable
+	elseif alt == 2 then
+		return self.db.profile.AHColorAltLearnable
+	elseif you == 3 then
+		return self.db.profile.AHColorWillLearn
+	elseif alt == 3 then
+		return self.db.profile.AHColorAltWillLearn
+	elseif you == 1 or alt == 1 then
+		return self.db.profile.AHColorKnown
+	end
+
+	return self.db.profile.AHColorUnavailable
+end
+
+function TradeskillInfo:TsmBuildFrame(tsmApiGui, info)
+	local orgRes = self.hooks[TSMAPI.GUI].BuildFrame(tsmApiGui, info)
+
+	if info and info.type == "AuctionResultsTable" and
+		orgRes and orgRes.SetRowInfo and not self:IsHooked(orgRes, "SetRowInfo") then
+		self:Hook(orgRes, "SetRowInfo", "TsmSetRowInfo")
+	end
+
+	return orgRes
+end
+
+function TradeskillInfo:TsmSetRowInfo(rt, rowIndex, record, displayNumAuctions, numPlayerAuctions, indented, expandable, expandKey, numAuctions)
+	if not self:ColoringAHRecipes() then return end
+
+	if rowIndex <= 0 or rowIndex > #rt.rows then return end
+	local row = rt.rows[rowIndex]
+
+	local c = self:ItemTextureColor(record.itemLink)
+	if c then
+		row.cells[1].icon:SetVertexColor(c.r, c.g, c.b)
+	else
+		row.cells[1].icon:SetVertexColor(1.0, 1.0, 1.0)
+	end
+end
 
 ----------------------------------------------------------------------
--- Vendor functions
+-- Vendor/bank/bag functions
 ----------------------------------------------------------------------
 
 function TradeskillInfo:MerchantFrame_UpdateMerchantInfo()
@@ -1730,34 +1757,64 @@ function TradeskillInfo:MerchantFrame_UpdateMerchantInfo()
 
 		local itemlink = GetMerchantItemLink(index)
 
-		if itemlink then
-			local recipeId = getIdFromLink(itemlink)
-			local id = self:GetRecipeItem(recipeId)
+		local c = self:ItemTextureColor(itemlink)
+		if c then
+			SetItemButtonNameFrameVertexColor(merchantButton, c.r, c.g, c.b)
+			SetItemButtonSlotVertexColor(merchantButton, c.r, c.g, c.b)
+			SetItemButtonTextureVertexColor(itemButton, c.r, c.g, c.b)
+			SetItemButtonNormalTextureVertexColor(itemButton, c.r, c.g, c.b)
+		end
+	end
+end
 
-			if id then
-				local you, alt = self:GetCombineAvailability(id)
-				local c
+function TradeskillInfo:ContainerFrame_UpdateCooldown(container, button)
+	if not self.db.profile.ColorBagRecipes then return end
 
-				-- 0 = unavailable, 1 = known, 2 = learnable, 3 = will be able to learn
---				self:Print("recipe", id, "you", you, "alt", alt)
+	_, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(container, button:GetID())
+	local c = self:ItemTextureColor(itemID)
+	if c then
+		SetItemButtonTextureVertexColor(button, c.r, c.g, c.b)
+	end
+end
 
-				if you == 2 then
-					c = self.db.profile.AHColorLearnable
-				elseif alt == 2 then
-					c = self.db.profile.AHColorAltLearnable
-				elseif you == 3 then
-					c = self.db.profile.AHColorWillLearn
-				elseif alt == 3 then
-					c = self.db.profile.AHColorAltWillLearn
-				else
-					c = self.db.profile.AHColorUnavailable
-				end
+function TradeskillInfo:BankFrameItemButton_Update(button)
+	if not self.db.profile.ColorBagRecipes then return end
 
-				SetItemButtonNameFrameVertexColor(merchantButton, c.r, c.g, c.b)
-				SetItemButtonSlotVertexColor(merchantButton, c.r, c.g, c.b)
-				SetItemButtonTextureVertexColor(itemButton, c.r, c.g, c.b)
-				SetItemButtonNormalTextureVertexColor(itemButton, c.r, c.g, c.b)
-			end
+	local container = button:GetParent():GetID();
+	local buttonID = button:GetID();
+	if (button.isBag) then
+		container = -4;
+	end
+
+	local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(container, buttonID);
+	local c = self:ItemTextureColor(itemID)
+	if c then
+		SetItemButtonTextureVertexColor(button, c.r, c.g, c.b)
+	else
+		SetItemButtonTextureVertexColor(button, 1.0, 1.0, 1.0)
+	end
+end
+
+function TradeskillInfo:GuildBankFrame_Update()
+	if not self.db.profile.ColorBagRecipes then return end
+
+	if (GuildBankFrame.mode ~= "bank") then return end
+
+	local tab = GetCurrentGuildBankTab();
+	for i=1, MAX_GUILDBANK_SLOTS_PER_TAB do
+		local index = mod(i, NUM_SLOTS_PER_GUILDBANK_GROUP);
+		if (index == 0) then
+			index = NUM_SLOTS_PER_GUILDBANK_GROUP;
+		end
+		local column = ceil((i-0.5)/NUM_SLOTS_PER_GUILDBANK_GROUP);
+
+		local button = _G["GuildBankColumn"..column.."Button"..index];
+		local itemLink = GetGuildBankItemLink(tab, i)
+		local c = self:ItemTextureColor(itemLink)
+		if c then
+			SetItemButtonTextureVertexColor(button, c.r, c.g, c.b)
+		else
+			SetItemButtonTextureVertexColor(button, 1.0, 1.0, 1.0)
 		end
 	end
 end
@@ -1895,54 +1952,4 @@ function TradeskillInfo:FindSkillsUnknownInCombines()
 			end
 		end
 	end
-end
-
-
-----------------------------
--- Duowan Interface
--- dugu@wowbox
-function TradeskillInfo_CreateButton()
-	local button = CreateFrame("Button", "OpenTradesillInfoButton", TradeSkillFrame, "UIPanelButtonTemplate2");
-	button:SetWidth(120);
-	button:SetHeight(22);
-	button:SetPoint("TOPLEFT", "TradeSkillFrame", "TOPLEFT", 195, 0);
-	button:SetText(L["Open Panel"]);
-	button:SetScript("OnClick", function(self)
-		TradeskillInfo:UI_Toggle()
-	end);
-end
-
-
-function TradeskillInfo:ToggleMerchantUse(switch)
-	if (switch) then		
-		self.db.profile.TooltipSource = true;
-		self.db.profile.TooltipUsedIn = true;
-		self.db.profile.recipesource = true;
-	else
-		self.db.profile.TooltipSource = false;
-		self.db.profile.TooltipUsedIn = false;
-		self.db.profile.recipesource = false;
-	end
-end
-
-function TradeskillInfo:Toggle(switch)
-	if (switch) then
-		self.enableAddon = true;
-		self:RegisterEvent("TRADE_SKILL_SHOW", "OnTradeShow");
-		self:RegisterEvent("SKILL_LINES_CHANGED", "OnSkillUpdate");
-		self:RegisterEvent("ADDON_LOADED", "OnAddonLoaded");
-		if (OpenTradesillInfoButton) then
-			OpenTradesillInfoButton:Show();
-		end
-		self.vars.playername = UnitName("player")
-		self:PopulateProfessionNames()		
-	else
-		self.enableAddon = false;
-		self:UnregisterEvent("TRADE_SKILL_SHOW");
-		self:UnregisterEvent("SKILL_LINES_CHANGED");
-		--self:UnregisterEvent("ADDON_LOADED");
-		if (OpenTradesillInfoButton) then
-			OpenTradesillInfoButton:Hide();
-		end
-	end	
 end

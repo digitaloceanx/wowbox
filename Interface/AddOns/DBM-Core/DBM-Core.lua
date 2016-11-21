@@ -41,9 +41,9 @@
 --  Globals/Default Options  --
 -------------------------------
 DBM = {
-	Revision = tonumber(("$Revision: 15187 $"):sub(12, -3)),
-	DisplayVersion = "7.0.4 alpha", -- the string that is shown as version
-	ReleaseRevision = 15178 -- the revision of the latest stable version that is available
+	Revision = tonumber(("$Revision: 15257 $"):sub(12, -3)),
+	DisplayVersion = "7.0.7 alpha", -- the string that is shown as version
+	ReleaseRevision = 15244 -- the revision of the latest stable version that is available
 }
 DBM.HighestRelease = DBM.ReleaseRevision --Updated if newer version is detected, used by update nags to reflect critical fixes user is missing on boss pulls
 
@@ -101,15 +101,9 @@ DBM.DefaultOptions = {
 	VoiceOverSpecW2 = "DefaultOnly",
 	AlwaysPlayVoice = false,
 	ShowCountdownText = false,
-	RaidWarningPosition = {
-		Point = "TOP",
-		X = 0,
-		Y = -185,
-	},
 	Enabled = true,
 	ShowWarningsInChat = true,
 	ShowSWarningsInChat = true,
-	ShowFakedRaidWarnings = false,
 	WarningIconLeft = true,
 	WarningIconRight = true,
 	WarningIconChat = true,
@@ -420,12 +414,12 @@ local addsGUIDs = {}
 local targetEventsRegistered = false
 local targetMonitor = nil
 local statusWhisperDisabled = false
-local wowTOC = select(4, GetBuildInfo())
+local wowVersionString, _, _, wowTOC = GetBuildInfo()
 local dbmToc = 0
 local isTalkingHeadLoaded = false
 local talkingHeadUnregistered = false
 
-local fakeBWVersion, fakeBWHash = 8, "f6fdc8d"
+local fakeBWVersion, fakeBWHash = 11, "edbe654"
 local versionQueryString, versionResponseString = "Q:%d-%s", "V:%d-%s"
 
 local enableIcons = true -- set to false when a raid leader or a promoted player has a newer version of DBM
@@ -452,7 +446,6 @@ DBM.DefaultOptions.AutoRespond = false
 DBM.DefaultOptions.ShowMinimapButton = false
 DBM.DefaultOptions.HideObjectivesFrame = false
 DBM.DefaultOptions.MovieFilter = "Never"
-
 
 -----------------
 --  Libraries  --
@@ -1201,7 +1194,7 @@ do
 							sort			= tonumber(GetAddOnMetadata(i, "X-DBM-Mod-Sort") or mhuge) or mhuge,
 							type			= GetAddOnMetadata(i, "X-DBM-Mod-Type") or "OTHER",
 							category		= GetAddOnMetadata(i, "X-DBM-Mod-Category") or "Other",
-							name			= GetAddOnMetadata(i, "X-DBM-Mod-Name") or GetRealZoneText(tonumber(mapIdTable[1])) or "Unknown",
+							name			= GetAddOnMetadata(i, "X-DBM-Mod-Name") or GetRealZoneText(tonumber(mapIdTable[1])) or DBM_CORE_UNKNOWN,
 							mapId			= mapIdTable,
 							subTabs			= GetAddOnMetadata(i, "X-DBM-Mod-SubCategoriesID") and {strsplit(",", GetAddOnMetadata(i, "X-DBM-Mod-SubCategoriesID"))} or GetAddOnMetadata(i, "X-DBM-Mod-SubCategories") and {strsplit(",", GetAddOnMetadata(i, "X-DBM-Mod-SubCategories"))},
 							oneFormat		= tonumber(GetAddOnMetadata(i, "X-DBM-Mod-Has-Single-Format") or 0) == 1,
@@ -1227,7 +1220,7 @@ do
 							for k, v in ipairs(self.AddOns[#self.AddOns].subTabs) do
 								local id = tonumber(self.AddOns[#self.AddOns].subTabs[k])
 								if id then
-									self.AddOns[#self.AddOns].subTabs[k] = GetRealZoneText(id):trim()
+									self.AddOns[#self.AddOns].subTabs[k] = GetRealZoneText(id):trim() or id
 								else
 									self.AddOns[#self.AddOns].subTabs[k] = (self.AddOns[#self.AddOns].subTabs[k]):trim()
 								end
@@ -1714,7 +1707,6 @@ end
 
 function DBM:RepositionFrames()
 	-- rearrange position
-	self:SetRaidWarningPositon()
 	self:UpdateWarningOptions()
 	self:UpdateSpecialWarningOptions()
 	self.Arrow:LoadPosition()
@@ -1741,7 +1733,8 @@ end
 ----------------------
 do
 	local function Pull(timer)
-		if (DBM:GetRaidRank(playerName) == 0 and IsInGroup()) or IsEncounterInProgress() then
+		local LFGTankException = IsPartyLFG() and UnitGroupRolesAssigned("player") == "TANK"--Tanks in LFG need to be able to send pull timer even if someone refuses to pass lead. LFG locks roles so no one can abuse this.
+		if (DBM:GetRaidRank(playerName) == 0 and IsInGroup() and not LFGTankException) or select(2, IsInInstance()) == "pvp" or IsEncounterInProgress() then
 			return DBM:AddMsg(DBM_ERROR_NO_PERMISSION)
 		end
 		local targetName = (UnitExists("target") and UnitIsEnemy("player", "target")) and UnitName("target") or nil--Filter non enemies in case player isn't targetting bos but another player/pet
@@ -1752,7 +1745,7 @@ do
 		end
 	end
 	local function Break(timer)
-		if IsInGroup() and (DBM:GetRaidRank(playerName) == 0 or IsPartyLFG()) or IsEncounterInProgress() then--No break timers if not assistant or if it's dungeon/raid finder
+		if IsInGroup() and (DBM:GetRaidRank(playerName) == 0 or IsPartyLFG()) or IsEncounterInProgress() or select(2, IsInInstance()) == "pvp" then--No break timers if not assistant or if it's dungeon/raid finder/BG
 			DBM:AddMsg(DBM_ERROR_NO_PERMISSION)
 			return
 		end
@@ -1766,6 +1759,34 @@ do
 	
 	SLASH_DEADLYBOSSMODS1 = "/dbm"
 	SLASH_DEADLYBOSSMODSRPULL1 = "/rpull"
+	if GetAddOnEnableState(playerName, "TomTom") == 0 then
+		SLASH_DEADLYBOSSMODSWAY1 = "/way"--/way not used because DBM would load before TomTom and can't check 
+		SlashCmdList["DEADLYBOSSMODSWAY"] = function(msg)
+			if DBM:HasMapRestrictions() then
+				DBM:AddMsg(DBM_CORE_NO_ARROW)
+				return
+			end
+			local x, y = string.split(" ", msg:sub(1):trim())
+			local xNum, yNum = tonumber(x or ""), tonumber(y or "")
+			local success
+			if xNum and yNum then
+				DBM.Arrow:ShowRunTo(xNum, yNum, 0.5, nil, true)
+				success = true
+			else--Check if they used , instead of space.
+				x, y = string.split(",", msg:sub(1):trim())
+				xNum, yNum = tonumber(x or ""), tonumber(y or "")
+				if xNum and yNum then
+					DBM.Arrow:ShowRunTo(xNum, yNum, 0.5, nil, true)
+					success = true
+				end
+			end
+			if not success then
+				DBM:AddMsg(DBM_ARROW_WAY_USAGE)
+			else
+				DBM:AddMsg(DBM_ARROW_WAY_SUCCESS)
+			end
+		end
+	end
 	if not BigWigs then
 		--Register pull and break slash commands for BW converts, if BW isn't loaded
 		--This shouldn't raise an issue since BW SHOULD load before DBM in any case they are both present.
@@ -1953,7 +1974,7 @@ do
 			DBM:AddMsg(DBM_CORE_LAG_CHECKING)
 			C_TimerAfter(5, function() DBM:ShowLag() end)
 		elseif cmd:sub(1, 3) == "hud" then
-			if DBM.Options.EnablePatchRestrictions and IsInInstance() then
+			if DBM:HasMapRestrictions() then
 				DBM:AddMsg(DBM_CORE_NO_HUD)
 				return
 			end
@@ -2047,7 +2068,7 @@ do
 				DBM:AddMsg(DBM_CORE_HUD_SUCCESS:format(strFromTime(hudDuration)))
 			end
 		elseif cmd:sub(1, 5) == "arrow" then
-			if DBM.Options.EnablePatchRestrictions and IsInInstance() then
+			if DBM:HasMapRestrictions() then
 				DBM:AddMsg(DBM_CORE_NO_ARROW)
 				return
 			end
@@ -2104,7 +2125,7 @@ do
 			DBM.Options.DebugMode = DBM.Options.DebugMode == false and true or false
 			DBM:AddMsg("Debug Message is " .. (DBM.Options.DebugMode and "ON" or "OFF"))
 		elseif cmd:sub(1, 8) == "whereiam" or cmd:sub(1, 8) == "whereami" then
-			if DBM.Options.EnablePatchRestrictions and IsInInstance() then
+			if DBM:HasMapRestrictions() then
 				DBM:AddMsg("Location debug not available do to instance restrictions")
 				return
 			end
@@ -2132,7 +2153,9 @@ do
 		if DBM.RangeCheck:IsShown() then
 			DBM.RangeCheck:Hide(true)
 		else
-			if IsInInstance() then
+			if DBM:HasMapRestrictions() then
+				DBM:AddMsg(DBM_CORE_NO_RANGE)
+			elseif IsInInstance() then
 				DBM:AddMsg(DBM_CORE_NO_RANGE_SOON)
 			end
 			if r and (r < 201) then
@@ -2980,11 +3003,6 @@ function DBM:AddDefaultOptions(t1, t2)
 	end
 end
 
-function DBM:SetRaidWarningPositon()
-	RaidWarningFrame:ClearAllPoints()
-	RaidWarningFrame:SetPoint(self.Options.RaidWarningPosition.Point, UIParent, self.Options.RaidWarningPosition.Point, self.Options.RaidWarningPosition.X, self.Options.RaidWarningPosition.Y)
-end
-
 function DBM:LoadModOptions(modId, inCombat, first)
 	local oldSavedVarsName = modId:gsub("-", "").."_SavedVars"
 	local savedVarsName = modId:gsub("-", "").."_AllSavedVars"
@@ -3415,9 +3433,6 @@ do
 		-- load special warning options
 		self:UpdateWarningOptions()
 		self:UpdateSpecialWarningOptions()
-		-- set this with a short delay to prevent issues with other addons also trying to do the same thing with another position ;)
-		self:Schedule(5, self.SetRaidWarningPositon, self)
-		self:Schedule(20, self.SetRaidWarningPositon, self)--A second attempt after we are sure all other mods are loaded, so we can work around issues with movemanything or other mods.
 		--Fix old options that use .wav instead of .ogg, to prevent no sounds bug as of 6.1+
 		if self.Options.RaidWarningSound:find(".wav") then self.Options.RaidWarningSound = self.DefaultOptions.RaidWarningSound end
 		if self.Options.SpecialWarningSound:find(".wav") then self.Options.SpecialWarningSound = self.DefaultOptions.SpecialWarningSound end
@@ -3666,6 +3681,7 @@ do
 	end
 	--Faster and more accurate loading for instances, but useless outside of them
 	function DBM:LOADING_SCREEN_DISABLED()
+		self.Bars:CancelBar(DBM_LFG_INVITE)--Disable bar here since LFG_PROPOSAL_SUCCEEDED seems broken right now
 		timerRequestInProgress = false
 		self:Debug("LOADING_SCREEN_DISABLED fired")
 		self:Unschedule(SecondaryLoadCheck)
@@ -3983,7 +3999,8 @@ do
 	local dummyMod2 -- dummy mod for the break timer
 	syncHandlers["PT"] = function(sender, timer, lastMapID, target)
 		if DBM.Options.DontShowUserTimers then return end
-		if (DBM:GetRaidRank(sender) == 0 and IsInGroup()) or select(2, IsInInstance()) == "pvp" or IsEncounterInProgress() then
+		local LFGTankException = IsPartyLFG() and UnitGroupRolesAssigned(sender) == "TANK"
+		if (DBM:GetRaidRank(sender) == 0 and IsInGroup() and not LFGTankException) or select(2, IsInInstance()) == "pvp" or IsEncounterInProgress() then
 			return
 		end
 		if (lastMapID and tonumber(lastMapID) ~= LastInstanceMapID) or (not lastMapID and DBM.Options.DontShowPTNoID) then return end
@@ -4388,8 +4405,8 @@ do
 			if not ver or not (ver == "2") then return end--Ignore old versions
 			if DBM:AntiSpam(5, "GCB") then
 				if IsInInstance() then return end--Simple filter, if you are inside an instance, just filter it, if not in instance, good to go.
-				local bossName = EJ_GetEncounterInfo(modId) or UNKNOWN
-				local difficultyName = UNKNOWN
+				local bossName = EJ_GetEncounterInfo(modId) or DBM_CORE_UNKNOWN
+				local difficultyName = DBM_CORE_UNKNOWN
 				difficulty = tonumber(difficulty)
 				if difficulty == 16 then
 					difficultyName = PLAYER_DIFFICULTY6
@@ -4407,8 +4424,8 @@ do
 			if not ver or not (ver == "3") then return end--Ignore old versions
 			if DBM:AntiSpam(5, "GCE") then
 				if IsInInstance() then return end--Simple filter, if you are inside an instance, just filter it, if not in instance, good to go.
-				local bossName = EJ_GetEncounterInfo(modId) or UNKNOWN
-				local difficultyName = UNKNOWN
+				local bossName = EJ_GetEncounterInfo(modId) or DBM_CORE_UNKNOWN
+				local difficultyName = DBM_CORE_UNKNOWN
 				difficulty = tonumber(difficulty)
 				if difficulty == 16 then
 					difficultyName = PLAYER_DIFFICULTY6
@@ -4431,7 +4448,7 @@ do
 			lastBossEngage[modId..realm] = GetTime()
 			if realm == playerRealm and DBM.Options.WorldBossAlert and not IsEncounterInProgress() then
 				modId = tonumber(modId)--If it fails to convert into number, this makes it nil
-				local bossName = modId and EJ_GetEncounterInfo(modId) or name or UNKNOWN
+				local bossName = modId and EJ_GetEncounterInfo(modId) or name or DBM_CORE_UNKNOWN
 				DBM:AddMsg(DBM_CORE_WORLDBOSS_ENGAGED:format(bossName, floor(health), sender))
 			end
 		end
@@ -4442,7 +4459,7 @@ do
 			lastBossDefeat[modId..realm] = GetTime()
 			if realm == playerRealm and DBM.Options.WorldBossAlert and not IsEncounterInProgress() then
 				modId = tonumber(modId)--If it fails to convert into number, this makes it nil
-				local bossName = modId and EJ_GetEncounterInfo(modId) or name or UNKNOWN
+				local bossName = modId and EJ_GetEncounterInfo(modId) or name or DBM_CORE_UNKNOWN
 				DBM:AddMsg(DBM_CORE_WORLDBOSS_DEFEATED:format(bossName, sender))
 			end
 		end
@@ -4454,7 +4471,7 @@ do
 			if realm == playerRealm and DBM.Options.WorldBossAlert and not IsEncounterInProgress() then
 				local _, toonName = BNGetGameAccountInfo(sender)
 				modId = tonumber(modId)--If it fails to convert into number, this makes it nil
-				local bossName = modId and EJ_GetEncounterInfo(modId) or name or UNKNOWN
+				local bossName = modId and EJ_GetEncounterInfo(modId) or name or DBM_CORE_UNKNOWN
 				DBM:AddMsg(DBM_CORE_WORLDBOSS_ENGAGED:format(bossName, floor(health), toonName))
 			end
 		end
@@ -4466,7 +4483,7 @@ do
 			if realm == playerRealm and DBM.Options.WorldBossAlert and not IsEncounterInProgress() then
 				local _, toonName = BNGetGameAccountInfo(sender)
 				modId = tonumber(modId)--If it fails to convert into number, this makes it nil
-				local bossName = modId and EJ_GetEncounterInfo(modId) or name or UNKNOWN
+				local bossName = modId and EJ_GetEncounterInfo(modId) or name or DBM_CORE_UNKNOWN
 				DBM:AddMsg(DBM_CORE_WORLDBOSS_DEFEATED:format(bossName, toonName))
 			end
 		end
@@ -4744,8 +4761,8 @@ do
 			end
 		elseif prefix == "Transcriptor" and msg then
 			if msg:find("spell:") and (DBM.Options.DebugLevel > 2 or (Transcriptor and Transcriptor:IsLogging())) then
-				local spellId = string.match(msg, "spell:(%d+)") or UNKNOWN
-				local spellName = string.match(msg, "h%[(.-)%]|h") or UNKNOWN
+				local spellId = string.match(msg, "spell:(%d+)") or DBM_CORE_UNKNOWN
+				local spellName = string.match(msg, "h%[(.-)%]|h") or DBM_CORE_UNKNOWN
 				local message = "RAID_BOSS_WHISPER on "..sender.." with spell of "..spellName.." ("..spellId..")"
 				self:Debug(message)
 			end
@@ -5126,12 +5143,7 @@ do
 	end
 
 	function DBM:UNIT_SPELLCAST_SUCCEEDED(uId, spellName, _, spellGUID, spellId)
-		local correctSpellId = 0
-		if wowTOC >= 70000 then--in Legion spellId arg is canned as of latest build, it existed until talarn testing.
-			correctSpellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
-		else
-			correctSpellId = spellId
-		end
+		local correctSpellId = tonumber(select(5, strsplit("-", spellGUID)), 10)
 		self:Debug("UNIT_SPELLCAST_SUCCEEDED fired: "..UnitName(uId).."'s "..spellName.."("..correctSpellId..")", 3)
 	end
 
@@ -6022,8 +6034,7 @@ do
 	local autoTLog = false
 	
 	local function isCurrentContent()
-		if LastInstanceMapID == 1205 or LastInstanceMapID == 1228 or LastInstanceMapID == 1448 or --Draenor (Remove August 30th)
-		LastInstanceMapID == 1520 or LastInstanceMapID == 1530 or LastInstanceMapID == 1220 then--Legion
+		if LastInstanceMapID == 1520 or LastInstanceMapID == 1530 or LastInstanceMapID == 1220 then--Legion
 			return true
 		end
 		return false
@@ -6097,7 +6108,7 @@ function DBM:GetCurrentInstanceDifficulty()
 	elseif difficulty == 7 then--Fixed LFR (ie pre WoD zones)
 		return "lfr25", difficultyName.." - ", difficulty, instanceGroupSize
 	elseif difficulty == 8 then
-		return "challenge5", difficultyName.." - ", difficulty, instanceGroupSize
+		return "challenge5", PLAYER_DIFFICULTY6.."+ - ", difficulty, instanceGroupSize
 	elseif difficulty == 9 then--40 man raids have their own difficulty now, no longer returned as normal 10man raids
 		return "normal10", difficultyName.." - ",difficulty, instanceGroupSize--Just use normal10 anyways, since that's where we been saving 40 man stuff for so long anyways, no reason to change it now, not like any 40 mans can be toggled between 10 and 40 where we NEED to tell the difference.
 	elseif difficulty == 11 then
@@ -6137,8 +6148,17 @@ function DBM:GetGroupSize()
 	return LastGroupSize
 end
 
+function DBM:HasMapRestrictions()
+	--Check playerX and playerY. if they are nil restrictions are active
+	--Restrictions active in all party, raid, pvp, arena maps. No restrictions in "none" or "scenario"
+	local playerX, playerY = UnitPosition("player")
+	if self.Options.EnablePatchRestrictions or not playerX or not playerY then
+		return true
+	end
+	return false
+end
+
 function DBM:PlaySoundFile(path, ignoreSFX)
---	if wowTOC == 70000 then return end--Check if this is fixed in newer build
 	local soundSetting = self.Options.UseSoundChannel
 	if soundSetting == "Dialog" then
 		PlaySoundFile(path, "Dialog")
@@ -6150,7 +6170,6 @@ function DBM:PlaySoundFile(path, ignoreSFX)
 end
 
 function DBM:PlaySound(path)
-	if wowTOC == 70000 then return end--Check if this is fixed in newer build
 	local soundSetting = self.Options.UseSoundChannel
 	if soundSetting == "Master" then
 		PlaySound(path, "Master")
@@ -6361,7 +6380,7 @@ do
 			SetMapToCurrentZone()
 			currentMapId = GetCurrentMapAreaID()
 		end
-		self:Schedule(120 + math.random(0, 600) , self.AprilFools, self)
+		self:Schedule(120 + math.random(0, 300) , self.AprilFools, self)
 		if currentMapId ~= 1014 then return end--Legion Dalaran
 		playDelay(self, 1)
 		self:Schedule(5, playDelay, self, 2)
@@ -6375,7 +6394,7 @@ do
 	function DBM:PLAYER_ENTERING_WORLD()
 		local weekday, month, day, year = CalendarGetDate()--Must be called after PLAYER_ENTERING_WORLD
 		if month == 4 and day == 1 then--April 1st
-			self:Schedule(180 + math.random(0, 600) , self.AprilFools, self)
+			self:Schedule(180 + math.random(0, 300) , self.AprilFools, self)
 		end
 		if GetLocale() == "ptBR" or GetLocale() == "frFR" or GetLocale() == "itIT" then
 			C_TimerAfter(10, function() if self.Options.HelpMessageVersion < 4 then self.Options.HelpMessageVersion = 4 self:AddMsg(DBM_CORE_NEED_LOCALS) end end)
@@ -6555,10 +6574,7 @@ do
 	end
 
 	--This is the source of the taints. As well as function DBM:AddMsg(text, prefix) function
-	--It's also required and impossible to avoid since we need this stuff
-	--This taint LOOKS like a StaticPopupDialog taint but it is not. That taint was actaully fixed in 5.3
-	--Install http://www.wowace.com/addons/notaint/ which embeds libchatanims to fix problem.
-	--Additional information at http://www.wowace.com/addons/libchatanims/
+	--Which is why we embed libchatanims to fix those taints.
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", filterOutgoing)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", filterOutgoing)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", filterIncoming)
@@ -6814,14 +6830,14 @@ end
 --/run DBM:FindEncounterIDs(768)--Emerald Nightmare
 --/run DBM:FindEncounterIDs(786)--The Nighthold
 --/run DBM:FindEncounterIDs(822)--Broken Isles
+--/run DBM:FindEncounterIDs(861)--Trial of Valor
+--/run DBM:FindEncounterIDs(860, 23)--Return to Karazhan
 function DBM:FindEncounterIDs(instanceID, diff)
 	if not instanceID then
 		self:AddMsg("Error: Function requires instanceID be provided")
 	end
-	local _, instanceType, difficultyID = GetInstanceInfo()
-	if not diff then diff = 14 end--Default to "normal" in 6.0 if diff arg not given.
-	if difficultyID == 0 then difficultyID = 6 end--EJ in 5.4 considers world bosses as 25man normal
-	EJ_SetDifficulty(diff or difficultyID)--Make sure it's set to right difficulty or it'll ignore mobs (ie ra-den if it's not set to heroic). Use user specified one as primary, with curernt zone difficulty as fallback
+	if not diff then diff = 14 end--Default to "normal" in 6.0+ if diff arg not given.
+	EJ_SetDifficulty(diff)--Make sure it's set to right difficulty or it'll ignore mobs (ie ra-den if it's not set to heroic). Use user specified one as primary, with curernt zone difficulty as fallback
 	for i=1, 25 do
 		local name, _, encounterID = EJ_GetEncounterInfoByIndex(i, instanceID)
 		if name then
@@ -6847,7 +6863,8 @@ do
 	MovieFrame:HookScript("OnEvent", function(self, event, id)
 		if event == "PLAY_MOVIE" and id and not neverFilter[id] then
 			DBM:Debug("PLAY_MOVIE fired for ID: "..id, 2)
-			if not IsInInstance() or C_Garrison:IsOnGarrisonMap() or C_Scenario.IsInScenario() or DBM.Options.MovieFilter == "Never" then return end
+			local isInstance, instanceType = IsInInstance()
+			if not isInstance or C_Garrison:IsOnGarrisonMap() or instanceType == "scenario" or DBM.Options.MovieFilter == "Never" then return end
 			if DBM.Options.MovieFilter == "Block" or DBM.Options.MovieFilter == "AfterFirst" and DBM.Options.MoviesSeen[id] then
 				MovieFrame_OnMovieFinished(self)
 				DBM:AddMsg(DBM_CORE_MOVIE_SKIPPED)
@@ -6859,7 +6876,8 @@ do
 
 	function DBM:CINEMATIC_START()
 		self:Debug("CINEMATIC_START fired", 2)
-		if not IsInInstance() or C_Garrison:IsOnGarrisonMap() or C_Scenario.IsInScenario() or self.Options.MovieFilter == "Never" then return end
+		local isInstance, instanceType = IsInInstance()
+		if not isInstance or C_Garrison:IsOnGarrisonMap() or instanceType == "scenario" or self.Options.MovieFilter == "Never" then return end
 		SetMapToCurrentZone()
 		local currentFloor = GetCurrentMapDungeonLevel() or 0
 		if self.Options.MovieFilter == "Block" or self.Options.MovieFilter == "AfterFirst" and self.Options.MoviesSeen[LastInstanceMapID..currentFloor] then
@@ -7077,9 +7095,17 @@ function bossModPrototype:IsLFR()
 	return false
 end
 
-function bossModPrototype:IsFaceroll()
+function bossModPrototype:IsEasy()
 	local diff = DBM:GetCurrentInstanceDifficulty()
 	if diff == "normal" or diff == "lfr" then
+		return true
+	end
+	return false
+end
+
+function bossModPrototype:IsHard()
+	local diff = DBM:GetCurrentInstanceDifficulty()
+	if diff == "mythic" or diff == "challenge5" then
 		return true
 	end
 	return false
@@ -7179,6 +7205,7 @@ do
 end
 
 bossModPrototype.AntiSpam = DBM.AntiSpam
+bossModPrototype.HasMapRestrictions = DBM.HasMapRestrictions
 bossModPrototype.GetUnitCreatureId = DBM.GetUnitCreatureId
 bossModPrototype.GetCIDFromGUID = DBM.GetCIDFromGUID
 bossModPrototype.IsCreatureGUID = DBM.IsCreatureGUID
@@ -7374,7 +7401,7 @@ end
 
 function bossModPrototype:CheckNearby(range, targetname)
 	local uId = DBM:GetRaidUnitId(targetname)
-	if uId then
+	if uId and not UnitIsUnit("player", uId) then
 		local inRange = DBM.RangeCheck:GetDistance(uId)
 		if inRange and inRange < range then
 			return true
@@ -8561,16 +8588,7 @@ do
 				if not DBM.Options.WarningIconChat then
 					text = text:gsub(textureExp, "") -- textures @ chat frame can (and will) distort the font if using certain combinations of UI scale, resolution and font size TODO: is this still true as of cataclysm?
 				end
-				if DBM.Options.ShowFakedRaidWarnings then
-					for i = 1, select("#", GetFramesRegisteredForEvent("CHAT_MSG_RAID_WARNING")) do
-						local frame = select(i, GetFramesRegisteredForEvent("CHAT_MSG_RAID_WARNING"))
-						if frame ~= RaidWarningFrame and frame:GetScript("OnEvent") then
-							frame:GetScript("OnEvent")(frame, "CHAT_MSG_RAID_WARNING", text, playerName, GetDefaultLanguage("player"), "", playerName, "", 0, 0, "", 0, 99, UnitGUID("player"))
-						end
-					end
-				else
-					self.mod:AddMsg(text, nil)
-				end
+				self.mod:AddMsg(text, nil)
 			end
 			if self.sound then
 				DBM:PlaySoundFile(DBM.Options.RaidWarningSound)

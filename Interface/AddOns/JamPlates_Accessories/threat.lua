@@ -2,7 +2,6 @@ local addonName, at = ...
 local core = at.core
 
 core:AddCallback('Initialize', 'threat', function(self, ...)
---print('loaded')
 	local tab = {}
 
 	tab.enabled = false
@@ -27,6 +26,7 @@ local threatStates = {
 	[2] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_Medium",
 	--[3] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_Medium",
 	[3] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_High",
+	[4] = "Interface\\AddOns\\" .. addonName .. "\\Media\\Threat_Max",
 }
 local function Frame_SetTexture(self, state)
 	self.texture:SetTexture(threatStates[state])
@@ -73,18 +73,20 @@ end
 
 
 local function Nameplate_OnUpdate(self, event, token)
-	--isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, mobUnit) or UnitDetailedThreatSituation("name", mobUnit)
+		local state
 		local _, _, scaledPercent, _, _ = UnitDetailedThreatSituation('player', token)
-		
-		if scaledPercent > 90 then
-			state = 3
-		elseif scaledPercent > 50 then
-			state = 2
-		elseif scaledPercent > 10 then
-			state = 1
+		if scaledPercent then
+			if scaledPercent >= 99 then
+				state = 4
+			elseif scaledPercent > 66 then
+				state = 3
+			elseif scaledPercent > 33 then
+				state = 2
+			elseif scaledPercent > 0 then
+				state = 1
+			end
 		else
 			self.threatFrame:Hide()
-			state = nil
 		end
 		if state then
 			self.threatFrame:SetThreatTexture(state)

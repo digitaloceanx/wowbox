@@ -104,13 +104,15 @@ local function addSet(sets, exclude, name, ...)
 		else
 			exclude = {[name] = {...}}
 		end
+	else
+		exclude = {}
 	end
 
 	return sets, exclude
 end
 
 local function getDefaultInventorySets(class)
-	local sets, exclude = addSet(sets, exclude, ALL, ALL)
+	local sets, exclude = addSet(sets, exclude, ALL)
 	sets, exclude = addSet(sets, exclude, L.Equipment)
 	sets, exclude = addSet(sets, exclude, L.TradeGood)
 	sets, exclude = addSet(sets, exclude, L.Misc)
@@ -121,7 +123,7 @@ local function getDefaultInventorySets(class)
 end
 
 local function getDefaultBankSets(class)
-	local sets, exclude = addSet(sets, exclude, ALL, ALL)
+	local sets, exclude = addSet(sets, exclude, ALL)
 	sets, exclude = addSet(sets, exclude, L.Equipment)
 	sets, exclude = addSet(sets, exclude, L.TradeGood)
 	sets, exclude = addSet(sets, exclude, L.Misc)
@@ -138,6 +140,8 @@ function Addon:InitProfile()
 
 	profile.inventory.sets, profile.inventory.exclude = getDefaultInventorySets(class)
 	profile.bank.sets, profile.bank.exclude = getDefaultBankSets(class)
+	if not profile.inventory.exclude then profile.inventory.exclude = {} end
+	if not profile.bank.exclude then profile.bank.exclude = {} end
 
 	self.db.profiles[player .. ' - ' .. realm] = profile
 	return profile
@@ -151,12 +155,14 @@ function Addon:GetBaseProfile()
 			leftSideFilter = true,
 			w = 345,
 			h = 480,
+			exclude = {},
 		},
 
 		bank = {
 			showBags = false,
 			w = 512,
 			h = 512,
+			exclude = {},
 		}
 	}
 end

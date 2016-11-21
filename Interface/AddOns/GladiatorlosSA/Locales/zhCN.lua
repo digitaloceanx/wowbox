@@ -47,7 +47,7 @@ L["Dest type"] = "目标类型"
 
 L["Profiles"] = "配置文件"
 
-L["GladiatorlosSACredits"] = "Customizable PvP Announcer addon for vocalizing many important spells and cast by your enemies.|n|n|cffFFF569Created by|r |cff9482C9Abatorlos|r |cffFFF569of Spinebreaker|r|n|cffFFF569Currently managed by|r |cffC79C6EOrunno|r |cffFFF569of Moon Guard|r|n|n|cffFFF569Past Contributors|r|n|cffA330C9DuskAshes|r (Chinese Support)|n|cffA330C9N30Ex|r (Mists of Pandaria Support)|n|cffA330C9zuhligan|r (Warlords of Draenor & French Support)|n|cffA330C9jungwan2|r (Korean Support)|n|cffA330C9Mini_Dragon|r (Chinese support after WoD)"
+L["GladiatorlosSACredits"] = "Customizable PvP Announcer addon for vocalizing many important spells and cast by your enemies.|n|n|cffFFF569Created by|r |cff9482C9Abatorlos|r |cffFFF569of Spinebreaker|r|n|cffFFF569Legion update by|r |cffC79C6EOrunno|r |cffFFF569of Moon Guard (With permission from zuhligan)|r|n|n|cffFFF569Special Thanks|r|n|cffA330C9superk521|r (Past Project Manager)|n|cffA330C9DuskAshes|r (Chinese Support)|n|cffA330C9N30Ex|r (Mists of Pandaria Support)|n|cffA330C9zuhligan|r (Warlords of Draenor & French Support)|n|cffA330C9jungwan2|r (Korean Support)|n|cffA330C9Mini_Dragon|r (Chinese support for WoD & Legion)|n|cffA330C9LordKuper|r (Russian support for Legion)"
 L["PVP Voice Alert"] = "PVP技能语音提示"
 L["Load Configuration"] = "加载配置"
 L["Load Configuration Options"] = "加载配置选项"

@@ -332,6 +332,7 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 
 	-- do this in case I add a Spell list as well; for viewing player spells saved by addon... which I did.  Damn I'm good.
 	local function List_OnClick(self)
+		if not MouseIsOver(self:GetParent()) then return end
 		for x, v in pairs(self.list) do
 			if MouseIsOver(x) then
 				local info = self.list[x]
@@ -424,6 +425,7 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		self.prev = nil
 	end
 
+
 	
 	local totalHeight = 0
 	CreateContainer(at.L['Features'], function(self)
@@ -431,7 +433,7 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 			core:CallbackKey('Toggle', self.key)
 		end
 		
-		local EnableDefaultAuras = CreateCheckButton(at.L['Enable Default Auras'], self, 'aura', 'defaultEnabled', {at.L["Display default auras."]}, 100, 8)
+		local EnableDefaultAuras = CreateCheckButton(at.L['Enable Default Auras'], self, 'aura', 'defaultEnabled', {at.L["Display default auras."], at.L["Disables addon auras."]}, 100, 8)
 		EnableDefaultAuras:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -16)
 		EnableDefaultAuras.key = 'aura'
 		EnableDefaultAuras:HookScript('OnClick', ToggleFeature)
@@ -445,6 +447,15 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		EnableAuras:SetPoint('TOPLEFT', EnableDefaultAuras, 'BOTTOMLEFT', 0, -12)
 		EnableAuras.key = 'aura'
 		EnableAuras:HookScript('OnClick', ToggleFeature)
+		
+		EnableDefaultAuras:HookScript('OnClick', function(self)
+			ToggleFeature(EnableAuras)
+			if EnableAuras:GetChecked() then
+				EnableAuras:SetChecked(false)
+			end
+			EnableAuras:SetEnabled(not self:GetChecked())
+		end)
+		
 		
 		local EnableTrack = CreateCheckButton(at.L['Enable Aura Watch'], self, 'tracker', 'enabled', {at.L["Enable aura tracking, seperating specified auras from the default display."], at.L["These ignore the inverted setting."]}, 100, 8)
 		EnableTrack:SetPoint('TOPLEFT', EnableAuras, 'BOTTOMLEFT', 0, -12)
@@ -473,24 +484,38 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 	local L_Relative = at.L["Relative"]
 	
 	CreateContainer(at.L['Aura'], function(self)
-		local PvPState = CreateCheckButton(at.L['Invert Auras'], self, 'aura', 'invert', {at.L["Enemy: Show buffs instead of debuffs."], at.L["Ally: Show debuffs instead of buffs."]})
-		PvPState:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -10)
+		local ShowPlayerBuffs = CreateCheckButton(at.L['Show player buffs'], self, 'aura', 'showPlayerBuff', {at.L["Show player buffs."]})
+		ShowPlayerBuffs:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -10)
+		local ShowPlayerDebuffs = CreateCheckButton(at.L['Show player debuffs'], self, 'aura', 'showPlayerDebuff', {at.L["Show player debuffs."]})
+		ShowPlayerDebuffs:SetPoint('LEFT', ShowPlayerBuffs.label, 'RIGHT', 14, 0)
 		
-		local PerRow = CreateTextField(at.L['Auras Per Row'], self, 'aura', 'BPR', {at.L["The number of auras per row."]}, 100, 8)
-		PerRow:SetPoint('TOPLEFT', PvPState, 'BOTTOMLEFT', 0, -4)
+		local ShowPetBuffs = CreateCheckButton(at.L['Show pet buffs'], self, 'aura', 'showPetBuff', {at.L["Show pet buffs."]})
+		ShowPetBuffs:SetPoint('TOPLEFT', ShowPlayerBuffs, 'BOTTOMLEFT', 0, -4)
+		local ShowPetDebuffs = CreateCheckButton(at.L['Show pet debuffs'], self, 'aura', 'showPetDebuff', {at.L["Show pet debuffs."]})
+		ShowPetDebuffs:SetPoint('LEFT', ShowPetBuffs.label, 'RIGHT', 14, 0)
 		
-		local ShowPet = CreateCheckButton(at.L['Show Pet Auras'], self, 'aura', 'ShowPet', {at.L["Display pet auras alongside your own."]})
-		ShowPet:SetPoint('LEFT', PerRow, 'RIGHT', 130, 0)
+		local ShowFriendlyBuffs = CreateCheckButton(at.L['Show friendly buffs'], self, 'aura', 'showFriendlyBuff', {at.L["Show friendly buffs."]})
+		ShowFriendlyBuffs:SetPoint('TOPLEFT', ShowPetBuffs, 'BOTTOMLEFT', 0, -4)
+		local ShowFriendlyDebuffs = CreateCheckButton(at.L['Show friendly debuffs'], self, 'aura', 'showFriendlyDebuff', {at.L["Show friendly debuffs."]})
+		ShowFriendlyDebuffs:SetPoint('LEFT', ShowFriendlyBuffs.label, 'RIGHT', 14, 0)
 		
-		local ShowBorder = CreateCheckButton(at.L['Show Aura Borders'], self, 'aura', 'ShowBorder', {at.L["Display aura type borders."]})
-		ShowBorder:SetPoint('LEFT', ShowPet.label, 'RIGHT', 14, 0)
+		local ShowHostileBuffs = CreateCheckButton(at.L['Show hostile buffs'], self, 'aura', 'showHostileBuff', {at.L["Show hostile buffs."]})
+		ShowHostileBuffs:SetPoint('TOPLEFT', ShowFriendlyBuffs, 'BOTTOMLEFT', 0, -4)
+		local ShowHostileDebuffs = CreateCheckButton(at.L['Show hostile debuffs'], self, 'aura', 'showHostileDebuff', {at.L["Show hostile debuffs."]})
+		ShowHostileDebuffs:SetPoint('LEFT', ShowHostileBuffs.label, 'RIGHT', 14, 0)
+				
 		
 		local ChangeGrowth = CreateCheckButton(at.L['Reverse Row Growth'], self, 'aura', 'growth', {at.L["Grow auras down instead of up."]})
-		ChangeGrowth:SetPoint('LEFT', PvPState.label, 'RIGHT', 14, 0)
+		ChangeGrowth:SetPoint('TOPLEFT', ShowHostileBuffs, 'BOTTOMLEFT', 0, -4)
 		
 		local ChangeDirection = CreateCheckButton(at.L['Reverse Column Direction'], self, 'aura', 'direction', {at.L["Grow auras left instead of right."]})
 		ChangeDirection:SetPoint('LEFT', ChangeGrowth.label, 'RIGHT', 14, 0)
-
+		
+		local PerRow = CreateTextField(at.L['Auras Per Row'], self, 'aura', 'BPR', {at.L["The number of auras per row."]}, 100, 8)
+		PerRow:SetPoint('TOPLEFT', ChangeGrowth, 'BOTTOMLEFT', 0, -4)
+		
+		local ShowBorder = CreateCheckButton(at.L['Show Aura Borders'], self, 'aura', 'ShowBorder', {at.L["Display aura type borders."]})
+		ShowBorder:SetPoint('LEFT', PerRow, 'RIGHT', 130, 0)
 		
 		local Anchor = CreateDropDownMenu(at.L['Anchor'], self, 'aura', 'anchor', anchorTip, 180, 8)
 		Anchor:SetPoint('TOPLEFT', PerRow, 'BOTTOMLEFT', 0, -16)
@@ -515,13 +540,34 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		Scale:SetPoint('TOPLEFT', Width, 'BOTTOMLEFT', 0, -22)
 		
 		
-		self:SetHeight(260)
-		totalHeight = totalHeight + 260
+		self:SetHeight(380)
+		totalHeight = totalHeight + 380
 	end)
 	
 	CreateContainer(at.L['Aura Watch'], function(self) -- I'd have called it Aura Watcher but that sounds lame...
+		local ShowPlayerBuffs = CreateCheckButton(at.L['Show player buffs'], self, 'tracker', 'showPlayerBuff', {at.L["Show player buffs."]})
+		ShowPlayerBuffs:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -10)
+		local ShowPlayerDebuffs = CreateCheckButton(at.L['Show player debuffs'], self, 'tracker', 'showPlayerDebuff', {at.L["Show player debuffs."]})
+		ShowPlayerDebuffs:SetPoint('LEFT', ShowPlayerBuffs.label, 'RIGHT', 14, 0)
+		
+		local ShowPetBuffs = CreateCheckButton(at.L['Show pet buffs'], self, 'tracker', 'showPetBuff', {at.L["Show pet buffs."]})
+		ShowPetBuffs:SetPoint('TOPLEFT', ShowPlayerBuffs, 'BOTTOMLEFT', 0, -4)
+		local ShowPetDebuffs = CreateCheckButton(at.L['Show pet debuffs'], self, 'tracker', 'showPetDebuff', {at.L["Show pet debuffs."]})
+		ShowPetDebuffs:SetPoint('LEFT', ShowPetBuffs.label, 'RIGHT', 14, 0)
+		
+		local ShowFriendlyBuffs = CreateCheckButton(at.L['Show friendly buffs'], self, 'tracker', 'showFriendlyBuff', {at.L["Show friendly buffs."]})
+		ShowFriendlyBuffs:SetPoint('TOPLEFT', ShowPetBuffs, 'BOTTOMLEFT', 0, -4)
+		local ShowFriendlyDebuffs = CreateCheckButton(at.L['Show friendly debuffs'], self, 'tracker', 'showFriendlyDebuff', {at.L["Show friendly debuffs."]})
+		ShowFriendlyDebuffs:SetPoint('LEFT', ShowFriendlyBuffs.label, 'RIGHT', 14, 0)
+		
+		local ShowHostileBuffs = CreateCheckButton(at.L['Show hostile buffs'], self, 'tracker', 'showHostileBuff', {at.L["Show hostile buffs."]})
+		ShowHostileBuffs:SetPoint('TOPLEFT', ShowFriendlyBuffs, 'BOTTOMLEFT', 0, -4)
+		local ShowHostileDebuffs = CreateCheckButton(at.L['Show hostile debuffs'], self, 'tracker', 'showHostileDebuff', {at.L["Show hostile debuffs."]})
+		ShowHostileDebuffs:SetPoint('LEFT', ShowHostileBuffs.label, 'RIGHT', 14, 0)
+		
+		
 		local ChangeGrowth = CreateCheckButton(at.L['Reverse Row Growth'], self, 'tracker', 'growth', {at.L["Grow auras down instead of up."]})
-		ChangeGrowth:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -10)
+		ChangeGrowth:SetPoint('TOPLEFT', ShowHostileBuffs, 'BOTTOMLEFT', 0, -4)
 		
 		local ChangeDirection = CreateCheckButton(at.L['Reverse Column Direction'], self, 'tracker', 'direction', {at.L["Grow auras left instead of right."]})
 		ChangeDirection:SetPoint('LEFT', ChangeGrowth.label, 'RIGHT', 14, 0)
@@ -555,8 +601,8 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		Scale:SetPoint('TOPLEFT', Width, 'BOTTOMLEFT', 0, -22)
 		
 		
-		self:SetHeight(250)
-		totalHeight = totalHeight + 250
+		self:SetHeight(380)
+		totalHeight = totalHeight + 380
 	end)
 	
 	CreateContainer(at.L['Threat'], function(self)
@@ -653,7 +699,8 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		end
 		FilterFrame:HookScript("OnShow", FF_OnShow)
 		FF_OnShow(FilterFrame)
-		SpellListUpdate = function() FF_OnShow(FilterFrame) end
+		
+		
 		
 		local warning = scrollFrame:CreateFontString( nil, 'ARTWORK', 'GameFontNormal' )
 		warning:SetPoint('TOPLEFT', scrollFrame, 'TOPRIGHT', 32, -16)
@@ -1044,8 +1091,8 @@ InterfaceOptions_AddCategory( main )
 _G['SLASH_' .. addonName .. 1] = "/jamplates"
 SlashCmdList[addonName] = function()
 	if InCombatLockdown() then return print(at.L['Commands disabled in combat.']) end
-	--   -_-  Blizzard make it more broken... me hit with hammer and make work smarter
-	InterfaceOptionsFrame_Show() -- this appears to work 100% of the time...
+	--   -_-  Blizzard make it more broken... me hit with hammer and make work smarter....
 	InterfaceOptionsFrame_OpenToCategory(main.name)
-	SpellListUpdate()
+	InterfaceOptionsFrame_OpenToCategory(main.name)
+	InterfaceOptionsFrame_OpenToCategory(main.name)
 end

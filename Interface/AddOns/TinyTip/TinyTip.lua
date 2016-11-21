@@ -10,6 +10,7 @@
 -- 对于大多数参数，true为启用，false 为禁用（请不要使用nil）
 local rc = LibStub("LibRangeCheck-2.0");
 local InspectLess = LibStub("LibInspectLess-1.0")
+local strutf8sub = string.utf8sub
 local tip = {};
 local _;
 local TTCfg = {
@@ -575,7 +576,7 @@ local function SetUnit(self, ...)
 		if tmp2 then
 			if TTVar.Guild then
 				if TTVar.GuildRank and tmp3 then tmp3 = "·"..tmp3 else tmp3 = "" end
-				L2:SetText("<"..tmp2..tmp3..">"..tmp)
+				L2:SetText("<"..strutf8sub(tmp2,1, 12)..tmp3..">"..tmp)
 				if IsInGuild() and not cDeadOrTapped
 				and (tmp2 == GetGuildInfo("player") or (TTVar.MyGuild ~="" and strfind(tmp2,TTVar.MyGuild))) then
 					L2:SetTextColor(ParseColor(TTColor.MyGuild))
@@ -1070,6 +1071,7 @@ local function OnLoad()
 		if (TT.peticon) then TT.peticon:Hide() end
 		itemlevel = 0;
 		avgitemlevel = 0;
+		TT:Hide()
 	end);
 	TT:HookScript("OnTooltipSetUnit", SetUnit)
 	GameTooltip:HookScript("OnTooltipSetItem", SetItem)

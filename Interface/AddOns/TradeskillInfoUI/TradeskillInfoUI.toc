@@ -7,7 +7,7 @@
 ## Notes-zhTW: 商業技能資料庫設置窗口
 ## Notes-esES: UI con Info Completa de las Habilidades de Comercio
 ## Author: Ethan Centaurai
-## Version: v2.3.11-8-g4a4280c
+## Version: v2.3.11-20-ge023f39
 ## Dependencies: TradeskillInfo
 ## LoadOnDemand: 1
 ## X-Icon: Interface\Icons\INV_Elemental_SpiritOfHarmony_2

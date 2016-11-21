@@ -4,7 +4,7 @@
 ## Notes-zhCN: 在姓名版上显示你和你宠物施放的Buff/Debuff
 ## Title-zhTW: [多玩] 姓名版增强
 ## Notes-zhTW: 在姓名版上顯示你和你寵物施放的Buff/Debuff
-## Version: 7.0.1.0
+## Version: 7.0.2.1
 ## Author: Jeruku
 ## SpecialMentions: Talasonx
 ## Notes: Adds de/buffs, threat and combo points to nameplates.

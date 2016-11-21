@@ -71,12 +71,12 @@ L["TITAN_PANEL_SLASH_PROFILE_2"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<名字>
 L["TITAN_PANEL_SLASH_PROFILE_3"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<服务器>: |cffffffff可以是服务器名也可以是 Titan配置模板名."
 L["TITAN_PANEL_SLASH_SILENT_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {silent}";
 L["TITAN_PANEL_SLASH_SILENT_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."silent: |cffffffffToggles "..TITAN_PANEL.." to load silently.";
-L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."使用命令: |cffffffff/titan {help | help <主题>}";
-L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<主题>: reset/gui/profile/silent/help ";
 L["TITAN_PANEL_SLASH_ORDERHALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."Usage: |cffffffff/titan {orderhall}";
 L["TITAN_PANEL_SLASH_ORDERHALL_1"] = LIGHTYELLOW_FONT_COLOR_CODE.."orderhall: |cffffffffToggles "..TITAN_PANEL.." to hide Order Hall Command Bar.";
+L["TITAN_PANEL_SLASH_HELP_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."使用命令: |cffffffff/titan {help | help <主题>}";
+L["TITAN_PANEL_SLASH_HELP_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<主题>: reset/gui/profile/silent/orderhall/help ";
 L["TITAN_PANEL_SLASH_ALL_0"] = LIGHTYELLOW_FONT_COLOR_CODE.."使用命令: |cffffffff/titan <topic>";
-L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<主题>: |cffffffffreset/gui/profile/help ";
+L["TITAN_PANEL_SLASH_ALL_1"] = " - "..LIGHTYELLOW_FONT_COLOR_CODE.."<主题>: |cffffffffreset/gui/profile/silent/orderhall/help ";
 
 -- slash command responses
 L["TITAN_PANEL_SLASH_RESP1"] = LIGHTYELLOW_FONT_COLOR_CODE..TITAN_PANEL.."Titan Panel 提示文字缩放已重置.";
@@ -164,6 +164,7 @@ L["TITAN_PANEL_MENU_SHOW"] = "显示扩展组件";
 L["TITAN_PANEL_MENU_PLUGIN_RESET"] = "刷新扩展组件";
 L["TITAN_PANEL_MENU_PLUGIN_RESET_DESC"] = "刷新扩展组件的文本和位置";
 L["TITAN_PANEL_MENU_SILENT_LOAD"] = "Silent Load";
+L["TITAN_PANEL_MENU_HIDE_ORDERHALL"] = "Hide Order Hall Command Bar";
 
 -- localization strings for AceConfigDialog-3.0     
 L["TITAN_ABOUT_VERSION"] = "版本";
@@ -545,6 +546,7 @@ L["TITAN_GOLD_ONLY"] = "只显示金";
 L["TITAN_GOLD_COLORS"] = "显示金币颜色";
 L["TITAN_GOLD_MERGE"] = "合并服务器";
 L["TITAN_GOLD_SEPARATE"] = "独立服务器";
+
 L["TITAN_VOLUME_TOOLTIP"] = "音量信息";
 L["TITAN_VOLUME_MASTER_TOOLTIP_VALUE"] = "主音量: ";
 L["TITAN_VOLUME_SOUND_TOOLTIP_VALUE"] = "音效音量: ";

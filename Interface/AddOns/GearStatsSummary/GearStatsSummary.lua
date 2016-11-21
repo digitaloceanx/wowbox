@@ -232,11 +232,13 @@ function GearStatsSummary_OnEvent(self, event, ...)
 	end
 end
 
+
 function GearStatsSummary_PaperDollFrame_OnShow()
 	if not InspectFrame or not InspectFrame:IsVisible() then
 		GearStatsSummary_ShowFrame(GearStatsSummarySelfFrame,PaperDollFrame,UnitName("player"),OFFSET_X,OFFSET_Y);
 	end
 	GearStatsSummary_UpdateAnchor(1)
+
 end
 
 function GearStatsSummary_PaperDollFrame_OnHide()
@@ -244,6 +246,8 @@ function GearStatsSummary_PaperDollFrame_OnHide()
 		GearStatsSummary_HideFrame(GearStatsSummarySelfFrame);
 	end
 	GearStatsSummary_UpdateAnchor(-1)
+	
+	--Outfitter_UpdateAnchor(false)	
 end
 
 function GearStatsSummary_InspectFrame(self)
@@ -524,9 +528,12 @@ function GearStatsSummary_Sum(inspecting, tipUnit)
 			if quality then
 				r, g, b = GetItemQualityColor(quality);
 			end
-			
+
 			--[[# 2 - Uncommon # 3 - Rare # 4 - Epic # 5 - Legendary # 7 Account]]
 			if quality and (quality >=2 and quality <=7) then
+				if quality == 6 and iLevel == 750 and (i == 16 or i == 17) then
+					iLevel = ScanItemTooltip(GetInventoryItemLink(unit, i == 16 and 17 or 16))
+				end
 				sum["ITEMCOUNT"..quality] = (sum["ITEMCOUNT"..quality] or 0) + 1;
 				sum["ITEMLEVEL"..quality] = (sum["ITEMLEVEL"..quality] or 0) + iLevel;
 				sum["ItemLink"][i] = "["..iLevel.."]"..dw_RGBToHex(r,g,b).."["..itemName.."]|r";

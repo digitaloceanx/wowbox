@@ -12,8 +12,7 @@ core:AddCallback('Initialize', nil, function(self, ...)
 	tab.defaultEnabled = false
 	--tab.defaultTimers = true -- maybe some day
 	
-	tab.invert = false
-	tab.ShowPet = true
+	--tab.invert = false
 	tab.ShowBorder = true
 	tab.BPR = 6
 	tab.scale = 1
@@ -25,12 +24,21 @@ core:AddCallback('Initialize', nil, function(self, ...)
 	tab.direction = false
 	tab.x = 0
 	tab.y = 0
+	
+	tab.showPlayerBuff = true
+	tab.showPlayerDebuff = true
+	tab.showPetBuff = true
+	tab.showPetDebuff = true
+	tab.showFriendlyBuff = false
+	tab.showFriendlyDebuff = false
+	tab.showHostileBuff = false
+	tab.showHostileDebuff = false
+	
 	tab.filter = {
 		--[1459] = true, -- mage: arcane brilliance
 		--[21562] = true, -- priest: Power word: fortitude
 	}
 	
-	--self.db.aura = self:CopyTable(tab)
 	self.db.aura = tab
 
 	self:AddCallback('VariablesLoaded', 'aura', function(self)
@@ -46,17 +54,27 @@ core:AddCallback('Initialize', nil, function(self, ...)
 	tab = {}
 
 	tab.enabled = true
-	tab.ShowPet = true
+	tab.ShowBorder = true
 	tab.BPR = 6
 	tab.scale = 1
 	tab.width = 17
 	tab.height = 17
-	tab.anchor = 'RIGHT'
+	tab.anchor = 'TOPRIGHT'
 	tab.relative = 'LEFT'
 	tab.growth = false
 	tab.direction = true
 	tab.x = 0
 	tab.y = 0
+	
+	tab.showPlayerBuff = true
+	tab.showPlayerDebuff = true
+	tab.showPetBuff = true
+	tab.showPetDebuff = true
+	tab.showFriendlyBuff = true
+	tab.showFriendlyDebuff = true
+	tab.showHostileBuff = true
+	tab.showHostileDebuff = true
+	
 	tab.filter = {
 		--[1459] = true, -- mage: arcane brilliance
 		--[21562] = true, -- priest: Power word: fortitude
@@ -138,8 +156,6 @@ local function RecyctableAuras(tab)
 			frame:SetScale(core.db.aura.scale)
 
 			frame.border:SetSize(core.db.aura.width +3, core.db.aura.height +2)
-
-			--frame.cooldown.scrollframe:SetSize(core.db.aura.width/2, core.db.aura.height)
 		end
 		core.auras[#core.auras +1] = tab
 		return nil
@@ -164,8 +180,6 @@ local function RecyctableCCs(tab)
 			frame:SetScale(core.db.tracker.scale)
 
 			frame.border:SetSize(core.db.tracker.width +3, core.db.tracker.height +2)
-
-			--frame.cooldown.scrollframe:SetSize(core.db.tracker.width/2, core.db.tracker.height)
 		end
 		core.tracker[#core.tracker +1] = tab
 		return nil
@@ -184,15 +198,17 @@ end
 local function Aura_OnHide(self)
 	self.spellID = nil
 end
-local function CreateButton()
-	local frame = CreateFrame('Frame')
-	frame:SetSize(core.db.aura.width, core.db.aura.height)
-	frame:SetScale(core.db.aura.scale)
+local function CreateButton(parent, isCC)
+	local db = isCC and core.db.tracker or core.db.aura
+	
+	local frame = CreateFrame('Frame', parent)
+	frame:SetSize(core.db.aura.width, db.height)
+	frame:SetScale(db.scale)
 
 	local border = frame:CreateTexture()
 	border:SetTexture("Interface\\Buttons\\UI-Debuff-Overlays")
 	border:SetTexCoord(0.296875, 0.5703125, 0, 0.515625)
-	border:SetSize(core.db.aura.width +3, core.db.aura.height +2)
+	border:SetSize(db.width +3, db.height +2)
 	border:SetPoint('CENTER', frame, 'CENTER')
 	frame.border = border
 
@@ -209,12 +225,10 @@ local function CreateButton()
 	-- finally
 	local cooldown = CreateFrame('Cooldown', nil, frame, "CooldownFrameTemplate")
 	cooldown:SetAllPoints(frame)
-	cooldown.noCooldownCount = true -- TODO: is this a variable Tuller uses to
+	cooldown.noCooldownCount = true -- CooldownCount ignore thing
 	cooldown:SetReverse(true)
-	--local cooldown = CreateCooldown(frame)
 	cooldown.timer = timer
 	cooldown:HookScript('OnUpdate', Cooldown_OnUpdate)
-	--cooldown:HookScript('OnHide', Cooldown_OnHide)
 	cooldown.Parent = frame
 	frame.cooldown = cooldown
 
@@ -231,13 +245,13 @@ local function CreateButton()
 end
 
 
-local function AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expirationTime, count)
+local function AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expirationTime, count, isCC)
 	frame.spellID = spellID
 
 	frame.texture:SetTexture(icon)
 	
 	frame.debuffType = debuffType
-	if core.db.aura.ShowBorder then
+	if isCC and core.db.tracker.ShowBorder or core.db.aura.ShowBorder then
 		frame.border:Show()
 		local color = DebuffTypeColor[debuffType or 'none']
 		frame.border:SetVertexColor(color.r, color.g, color.b)
@@ -298,75 +312,88 @@ local Growth = {
 	},
 }
 
-local function AddAura(self, nameplate, isCC, spellID, icon, debuffType, duration, expirationTime, count)
-	local buffs = not isCC and self.plates[nameplate].auras or self.plates[nameplate].tracker
+local function AddAura(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count)
+	local buffs = self.plates[nameplate].auras
+	if not buffs then return end
 	local index = buffs.visible +1
 	buffs.visible = index
 	local frame = buffs[index]
 	if not frame then
-		frame = CreateButton()
-		if isCC then
-			self.plates[nameplate].tracker[index] = frame
-		else
-			self.plates[nameplate].auras[index] = frame
-		end
+		frame = CreateButton(nameplate)
+		self.plates[nameplate].auras[index] = frame
 	end
 	AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expirationTime, count)
+
+	index = index -1
+	frame:ClearAllPoints()
+	if not self.db.aura.enabled then
+		frame:Hide()
+	else
+		if index == 0 then
+			frame:SetPoint(self.db.aura.anchor, nameplate, self.db.aura.relative, self.db.aura.x, self.db.aura.y)
+
+		else
+			local bpr = self.db.aura.BPR
+			local growth
+			if ceil(index / bpr) == index / bpr then
+				growth = self.db.aura.growth
+				--frame:SetPoint('BOTTOMLEFT', buffs[index - self.db.aura.BPR + 1], 'TOPLEFT', 0, 14)
+				frame:SetPoint(Growth.Row[growth][1], buffs[index - bpr + 1], Growth.Row[growth][2], 0, 14 * (growth and -1 or 1))
+
+			else
+				growth = self.db.aura.direction
+				frame:SetPoint(Growth.Column[growth][1], buffs[index], Growth.Column[growth][2], BUFF_HORIZ_SPACING  * (growth and 1 or -1), 0)
+				
+			end
+		end
+	end
+	self.plates[nameplate].auras.visible = buffs.visible
+		
+	frame:Show()
+	return frame
+end
+local function AddCC(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count)
+	local buffs = self.plates[nameplate].tracker
+	if not buffs then return end
+	local index = buffs.visible +1
+	buffs.visible = index
+	local frame = buffs[index]
+	if not frame then
+		frame = CreateButton(nameplate)
+		self.plates[nameplate].tracker[index] = frame
+	end
+	AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expirationTime, count, true)
 	frame:SetParent(nameplate)
 
 	index = index -1
 	frame:ClearAllPoints()
-	if not isCC then
-		if not self.db.aura.enabled then
-			frame:Hide()
-		else
-			if index == 0 then
-				frame:SetPoint(self.db.aura.anchor, nameplate, self.db.aura.relative, self.db.aura.x, self.db.aura.y)
 
-			else
-				local bpr = self.db.aura.BPR
-				local growth
-				if ceil(index / bpr) == index / bpr then
-					growth = self.db.aura.growth
-					--frame:SetPoint('BOTTOMLEFT', buffs[index - self.db.aura.BPR + 1], 'TOPLEFT', 0, 14)
-					frame:SetPoint(Growth.Row[growth][1], buffs[index - bpr + 1], Growth.Row[growth][2], 0, 14 * (growth and -1 or 1))
-
-				else
-					growth = self.db.aura.direction
-					frame:SetPoint(Growth.Column[growth][1], buffs[index], Growth.Column[growth][2], BUFF_HORIZ_SPACING  * (growth and 1 or -1), 0)
-					
-				end
-			end
-		end
-		self.plates[nameplate].auras.visible = buffs.visible
-		
+	if not self.db.tracker.enabled then
+		frame:Hide()
 	else
-		if not self.db.tracker.enabled then
-			frame:Hide()
+		if index == 0 then
+			frame:SetPoint(self.db.tracker.anchor, nameplate, self.db.tracker.relative, self.db.tracker.x, self.db.tracker.y)
+
 		else
-			if index == 0 then
-				frame:SetPoint(self.db.tracker.anchor, nameplate, self.db.tracker.relative, self.db.tracker.x, self.db.tracker.y)
+			local bpr = self.db.tracker.BPR
+			local growth
+			if ceil(index / bpr) == index / bpr then
+				growth = self.db.tracker.growth
+				frame:SetPoint(Growth.Row[growth][1], buffs[index - bpr + 1], Growth.Row[growth][2], 0, 14 * (growth and -1 or 1))
 
 			else
-				local bpr = self.db.tracker.BPR
-				local growth
-				if ceil(index / bpr) == index / bpr then
-					growth = self.db.tracker.growth
-					frame:SetPoint(Growth.Row[growth][1], buffs[index - bpr + 1], Growth.Row[growth][2], 0, 14 * (growth and -1 or 1))
-
-				else
-					growth = self.db.tracker.direction
-					frame:SetPoint(Growth.Column[growth][1], buffs[index], Growth.Column[growth][2], BUFF_HORIZ_SPACING * (growth and 1 or -1), 0)
-					
-				end
+				growth = self.db.tracker.direction
+				frame:SetPoint(Growth.Column[growth][1], buffs[index], Growth.Column[growth][2], BUFF_HORIZ_SPACING * (growth and 1 or -1), 0)
+				
 			end
 		end
-		self.plates[nameplate].tracker.visible = buffs.visible
-	
 	end
+	self.plates[nameplate].tracker.visible = buffs.visible
+	
 	frame:Show()
 	return frame
 end
+--[[
 local function DoseAura(self, nameplate, isCC, spellID, icon, debuffType, duration, expirationTime, count)
 	local buffs = self.plates[nameplate].auras
 	if isCC then buffs = self.plates[nameplate].tracker end
@@ -424,80 +451,62 @@ local function RemoveAura(self, nameplate, isCC, spellID)
 	self.plates[nameplate].auras.visible = buffs.visible -1
 
 end
+--]]
 
--- Oh ma gurd... there's got to be an easier way.
-local function ShowPlayerDebuffsOnly(IsHarmful, IsInverted, IsEnemy, IsPlayerCaster)
-	if IsInverted then
-		return false
-	elseif IsEnemy and IsHarmful and IsPlayerCaster then
-		return true
-	end
-	return false
-end
-
-local function ShowPlayerBuffsOnly(IsHarmful, IsInverted, IsEnemy, IsPlayerCaster)
-	if IsHarmful or IsInverted or IsEnemy then
-		return false
-	elseif IsPlayerCaster then
-		return true
-	end
-	return false
-end
-
-local function ShowOtherDebuffsOnly(IsHarmful, IsInverted, IsEnemy, IsPlayerCaster)
-	if IsHarmful and IsInverted and IsEnemy and not IsPlayerCaster then
-		return true
-	end
-	return false
-end
-
-local function ShowOtherBuffsOnly(IsHarmful, IsInverted, IsEnemy, IsPlayerCaster)
-	if IsEnemy or IsHarmful or not IsInverted or IsPlayerCaster then
-		return false
-	end
-	return true
-end
-
+-- Oh ma gurd... I deleted it, yay!
 local function ScanAuras(self, nameplate, token)
-	if not token then return end -- apparently I need this...
 	local tab = self.plates[nameplate]
 	local aura = self.db.aura
 	local trac = self.db.tracker
 	
 	local auras, frame
 	local index, visible = 1
-	local canAttack = tab.canAttack
-	local invert = aura.invert
 
 	if tab.auras then tab.auras.visible = 0 end
 	if tab.tracker then tab.tracker.visible = 0 end
 	
-	local filter = 'HARMFUL'
+	local filter = 'HARMFUL' or nil
 	
 	local spellID, icon, count, debuffType, duration, expirationTime, caster = true
-	
-	while spellID do
+	while token and spellID do
 		_, _, icon, count, debuffType, duration, expirationTime, caster, _, _, spellID = UnitAura(token, index, filter)
-		if spellID and not aura.filter[spellID] then
+		if spellID then
 			local tmp = self.spells[spellID] or {}
 			tmp.icon = icon
 			tmp.debuffType = debuffType
 			tmp.duration = duration
 			self.spells[spellID] = tmp
 			
-			local isCC = trac.filter[spellID]
-			if isCC
-				--  This had been a long standing error, that apparently didn't affect me...
-				--		Thank you, Talasonx, for helping me spot it.
-				or (filter and ShowPlayerDebuffsOnly(filter, invert, canAttack, caster == 'player'))
-				or (filter and ShowOtherDebuffsOnly(filter, invert, canAttack, caster == 'player'))
-				or (not filter and ShowPlayerBuffsOnly(filter, invert, canAttack, caster == 'player'))
-				or (not filter and ShowOtherBuffsOnly(filter, invert, canAttack, caster == 'player')) then
+			local unitIsAllied = UnitCanAttack('player', token)
+			-- Talasonx special honors; I've since improved the code he pointed out I had wrong.
+			if (trac.filter[spellID] and trac.enabled) and (
+				(trac.showPlayerBuff and not filter and caster == 'player') or
+				(trac.showPlayerDebuff and filter and caster == 'player') or
+				(trac.showPetBuff and not filter and caster == 'pet') or
+				(trac.showPetDebuff and filter and caster == 'pet') or
 				
+				(trac.showFreindlyBuff and not filter and unitIsAllied) or
+				(trac.showFreindlyDebuff and filter and unitIsAllied) or
 				
+				(trac.showHostileBuff and not filter and not unitIsAllied) or
+				(trac.showHostileDebuff and filter and not unitIsAllied)
+				) then
 				
-				AddAura(self, nameplate, isCC, spellID, icon, debuffType, duration, expirationTime, count)
-
+				AddCC(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count)
+				
+			elseif (aura.enabled and not aura.filter[spellID]) and (
+				(aura.showPlayerBuff and not filter and caster == 'player') or
+				(aura.showPlayerDebuff and filter and caster == 'player') or
+				(aura.showPetBuff and not filter and caster == 'pet') or
+				(aura.showPetDebuff and filter and caster == 'pet') or
+				
+				(aura.showFreindlyBuff and not filter and unitIsAllied) or
+				(aura.showFreindlyDebuff and filter and unitIsAllied) or
+				
+				(aura.showHostileBuff and not filter and not unitIsAllied) or
+				(aura.showHostileDebuff and filter and not unitIsAllied)
+				) then
+				AddAura(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count)
 			end
 		end
 		
@@ -532,21 +541,38 @@ core:AddCallback('NAME_PLATE_CREATED', 'aura', function(self, plate)
 	UnitAurasEventFrames[plate]:SetScript('OnEvent', function()
 		ScanAuras(self, plate, plate.namePlateUnitToken)
 	end)
-	if self.db.aura.defaultEnabled then
-		plate.UnitFrame.BuffFrame:Show()
-	else
-		plate.UnitFrame.BuffFrame:Hide()
-	end
+	local visible = self.db.aura.defaultEnabled and main.Show or main.Hide
+	if plate.UnitFrame.BuffFrame then visible(plate.UnitFrame.BuffFrame) end
 end)
 
+local function HideUnusedFrames(default, aura, tracker)
+	local visible = default and main.Show or main.Hide
+	for x, v in pairs(core.plates) do
+		if x.UnitFrame.BuffFrame then visible(x.UnitFrame.BuffFrame) end
+		if not aura and v.auras then
+			local list = v.auras
+			for y=1, #list do
+				list[y]:Hide()
+			end
+			v.auras = RecyctableCCs(v.auras)
+		end
+		if not tracker and v.tracker then
+			local list = v.tracker
+			for y=1, #list do
+				list[y]:Hide()
+			end
+			v.tracker = RecyctableCCs(v.tracker)
+		end
+	end
+end
+
 local function ToggleEvents(self)
-	local state = self.db.aura.enabled or self.db.tracker.enabled
-	local visible = self.db.aura.defaultEnabled
+	local aura = self.db.aura.enabled
+	local track = self.db.tracker.enabled
+	local state = aura or track
+	HideUnusedFrames(self.db.aura.defaultEnabled, aura, track)
 	if state then
 		state = 'AddCallback'
-		for x, v in pairs(UnitAurasEventFrames) do
-			v:RegisterEvent('UNIT_AURA')
-		end
 	else
 		state = 'RemoveCallback'
 		for x, v in pairs(UnitAurasEventFrames) do
@@ -554,19 +580,15 @@ local function ToggleEvents(self)
 		end
 	end
 	
-	visible = visible and main.Show or main.Hide
-	for x, v in pairs(self.plates) do
-		visible(x.UnitFrame.BuffFrame)
-	end
-	
 	self[state](self, 'NAME_PLATE_UNIT_ADDED', 'aura', function(self, plate, token)
-		UnitAurasEventFrames[plate]:RegisterEvent('UNIT_AURA')
-		self.plates[plate].auras = RecyctableAuras()
-		self.plates[plate].tracker = RecyctableCCs()
+		UnitAurasEventFrames[plate]:RegisterUnitEvent('UNIT_AURA', token)
+		self.plates[plate].auras = not self.plates[plate].auras and RecyctableAuras()
+		self.plates[plate].tracker = not self.plates[plate].tracker and RecyctableCCs()
+		ScanAuras(self, plate, token)
 	end)
 	self[state](self, 'NAME_PLATE_UNIT_REMOVED', 'aura', function(self, plate, token)
-		self.plates[plate].auras = RecyctableAuras(self.plates[plate].auras)
-		self.plates[plate].tracker = RecyctableCCs(self.plates[plate].tracker)
+		if aura then self.plates[plate].auras = RecyctableAuras(self.plates[plate].auras) end
+		if track then self.plates[plate].tracker = RecyctableCCs(self.plates[plate].tracker) end
 		UnitAurasEventFrames[plate]:UnregisterEvent('UNIT_AURA')
 	end)
 end

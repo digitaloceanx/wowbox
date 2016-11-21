@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
     
-    Decursive (v 2.7.4.7-3-ga9c60fa) add-on for World of Warcraft UI
+    Decursive (v 2.7.4.7-9-gdc22693) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
     Starting from 2009-10-31 and until said otherwise by its author, Decursive
@@ -18,7 +18,7 @@
     but WITHOUT ANY WARRANTY.
 
     
-    This file was last updated on 2016-07-23T07:59:38Z
+    This file was last updated on 2016-09-11T18:57:40Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -57,6 +57,30 @@ local L     = D.L;
 local LC    = D.LC;
 local DC    = T._C;
 
+local _G                = _G;
+local setmetatable      = _G.setmetatable;
+local unpack            = _G.unpack;
+local select            = _G.select;
+local pairs             = _G.pairs;
+local ipairs            = _G.ipairs;
+local bit               = _G.bit;
+local GetTime           = _G.GetTime;
+local IsControlKeyDown  = _G.IsControlKeyDown;
+local IsAltKeyDown      = _G.IsAltKeyDown;
+local IsShiftKeyDown    = _G.IsShiftKeyDown;
+local floor             = _G.math.floor;
+local table             = _G.table;
+local t_insert          = _G.table.insert;
+local str_format        = _G.string.format;
+local string            = _G.string;
+local UnitExists        = _G.UnitExists;
+local UnitClass         = _G.UnitClass;
+local fmod              = _G.math.fmod;
+local UnitIsUnit        = _G.UnitIsUnit;
+local str_upper         = _G.string.upper;
+local InCombatLockdown  = _G.InCombatLockdown;
+local GetRaidTargetIndex= _G.GetRaidTargetIndex;
+local CreateFrame       = _G.CreateFrame;
 
 -- NS def
 D.MicroUnitF = {};
@@ -72,10 +96,6 @@ function MicroUnitF:new(...)
 end
 
 
-
--- since there are tens of thousands of globals defined at all times, lets use some locals!
-local BOOKTYPE_PET      = BOOKTYPE_PET;
-local BOOKTYPE_SPELL    = BOOKTYPE_SPELL;
 
 -- Init object factory defaults
 --MicroUnitF.ExistingPerID          = {};
@@ -103,44 +123,29 @@ local EMPTY_TABLE           = DC.EMPTY_TABLE;
 -- Those are the different colors used for the MUFs main texture
 local MF_colors = { };
 
-local _G                = _G;
-local unpack            = _G.unpack;
-local select            = _G.select;
-local pairs             = _G.pairs;
-local ipairs            = _G.ipairs;
-local bit               = _G.bit;
-local GetTime           = _G.GetTime;
-local IsControlKeyDown  = _G.IsControlKeyDown;
-local floor             = _G.math.floor;
-local table             = _G.table;
-local t_insert          = _G.table.insert;
-local str_format        = _G.string.format;
-local table             = _G.table;
-local string            = _G.string;
-local UnitExists        = _G.UnitExists;
-local UnitClass         = _G.UnitClass;
-local fmod              = _G.math.fmod;
-local UnitIsUnit        = _G.UnitIsUnit;
-local str_upper         = _G.string.upper;
-local InCombatLockdown  = _G.InCombatLockdown;
-local GetRaidTargetIndex= _G.GetRaidTargetIndex;
-local CreateFrame       = _G.CreateFrame;
 
 
 DC.MouseButtonsReadable = { -- {{{
-    ["*%s1"]         =   L["HLP_LEFTCLICK"], -- left mouse button
-    ["*%s2"]         =   L["HLP_RIGHTCLICK"], -- right mouse button
-    ["*%s3"]         =   L["HLP_MIDDLECLICK"], -- middle mouse button
+    ["*%s1"]        =   L["HLP_LEFTCLICK"],   -- left mouse button
+    ["*%s2"]        =   L["HLP_RIGHTCLICK"],  -- right mouse button
+    ["*%s3"]        =   L["HLP_MIDDLECLICK"], -- middle mouse button
+    ["*%s4"]        =   L["HLP_MOUSE4"],      -- 4th mouse button
+    ["*%s5"]        =   L["HLP_MOUSE5"],      -- 5th mouse button
     ["ctrl-%s1"]    =   L["CTRL"]  .. "-" .. L["HLP_LEFTCLICK"],
     ["ctrl-%s2"]    =   L["CTRL"]  .. "-" .. L["HLP_RIGHTCLICK"],
     ["ctrl-%s3"]    =   L["CTRL"]  .. "-" .. L["HLP_MIDDLECLICK"],
+    ["ctrl-%s4"]    =   L["CTRL"]  .. "-" .. L["HLP_MOUSE4"],
+    ["ctrl-%s5"]    =   L["CTRL"]  .. "-" .. L["HLP_MOUSE5"],
     ["shift-%s1"]   =   L["SHIFT"] .. "-" .. L["HLP_LEFTCLICK"],
     ["shift-%s2"]   =   L["SHIFT"] .. "-" .. L["HLP_RIGHTCLICK"],
     ["shift-%s3"]   =   L["SHIFT"] .. "-" .. L["HLP_MIDDLECLICK"],
+    ["shift-%s4"]   =   L["SHIFT"] .. "-" .. L["HLP_MOUSE4"],
+    ["shift-%s5"]   =   L["SHIFT"] .. "-" .. L["HLP_MOUSE5"],
     ["alt-%s1"]     =   L["ALT"]   .. "-" .. L["HLP_LEFTCLICK"],
     ["alt-%s2"]     =   L["ALT"]   .. "-" .. L["HLP_RIGHTCLICK"],
     ["alt-%s3"]     =   L["ALT"]   .. "-" .. L["HLP_MIDDLECLICK"],
-    -- 3, -- middle mouse button || RESERVED FOR TARGETTING
+    ["alt-%s4"]     =   L["ALT"]   .. "-" .. L["HLP_MOUSE4"],
+    ["alt-%s5"]     =   L["ALT"]   .. "-" .. L["HLP_MOUSE5"],
 }; -- }}}
 
 -- modifier for the macro
@@ -921,39 +926,44 @@ end
 function MicroUnitF.OnPreClick(frame, Button) -- {{{
     D:Debug("Micro unit Preclicked: ", Button);
 
-    local Unit = frame.Object.CurrUnit; -- shortcut
+    local RequestedPrio;
+    local ButtonsString = "";
+    local modifier;
 
-    if (frame.Object.UnitStatus == NORMAL and (Button == "LeftButton" or Button == "RightButton")) then
+    if IsControlKeyDown() then
+        modifier = "ctrl-";
+    elseif IsAltKeyDown() then
+        modifier = "alt-";
+    elseif IsShiftKeyDown() then
+        modifier = "shift-";
+    end
+
+    if Button == "LeftButton" then
+        ButtonsString = "*%s1";
+    elseif Button == "RightButton" then
+        ButtonsString = "*%s2";
+    elseif Button == "MiddleButton" then
+        ButtonsString = "*%s3";
+    elseif Button == "Button4" then
+        ButtonsString = "*%s4";
+    elseif Button == "Button5" then
+        ButtonsString = "*%s5";
+    else
+        D:Debug("unknown button", Button);
+        return;
+    end
+
+    RequestedPrio = D:tGiveValueIndex(D.db.global.MouseButtons, modifier and (modifier .. ButtonsString:sub(-3)) or ButtonsString);
+
+    D:Debug("RequestedPrio:", RequestedPrio);
+    if frame.Object.UnitStatus == NORMAL and D:tcheckforval(D.Status.CuringSpellsPrio, RequestedPrio) then
 
         D:Println(L["HLP_NOTHINGTOCURE"]);
 
     elseif (frame.Object.UnitStatus == AFFLICTED and frame.Object.Debuffs[1]) then
         local NeededPrio = D:GiveSpellPrioNum(frame.Object.Debuffs[1].Type);
-        local RequestedPrio;
-        local ButtonsString = "";
-        local modifier;
-
-        if IsControlKeyDown() then
-            modifier = "ctrl-";
-        elseif IsAltKeyDown() then
-            modifier = "alt-";
-        elseif IsShiftKeyDown() then
-            modifier = "shift-";
-        end
-
-        if Button == "LeftButton" then
-            ButtonsString = "*%s1";
-        elseif Button == "RightButton" then
-            ButtonsString = "*%s2";
-        elseif Button == "MiddleButton" then
-            ButtonsString = "*%s3";
-        else
-            D:Debug("unknown button");
-            return;
-        end
-
-        RequestedPrio = D:tGiveValueIndex(D.db.global.MouseButtons, modifier and (modifier .. ButtonsString:sub(-3)) or ButtonsString);
-        D:Debug("RequestedPrio:", RequestedPrio);
+        local Unit = frame.Object.CurrUnit; -- shortcut
+        
 
         -- there is no spell for the requested prio ? (no spell registered to this modifier+mousebutton)
         if modifier and RequestedPrio and not D:tcheckforval(D.Status.CuringSpellsPrio, RequestedPrio) then
@@ -1265,6 +1275,18 @@ do
             self.Frame:SetAttribute("ctrl-type3", "macro");
             self.Frame:SetAttribute("alt-type3", "macro");
             self.Frame:SetAttribute("shift-type3", "macro");
+
+            -- set the mouse 4th-button actions on all modifiers
+            self.Frame:SetAttribute("*type4", "macro");
+            self.Frame:SetAttribute("ctrl-type4", "macro");
+            self.Frame:SetAttribute("alt-type4", "macro");
+            self.Frame:SetAttribute("shift-type4", "macro");
+
+            -- set the mouse 4th-button actions on all modifiers
+            self.Frame:SetAttribute("*type5", "macro");
+            self.Frame:SetAttribute("ctrl-type5", "macro");
+            self.Frame:SetAttribute("alt-type5", "macro");
+            self.Frame:SetAttribute("shift-type5", "macro");
         end
 
         local MouseButtons = D.db.global.MouseButtons;
@@ -1828,6 +1850,6 @@ local MF_Textures = { -- unused
 
 -- }}}
 
-T._LoadedFiles["Dcr_DebuffsFrame.lua"] = "2.7.4.7-3-ga9c60fa";
+T._LoadedFiles["Dcr_DebuffsFrame.lua"] = "2.7.4.7-9-gdc22693";
 
 -- Heresy

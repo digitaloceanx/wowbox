@@ -11,6 +11,7 @@ local L = scope.locale
 
 local CallbackHandler = LibStub("CallbackHandler-1.0")
 local LGIST = LibStub("LibGroupInSpecT-1.1")
+local LibDialog = LibStub("LibDialog-1.0")
 
 BINDING_HEADER_oRA3 = addonName
 BINDING_NAME_TOGGLEORA3 = L.togglePane
@@ -31,6 +32,7 @@ local _testUnits = {
 	Purple = "HUNTER",
 	Tor = "SHAMAN",
 	Ling = "MONK",
+	Donk = "DEMONHUNTER",
 }
 addon._testUnits = _testUnits
 
@@ -373,30 +375,6 @@ end
 --
 
 do
-	local partyUnits = {"player", "party1", "party2", "party3", "party4"}
-
-	local raidUnits = {}
-	for i = 1, _G.MAX_RAID_MEMBERS do
-		raidUnits[#raidUnits + 1] = ("raid%d"):format(i)
-	end
-
-	function addon:IterateGroup()
-		local i = 0
-		local size = GetNumGroupMembers()
-		if size == 0 then size = 1 end
-
-		local function iter(a)
-			i = i + 1
-			if i <= size then
-				return a[i], i
-			end
-		end
-
-		return iter, (IsInRaid() and raidUnits or partyUnits)
-	end
-end
-
-do
 	local playerCache = {}
 
 	local function guidToUnit(guid)
@@ -674,7 +652,7 @@ local function setupGUI()
 
 	frame:SetHitRectInsets(0, 30, 0, 45)
 	frame:SetToplevel(true)
-	frame:EnableMouse(true)
+	frame:SetMovable(true)
 
 	local topleft = frame:CreateTexture(nil, "ARTWORK")
 	topleft:SetTexture(136558) --"Interface\\PaperDollInfoFrame\\UI-Character-General-TopLeft"
@@ -715,8 +693,25 @@ local function setupGUI()
 	title:SetPoint("TOP", 4, -16)
 	frame.title = title
 
-	local drag = frame:CreateTitleRegion()
+	local drag = CreateFrame("Frame", nil, frame)
 	drag:SetAllPoints(title)
+	drag:EnableMouse(true)
+	drag:SetMovable(true)
+	drag:RegisterForDrag("LeftButton")
+	drag:SetScript("OnDragStart", function() frame:StartMoving() end)
+	drag:SetScript("OnDragStop", function() frame:StopMovingOrSizing() end)
+	frame.drag = drag
+
+	LibDialog:Register("oRA3DisbandGroup", {
+		text = L.disbandGroupWarning,
+		buttons = {
+			{ text = YES, on_click = actuallyDisband, },
+			{ text = NO, },
+		},
+		no_close_button = true,
+		hide_on_escape = true,
+		show_while_dead = true,
+	})
 
 	local disband = CreateFrame("Button", "oRA3DisbandButton", frame, "UIPanelButtonTemplate")
 	disband:SetWidth(120)
@@ -727,22 +722,10 @@ local function setupGUI()
 	disband:SetText(L.disbandGroup)
 	disband:SetPoint("TOPLEFT", 72, -37)
 	disband:SetScript("OnClick", function()
-		if not StaticPopupDialogs["oRA3DisbandGroup"] then
-			StaticPopupDialogs["oRA3DisbandGroup"] = {
-				text = L.disbandGroupWarning,
-				button1 = YES,
-				button2 = NO,
-				whileDead = 1,
-				hideOnEscape = 1,
-				timeout = 0,
-				OnAccept = actuallyDisband,
-				preferredIndex = STATICPOPUP_NUMDIALOGS,
-			}
-		end
 		if IsControlKeyDown() then
 			actuallyDisband()
 		else
-			StaticPopup_Show("oRA3DisbandGroup")
+			LibDialog:Spawn("oRA3DisbandGroup")
 		end
 	end)
 	if (addon:IsPromoted() or 0) > 1 and not IsInGroup(2) then
@@ -769,6 +752,7 @@ local function setupGUI()
 	check.module = consumables
 
 	local opt = CreateFrame("Button", "oRA3OptionsButton", frame)
+	opt:SetFrameLevel(drag:GetFrameLevel() + 1)
 	opt:SetNormalTexture(311225) --"Interface\\Worldmap\\Gear_64"
 	opt:GetNormalTexture():SetTexCoord(0, 0.5, 0, 0.5)
 	opt:SetHighlightTexture(311225) --"Interface\\Worldmap\\Gear_64"
@@ -1144,8 +1128,8 @@ function addon:CreateScrollEntry(header)
 end
 
 local sortIndex -- current index (scrollheader) being sorted
-local function sortAsc(a, b) return b[sortIndex] > a[sortIndex] end
-local function sortDesc(a, b) return a[sortIndex] > b[sortIndex] end
+local function sortAsc(a, b) return (b[sortIndex] or 0) > (a[sortIndex] or 0) end
+local function sortDesc(a, b) return (a[sortIndex] or 0) > (b[sortIndex] or 0) end
 local function toggleColumn(header)
 	local list = lists[openedList]
 	local nr = header.headerIndex

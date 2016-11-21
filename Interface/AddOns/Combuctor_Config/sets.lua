@@ -98,6 +98,8 @@ end
 
 local function HasSubSet(name, parent)
 	local info = getInfo()
+	if not info.exclude then info.exclude = {} end
+
 	local exclude = info.exclude[parent]
 
 	if exclude then

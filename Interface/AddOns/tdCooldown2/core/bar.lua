@@ -562,7 +562,7 @@ function tCD:UNIT_SPELLCAST_SUCCEEDED(unit, spell, rank)
 end
 
 function tCD:PLAYER_ENTERING_WORLD()
-	local start, duration, id, type, timed;
+	local start, duration, id, type, timed = 0;
 	for i, v in ipairs(tCDcoolingData) do
 		if v.spell == "Test Spell" then
 			tremove(tCDcoolingData, i);

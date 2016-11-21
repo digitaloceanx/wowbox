@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
     
-    Decursive (v 2.7.4.7-3-ga9c60fa) add-on for World of Warcraft UI
+    Decursive (v 2.7.4.7-9-gdc22693) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
     Starting from 2009-10-31 and until said otherwise by its author, Decursive
@@ -17,7 +17,7 @@
     Decursive is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY.
 
-    This file was last updated on 2016-08-17T22:57:44Z
+    This file was last updated on 2016-09-12T00:18:29Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -56,6 +56,7 @@ local _G                = _G;
 local pairs             = _G.pairs;
 local ipairs            = _G.ipairs;
 local type              = _G.type;
+local tostring          = _G.tostring;
 local unpack            = _G.unpack;
 local select            = _G.select;
 local str_sub           = _G.string.sub;
@@ -77,6 +78,7 @@ local IsSpellInRange    = _G.IsSpellInRange;
 local UnitInRange       = _G.UnitInRange;
 local debugprofilestop  = _G.debugprofilestop;
 local GetSpellInfo      = _G.GetSpellInfo;
+local GetItemInfo       = _G.GetItemInfo;
 
 -- replacement for the default function as it is bugged in WoW5 (it returns nil for some spells such as resto shamans' 'Purify Spirit')
 D.IsSpellInRange = function (spellName, unit)
@@ -219,8 +221,6 @@ end
 
 
 function D:tremovebyval(tab, val) -- {{{
-    local k;
-    local v;
     for k,v in pairs(tab) do
         if(v==val) then
             t_remove(tab, k);
@@ -229,6 +229,19 @@ function D:tremovebyval(tab, val) -- {{{
     end
     return false;
 end -- }}}
+
+function D:tAsString(t) -- debugging function
+
+    if type(t) ~= 'table' then
+        return tostring(t)
+    end
+
+    local s = '{'
+    for k,v in pairs(t) do
+        s = s .. ('[%s] = [%s], '):format(tostring(k), tostring(v))
+    end
+    return s .. '}'
+end
 
 function D:tcheckforval(tab, val) -- {{{
     local k, v;
@@ -441,7 +454,7 @@ do
             T._FatalError("global RAID_CLASS_COLORS does not exist...");
         end
 
-        D:Debug(INFO, 'CreateClassColorTables called');
+        D:Debug('CreateClassColorTables called');
     end
 
     if CUSTOM_CLASS_COLORS and CUSTOM_CLASS_COLORS.RegisterCallback then
@@ -515,7 +528,7 @@ function D.GetSpellOrItemInfo(spellID)
     if spellID > 0 then
         return GetSpellInfo(spellID);
     else
-        return GetItemInfo(spellID * -1);
+        return GetItemInfo(spellID * -1) or "Item: " .. spellID * -1;
     end
 end
 
@@ -807,4 +820,4 @@ do
 end
 
 
-T._LoadedFiles["Dcr_utils.lua"] = "2.7.4.7-3-ga9c60fa";
+T._LoadedFiles["Dcr_utils.lua"] = "2.7.4.7-9-gdc22693";

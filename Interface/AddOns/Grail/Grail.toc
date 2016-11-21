@@ -6,7 +6,7 @@
 ## Title-zhTW: [多玩] 任務指示數據庫
 ## Notes-zhTW: 提供可接任務提示的數據庫
 ## Author: Scott M Harrison
-## Version: 080
+## Version: 081
 ## SavedVariables: GrailDatabase
 ## SavedVariablesPerCharacter: GrailDatabasePlayer
 ## Dependencies: Duowan

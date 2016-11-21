@@ -63,7 +63,9 @@ local dispelMap = {
 -- Spells to ignore detecting
 local ignore_ids = {
 	[1604] = true, -- Dazed
-	[6307] = true, -- Blood Pact
+	[6788] = true, -- Weakened Soul
+	[57723] = true, -- Exhaustion
+	[95809] = true, -- Insanity (hunter pet Ancient Hysteria debuff)
 }
 
 local clientVersion

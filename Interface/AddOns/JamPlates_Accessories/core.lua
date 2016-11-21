@@ -42,17 +42,22 @@ end
 
 function core:CopyTable(t, t2)
 	if not t then return {} end
+	local t3 = {}
 	if t2 then
-		t2 = wipe(t2)
+		for k,v in pairs(t2) do
+			if type(v) == 'table' then
+				v = self:CopyTable(v, t3[k])
+			end
+			t3[k] = v
+		end
 		for k,v in pairs(t) do
 			if type(v) == 'table' then
-				v = self:CopyTable(v, t2[k])
+				v = self:CopyTable(v, t3[k])
 			end
-			t2[k] = v
+			t3[k] = v
 		end
-		return t2
+		return t3
 	else
-		local t3 = {}
 		for k,v in pairs(t) do
 			if type(v) == 'table' then
 				v = self:CopyTable(v)
@@ -232,7 +237,7 @@ function core:LoadVariables()
 		JamPlatesAccessoriesDB = self:CopyTable(JamPlatesAccessoriesDB or {default = self.defaults, spells = {}})
 
 		JamPlatesAccessoriesCP = JamPlatesAccessoriesCP or self.PLAYER_GUID
-		self.db = self:CopyTable(JamPlatesAccessoriesDB[JamPlatesAccessoriesCP] or self.db)
+		self.db = self:CopyTable(JamPlatesAccessoriesDB[JamPlatesAccessoriesCP] or self.db, self.db)
 		
 		
 		if core.db.name == 'default' and JamPlatesAccessoriesCP == self.PLAYER_GUID then
@@ -247,7 +252,7 @@ function core:LoadVariables()
 			local unitFrame = frame.UnitFrame
 			local tab = {}
 			--local overlay = unitFrame.Highlight
-			local threat = unitFrame.aggroHighlight
+			--local threat = unitFrame.aggroHighlight
 			local name = unitFrame.name
 			local hp = unitFrame.healthBar
 			--tab.overlay = overlay
@@ -257,12 +262,6 @@ function core:LoadVariables()
 			
 			self.plates[frame] = tab
 			self:Callback('NAME_PLATE_CREATED', frame, hp, threat, overlay, name)
-
-			--OnShow(frame)
-			--OnUpdate(frame)
-			--frame:HookScript('OnShow', OnShow)
-			--frame:HookScript('OnHide', OnHide)
-			--frame:HookScript('OnUpdate', OnUpdate)
 		end
 		
 		self:RegisterEvent('NAME_PLATE_UNIT_ADDED')

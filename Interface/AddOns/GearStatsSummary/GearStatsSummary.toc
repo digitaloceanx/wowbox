@@ -7,7 +7,7 @@
 ## Title: |cffC495DDEUI|r |cff00ff00GearStatsSummary|r
 ## Title-zhCN: [多玩] 装备属性统计
 ## Title-zhTW: [多玩] 裝備屬性統計
-## Version: GSS Realse 6
+## Version: GSS Realse 7
 ## Dependencies: Duowan
 ## X-Revision: Duowan
 

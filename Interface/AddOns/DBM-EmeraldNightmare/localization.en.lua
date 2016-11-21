@@ -22,6 +22,12 @@ L:SetMiscLocalization({
 ---------------------------
 L= DBM:GetModLocalization(1738)
 
+L:SetOptionLocalization({
+	InfoFrameBehavior	= "Set information InfoFrame shows during encounter",
+	Fixates				= "Show players affected by Fixate",
+	Adds				= "Show add counts for all add types"
+})
+
 ---------------------------
 -- Elerethe Renferal --
 ---------------------------
@@ -32,8 +38,12 @@ L= DBM:GetModLocalization(1744)
 ---------------------------
 L= DBM:GetModLocalization(1667)
 
+L:SetOptionLocalization({
+	NoAutoSoaking2		= "Disable all auto soaking related warnings/arrows/HUDs for Focused Gaze"
+})
+
 L:SetMiscLocalization({
-	SoakersText		=	"Soakers Assigned: %"
+	SoakersText			= "Soakers Assigned: %s"
 })
 
 ---------------------------
@@ -45,6 +55,10 @@ L= DBM:GetModLocalization(1704)
 -- Cenarius --
 ------------------
 L= DBM:GetModLocalization(1750)
+
+L:SetMiscLocalization({
+	BrambleMessage		= "Note: DBM can't detect who is actually FIXATED by Bramble. It does, however, warn who the initial target is for the SPAWN. Boss picks player, throws it them. After this, bramble picks ANOTHER target mods can't detect"
+})
 
 ------------------
 -- Xavius --

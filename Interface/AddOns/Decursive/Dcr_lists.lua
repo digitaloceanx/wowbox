@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
     
-    Decursive (v 2.7.4.7-3-ga9c60fa) add-on for World of Warcraft UI
+    Decursive (v 2.7.4.7-9-gdc22693) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
     Starting from 2009-10-31 and until said otherwise by its author, Decursive
@@ -590,4 +590,4 @@ function D:PopulateButtonPress(frame) --{{{
 
 end --}}}
 
-T._LoadedFiles["Dcr_lists.lua"] = "2.7.4.7-3-ga9c60fa";
+T._LoadedFiles["Dcr_lists.lua"] = "2.7.4.7-9-gdc22693";

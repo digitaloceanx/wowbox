@@ -32,16 +32,14 @@ local outputValues = { -- channel list
 }
 local outputValuesWithChannels = {} -- channel list with custom channels mixed in
 
-local FULL_PLAYER_NAME = _G.FULL_PLAYER_NAME
 local UNKNOWN = ("(%s)"):format(_G.UNKNOWN)
 local soulstoneList = {}
 
 local combatLogMap = {}
 combatLogMap.SPELL_CAST_START = {
 	-- Feasts
-	[160740] = "Feast", -- Feast of Blood (+75)
-	[160914] = "Feast", -- Feast of the Waters (+75)
 	[175215] = "Feast", -- Savage Feast (+100)
+	[201351] = "Feast", -- Hearty Feast (+150)
 }
 combatLogMap.SPELL_CAST_SUCCESS = {
 	-- Repair Bots
@@ -238,8 +236,8 @@ function module:Spam(key, msg)
 	local isInstanceGroup = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
 
 	local chatMsg = msg:gsub("|Hicon:%d+:dest|h|TInterface.TargetingFrame.UI%-RaidTargetingIcon_(%d).blp:0|t|h", "{rt%1}") -- replace icon textures
-	chatMsg = chatMsg:gsub("|Hplayer:.-|h%[(.-)%]|h", "%1") -- remove player links
-	chatMsg = chatMsg:gsub("|c%x%x%x%x%x%x%x%x([^%|].-)|r", "%1") -- remove color
+	chatMsg = chatMsg:gsub("|Hplayer:.-|h(.-)|h", "%1") -- remove player links
+	chatMsg = chatMsg:gsub("|c%x%x%x%x%x%x%x%x([^|].-)|r", "%1") -- remove color
 
 	if not IsInGroup() then
 		fallback = true
@@ -337,21 +335,26 @@ do
 end
 
 
+local function getClassColor(name)
+	if name and module.db.profile.classColor then
+		local _, class = UnitClass(name)
+		if class then
+			return classColors[class].colorStr
+		end
+	end
+end
+
 local UpdatePets
 do -- COMBAT_LOG_EVENT_UNFILTERED
 	function module:UNIT_PET(unit)
 		local pet = UnitGUID(unit .. "pet")
 		if pet then
-			local name, server = UnitName(unit)
-			if server and server ~= "" then
-				name = FULL_PLAYER_NAME:format(name, server)
-			end
-			petOwnerMap[pet] = name
+			petOwnerMap[pet] = self:UnitName(unit)
 		end
 	end
 
 	function UpdatePets()
-		for unit in oRA:IterateGroup() do
+		for unit in module:IterateGroup() do
 			module:UNIT_PET(unit)
 		end
 	end
@@ -375,25 +378,26 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 	end
 
 	local FILTER_FRIENDLY_PLAYERS = bit_bor(COMBATLOG_OBJECT_TYPE_PLAYER, COMBATLOG_OBJECT_REACTION_FRIENDLY)
-	local function getName(name, guid, flags)
+	local function getName(name, guid, flags, color)
 		local petOwner = petOwnerMap[guid]
 		if petOwner then
-			petOwner = module.db.profile.playerLink and ("|Hplayer:%s|h[%s]|h"):format(petOwner, petOwner:gsub("%-.*", "")) or petOwner:gsub("%-.*", "")
+			petOwner = ("|c%s|Hplayer:%s|h%s|h|r"):format(getClassColor(petOwner) or color, petOwner, petOwner:gsub("%-.*", ""))
 			return L["%s's %s"]:format(petOwner, name or UNKNOWN)
 		elseif name and bit_band(flags, FILTER_FRIENDLY_PLAYERS) == FILTER_FRIENDLY_PLAYERS then
-			return module.db.profile.playerLink and ("|Hplayer:%s|h[%s]|h"):format(name, name:gsub("%-.*", "")) or name:gsub("%-.*", "")
+			return ("|c%s|Hplayer:%s|h%s|h|r"):format(getClassColor(name) or color, name, name:gsub("%-.*", ""))
 		end
-		return name or UNKNOWN
+		return ("|c%s%s|r"):format(color, name or UNKNOWN)
 	end
 
 	local extraUnits = {"target", "focus", "focustarget", "mouseover", "boss1", "boss2", "boss3", "boss4", "boss5"}
 	local function getUnit(guid)
-		for _, unit in ipairs(extraUnits) do
+		for i = 1, #extraUnits do
+			local unit = extraUnits[i]
 			if UnitGUID(unit) == guid then return unit end
 		end
 
-		for unit in oRA:IterateGroup() do
-			local target = ("%starget"):format(unit)
+		for unit in module:IterateGroup() do
+			local target = unit .."target"
 			if UnitGUID(target) == guid then return target end
 		end
 	end
@@ -469,24 +473,12 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 			end
 
 			-- format output strings
-			local srcColor = "ff40ff40"
-			local dstColor = "ffff4040"
-			if module.db.profile.classColor then
-				local _, class = UnitClass(srcName or "")
-				if class then
-					srcColor = classColors[class].colorStr
-				end
-				_, class = UnitClass(dstName or "")
-				if class then
-					dstColor = classColors[class].colorStr
-				end
-			end
-			local srcOutput = ("%s|c%s%s|r"):format(getIconString(srcRaidFlags), srcColor, getName(srcName, srcGUID, srcFlags))
-			local dstOutput = ("%s|c%s%s|r"):format(getIconString(dstRaidFlags), dstColor, getName(dstName, dstGUID, dstFlags))
-			local spellOutput = module.db.profile.spellLink and GetSpellLink(spellId) or ("|cff71d5ff%s|r"):format(spellName)
+			local srcOutput = ("%s%s"):format(getIconString(srcRaidFlags), getName(srcName, srcGUID, srcFlags, "ff40ff40"))
+			local dstOutput = ("%s%s"):format(getIconString(dstRaidFlags), getName(dstName, dstGUID, dstFlags, "ffff4040"))
+			local spellOutput = GetSpellLink(spellId)
 			local extraSpellOuput
 			if tonumber(extraSpellId) then -- kind of hacky, pretty print the extra spell for interrupts/breaks/dispels
-				extraSpellOuput = module.db.profile.spellLink and GetSpellLink(extraSpellId) or ("|cff71d5ff%s|r"):format(extraSpellName)
+				extraSpellOuput = GetSpellLink(extraSpellId)
 			elseif (extraSpellId ~= "BUFF" and extraSpellId ~= "DEBUFF") then
 				extraSpellOuput = extraSpellId
 			end
@@ -498,15 +490,17 @@ do -- COMBAT_LOG_EVENT_UNFILTERED
 	end)
 
 	-- Codex handling
-	function module:UNIT_SPELLCAST_SUCCEEDED(unit, spellName, _, _, spellId)
-		if spellId == 227564 then -- XXX 226234 for Tranquil Mind (100+)
+	local prev = nil
+	function module:UNIT_SPELLCAST_SUCCEEDED(unit, spellName, _, spellCastGUID, spellId)
+		if spellId == 226234 and spellCastGUID ~= prev then -- Codex of the Tranquil Mind
+			prev = spellCastGUID
 			local srcName, srcGUID, srcRaidFlags = self:UnitName(unit), UnitGUID(unit), 0
 			local icon = GetRaidTargetIndex(unit)
 			if icon then
 				srcRaidFlags = _G["COMBATLOG_OBJECT_RAIDTARGET" .. icon]
 			end
-			local srcOutput = ("%s|cff40ff40%s|r"):format(getIconString(srcRaidFlags), getName(srcName, srcGUID))
-			local spellOutput = module.db.profile.spellLink and GetSpellLink(spellId) or ("|cff71d5ff%s|r"):format(spellName)
+			local srcOutput = ("%s|cff40ff40%s|r"):format(getIconString(srcRaidFlags), getName(srcName, srcGUID, 0, getClassColor(srcName) or "ff40ff40"))
+			local spellOutput = GetSpellLink(spellId)
 			self:Codex(srcOutput, nil, spellOutput)
 		end
 	end
@@ -634,7 +628,7 @@ do
 	local spiritOfRedemption = GetSpellInfo(27827)
 	local feignDeath = GetSpellInfo(5384)
 
-	local soulstoneLink, soulstone = (GetSpellLink(20707)), ("|cff71d5ff%s|r"):format((GetSpellInfo(20707)))
+	local soulstone = GetSpellLink(20707)
 
 	local total = 0
 	local function checkDead(self, elapsed)
@@ -652,10 +646,9 @@ do
 					soulstoneList[name] = nil
 				elseif not UnitIsDead(name) and UnitIsConnected(name) and not UnitIsFeignDeath(name) and not UnitBuff(name, feignDeath) and not UnitBuff(name, spiritOfRedemption) then
 					soulstoneList[name] = nil
-					name = module.db.profile.playerLink and ("|Hplayer:%s|h[%s]|h"):format(name, name:gsub("%-.*", "")) or name:gsub("%-.*", "")
+					name = ("|c%s|Hplayer:%s|h%s|h|r"):format(getClassColor(name) or "ff40ff40", name, name:gsub("%-.*", ""))
 					local srcOutput = ("|cff40ff40%s|r"):format(name)
-					local spellOutput = module.db.profile.spellLink and soulstoneLink or soulstone
-					module:Spam("combatRes", L["%s used %s"]:format(srcOutput, spellOutput))
+					module:Spam("combatRes", L["%s used %s"]:format(srcOutput, soulstone))
 				end
 			end
 
@@ -704,8 +697,6 @@ function module:OnRegister()
 			enableForRaid = true,
 			enableForLFG = false,
 
-			spellLink = true,
-			playerLink = true,
 			classColor = true,
 			icons = true,
 			groupOnly = true,
@@ -961,18 +952,6 @@ function GetOptions()
 						},
 					},
 
-					spellLink = {
-						name = L["Use Spell Links"],
-						desc = L["Display spell names as clickable spell links."],
-						type = "toggle",
-						order = 39,
-					},
-					playerLink = {
-						name = L["Use Player Links"],
-						desc = L["Display player names as clickable player links."],
-						type = "toggle",
-						order = 40,
-					},
 					classColor = {
 						name = L["Use Class Colors"],
 						desc = L["Use class colored names for people in your group instead of using source/target colors."],

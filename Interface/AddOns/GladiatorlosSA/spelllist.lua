@@ -32,6 +32,7 @@
 				-- Legion
 			[29166] = "innervate",
 			[194223] = "celestialAlignment",
+			[200851] = "rageOfSleeper",
 			
 
 			--paladin
@@ -58,7 +59,8 @@
 
 			--rogue
 				-- OLD
-			[51713] = "shadowDance", -- 暗影之舞
+			--[51713] = "shadowDance", -- 暗影之舞
+			[185313] = "shadowDance",
 			[2983] = "sprint", -- 疾跑
 			[31224] = "cloakOfShadows", -- 斗篷
 			[13750] = "adrenalineRush", -- 衝動
@@ -73,6 +75,9 @@
 			[84746] = "moderateInsight",
 				-- Legion
 			[121471] = "shadowBlades",
+			[199754] = "riposte",
+			[31230] = "cheatDeath",
+			[202665] = "dreadblades",
 
 			--warrior
 				-- OLD
@@ -82,7 +87,7 @@
 			[23920] = "spellReflection", -- 盾反
 			[12328] = "sweepingStrikes", -- 橫掃攻擊
 			[46924] = "bladestorm", -- 劍刃風暴
-			[1719] = "recklessness", -- 魯莽
+			[1719] = "battleCry", -- 魯莽
 			[118038] = "dieByTheSword", -- add 2.3.6
 				-- Mist of pandaria
 			[114029] = "safeguard",
@@ -128,6 +133,8 @@
 			[118347] = "reinforce", -- moved from castsuccess
 				-- Legion
 			[210918] = "etherealForm",
+			[108271] = "astralShift",
+			[204293] = "spiritLink",
 
 			--mage
 				-- OLD
@@ -141,6 +148,7 @@
 				-- Legion
 			[198111] = "temporalShield",
 			[198144] = "iceForm",
+			[86949] = "cauterize",
 
 			--dk
 				-- OLD
@@ -160,6 +168,7 @@
 			[206977] = "bloodmirror",
 			[207256] = "obliteration",
 			[207319] = "corpseShield",
+			[114556] = "purgatory",
 
 			--hunter
 				-- OLD
@@ -172,6 +181,8 @@
 			[186265] = "deterrence", -- Aspect of the Turtle
 			[186257] = "cheetah",
 			[212640] = "mendingBandage",
+			[193526] = "trueShot",
+			[186289] = "eagle",
 
 			--lock
 				-- Mist of pandaria
@@ -190,7 +201,9 @@
 			[122278] = "dampenHarm",
 			[122783] = "diffuseMagic",
 			[120954] = "fortifyingBrew",
+			[201318] = "fortifyingBrew",
 			[115176] = "zenMeditation",
+			[201325] = "zenMeditation",
 			[116849] = "lifeCocoon",
 			[122470] = "touchOfKarma",
 				-- WoD
@@ -222,7 +235,10 @@
 				-- Mist of pandaria
 			[108271] = "astralShiftDown",
 			[120954] = "fortifyingBrewDown",
+			[201318] = "fortifyingBrewDown",
+			[115203] = "fortifyingBrewDown",
 			[115176] = "zenMeditationDown",
+			[201325] = "zenMeditationDown",
 			[122470] = "karmaDown", -- Added
 			[118347] = "reinforceDown", -- Added
 			[118350] = "empowerDown", -- Added
@@ -259,6 +275,11 @@
 			--[33891] = "incarnationDown",
 			[117679] = "incarnationDown",
 			[197690] = "damageStance",
+			[193526] = "trueShotDown",
+			[199754] = "riposteDown",
+			[204293] = "spiritLinkDown",
+			[200851] = "rageOfSleeperDown",
+			[202665] = "dreadbladesDown",
 			},
 		castStart = {					-- cast start [spellid] = ".mp3 file name",
 			--general
@@ -266,8 +287,10 @@
 			[82326] = "bigHeal", -- Holy Light (Paladin)
 			[77472] = "bigHeal", -- Healing Wave (Shaman)
 			[5185] = "bigHeal", -- Healing Touch (Druid)
-			[186263] = "bigHeal", -- Shadow Mend (Discipline/Shadow Priest)
-			[116670] = "bigHeal", -- Vivify (MistweaveR)
+			[116670] = "bigHeal", -- Vivify (Mistweaver)
+			[194509] = "bigHeal", -- Power Word: Radiance (Discipline)
+			[204065] = "bigHeal", -- Shadow Covenant (Discipline)
+			--[186263] = "bigHeal", -- Shadow Mend (Discipline/Shadow Priest)
 			--[116694] = "bigHeal", -- Effuse (Mistweaver)
 			--[124682] = "bigHeal", -- Enveloping Mists (Mistweaver)
 			[2006] = "resurrection",
@@ -284,8 +307,13 @@
 			--druid
 				-- OLD
 			[33786] = "cyclone", -- 吹風
+			[209753] = "cyclone", -- SCREAMS LOUDLY
 				-- Mist of pandaria
 			[339] = "entanglingRoots",
+				-- Legion
+			[202767] = "littleMoon",
+			[202768] = "middleMoon",
+			[202771] = "fullMoon",
 
 			--paladin
 				-- Mist of pandaria
@@ -304,19 +332,31 @@
 			[32375] = "massDispell",
 
 			--shaman
-			[51514] = "hex", -- 妖術
+			[51514] = "hex", -- Frog
+			[210873] = "hex", -- Compy
+			[211004] = "hex", -- Spider
+			[211015] = "hex", -- Cockroach
+			[211010] = "hex", -- Snake
 
 			--mage
 				-- OLD
-			[118] = "polymorph",
-			[28272] = "polymorph",
-			[61305] = "polymorph",
-			[61721] = "polymorph",
-			[61025] = "polymorph",
-			[61780] = "polymorph",
-			[28271] = "polymorph", -- 變形術 羊豬貓兔蛇雞龜
+			[118] = "polymorph", -- Sheep
+			[28271] = "polymorph", -- Turtle
+			[28272] = "polymorph", -- Pig
+			[61305] = "polymorph", -- Black Cat
+			[61721] = "polymorph", -- Rabbit
+			[61025] = "polymorph", -- Serpent
+			[61780] = "polymorph", -- Turkey
+			[161372] = "polymorph", -- Peacock
+			[161355] = "polymorph", -- Penguin
+			[161353] = "polymorph", -- Polar Bear Cub
+			[161354] = "polymorph", -- Monkey
+			[126819] = "polymorph", -- Porcupine
 				-- Mist of pandaria
 			[102051] = "frostjaw",
+			[205021] = "rayOfFrost",
+			[31687] = "waterElemental",
+			[203286] = "greaterPyro",
 
 			--dk
 
@@ -343,17 +383,37 @@
 				-- WoD
 			[152108] = "Cataclysm",
 				-- Legion
-			[157695] = "demonBolt",
+			--[157695] = "demonBolt",
+			[104316] = "dreadstalkers",
+			[6358] = "seduction",
+			[115268] = "seduction",
+			[30283] = "shadowfury",
 
 			-- monk
 		},
 		castSuccess = {					--cast success [spellid] = ".mp3 file name",
 			--general
-			[58984] = "shadowmeld", -- 影遁
-			[20594] = "stoneform", -- 石像形態
-			[7744] = "willOfTheForsaken", -- 亡靈意志
+			[2825] = "bloodLust",
+			[32182] = "bloodLust",
+			[80353] = "bloodLust",
+			[90355] = "bloodLust",
+			[160452] = "bloodLust",
+			[178207] = "bloodLust",
+			[107079] = "quakingPalm",
+			[20549] = "warStomp",
+			[28730] = "arcaneTorrent",
+			[25046] = "arcaneTorrent",
+			[50613] = "arcaneTorrent",
+			[69179] = "arcaneTorrent",
+			[155145] = "arcaneTorrent",
+			[129597] = "arcaneTorrent",
+			[202719] = "arcaneTorrent",
+			[80483] = "arcaneTorrent",
+			[58984] = "shadowmeld",
+			[20594] = "stoneform",
+			[7744] = "willOfTheForsaken",
 			[42292] = "trinket2",
-			[59752] = "everyMan", -- Updated with the racial change in Legion.
+			[59752] = "everyMan", 
 --			[214027] = "trinket1", -- Adaptation Legion
 --			[195756] = "trinket1", -- Adaptation Legion
 --			[195885] = "trinket1", -- Adaptation Legion
@@ -373,6 +433,8 @@
 			[202138] = "gripSigil",
 			[207684] = "fearSigil",
 			[202137] = "silenceSigil",
+			[211881] = "felEruption",
+			[203704] = "manaBreak",
 
 			--druid
 				-- OLD
@@ -417,6 +479,7 @@
 			[115750] = "blindingLight",
 			[210220] = "holyWrath",
 			[210256] = "sanctuary",
+			[633] = "layOnHands",
 
 			--rogue
 				-- OLD
@@ -429,11 +492,19 @@
 				-- LEGION
 			[207777] = "dismantle",
 			[207736] = "shadowyDuel",
+			[200806] = "exsanguinate",
+			[198529] = "plunderArmor",
+			[1833] = "cheapShot",
+			[408] = "kidney",
+			[199804] = "kidney",
+			[185767] = "cannonballBarrage",
+			[1330] = "garrote",
+			[193316] = "diceRoll",
 
 			--warrior
 				-- OLD
 			[114028] = "massSpellReflection", -- moved from SpellAuraApplied
-			[97462] = "rallyingCry", -- 集結怒吼
+			[97462] = "commandingShout", -- 集結怒吼
 			[5246] = "fear3", -- 破膽怒吼
 			[6552] = "pummel", -- 拳擊
 			[107566] = "staggeringShout",
@@ -477,19 +548,22 @@
 			[205369] = "mindBomb",
 			[211522] = "psyfiend",
 			[108968] = "voidshift",
+			[528] = "purge",
+			[208065] = "lightOfTuure",
+			[62618] = "wordBarrier",
 
 			--shaman
 				-- old
 			[8177] = "grounding", -- 根基圖騰
 			[8143] = "tremorTotem", -- 戰慄圖騰
-			[98008] = "spiritlinktotem", -- 靈魂鏈接圖騰
+			[98008] = "spiritLinkTotem", -- 靈魂鏈接圖騰
 			[370] = "purge", -- added to 2.2.2
 				-- Mist of pandaria
 			[108270] = "stoneBulwark",
 			[51485] = "earthgrab",
 			[2484] = "earthbind",
 			[108273] = "windwalk",
-			[108285] = "callOfTheElements",
+			--[108285] = "callOfTheElements",
 			[108287] = "totemicProjection",
 			[108280] = "healingTide",
 			[108281] = "ancestralGuidance",
@@ -497,10 +571,9 @@
 			[2894] = "fireElemental",
 			[2062] = "earthElemental",
 			[108269] = "capacitor",
-			[108271] = "astralShift",
 			[57994] = "windShear",
 				-- WoD
-			[152256] = "StormElementalTotem",
+			[152256] = "stormElemental",
 			[152255] = "LiquidMagma",	-- Maybe useless
 				-- Legion
 			[198067] = "fireElemental", -- Updated for Legion
@@ -508,11 +581,11 @@
 			[192058] = "capacitor", -- Updated for Legion
 			[192077] = "windRushTotem",
 			[196932] = "hexTotem",
-			[192249] = "StormElementalTotem", -- Updated for Legion
+			[192249] = "stormElemental", -- Updated for Legion
 			[192222] = "LiquidMagma", -- Updated for Legion
-			[204330] = "pvpTotem",
-			[204331] = "pvpTotem",
-			[204332] = "pvpTotem",
+			[204330] = "skyfuryTotem",
+			[204331] = "counterstrikeTotem",
+			[204332] = "windfuryTotem",
 			[204437] = "lightningLasso",
 			[207399] = "reincarnationTotem",
 			[198838] = "protectionTotem",
@@ -536,6 +609,7 @@
 				-- Legion
 			[198158] = "massInvis",
 			[190319] = "Combustion", -- Legion Combustion
+			[30449] = "spellSteal",
 
 			--dk
 				-- old
@@ -555,7 +629,7 @@
 				-- Legion
 			[207167] = "blindingSleet",
 			[204160] = "chillStreak",
-			--[190778] = "sindragosaFury",
+			[190778] = "sindragosaFury",
 			[130736] = "soulReaper",
 			[207349] = "arbiterGargoyle",
 
@@ -592,20 +666,23 @@
 			[191241] = "stickyBomb",
 			[213691] = "scatterShot",
 			[209789] = "freezingArrow",
+			[201078] = "snakeHunter",
+			[186387] = "burstingShot",
 
 			--warlock
 				-- old
 			[6789] = "mortalCoil", -- aka Death Coil 死亡纏繞
 			[5484] = "terrorHowl", -- 恐懼嚎叫 Howl of Terror - was fear2 2.2.3 -- Updated for Legion
 			[19647] = "spellLock", -- 法術封鎖
+			[119910] = "spellLock", -- New Interrupt? blizz pls
+			[171140] = "spellLock", -- New Interrupt? blizz pls
+			[171138] = "spellLock", -- New Interrupt? blizz pls
 			[48020] = "demonicCircleTeleport", -- 惡魔法陣:傳送
-			[30283] = "shadowfury",
 				-- Mist of pandaria
 			[108359] = "darkRegeneration",
 			[111397] = "bloodFear",
 			[108482] = "unboundWill",
 			--[108505] = "archimondesVengeance",
-			[104316] = "dreadstalkers",
 			[110913] = "darkBargain",
 			[111859] = "grimoireOfService",
 			[111895] = "grimoireOfService",
@@ -613,7 +690,9 @@
 			[111897] = "grimoireOfService",
 			[111898] = "grimoireOfService",
 				-- Legion
-			[212619] = "callFelPuppy",
+			--[212619] = "callFelPuppy",
+			[212619] = "spellLock",
+			[196277] = "implosion",
 
 			-- monk
 				-- Mist of pandaria
@@ -637,6 +716,8 @@
 			[198898] = "craneSong",
 			[132578] = "invokeOx",
 			[198664] = "invokeCrane",
+			[214326] = "explodingKeg",
+			[115080] = "touchOfDeath",
 		},
 		friendlyInterrupt = {			--friendly interrupt [spellid] = ".mp3 file name",
 			[19647] = "lockout", -- Spell Lock

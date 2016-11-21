@@ -28,7 +28,8 @@ function C:OnInitialize()
 	self.delayBar:SetTexture("Interface\\TargetingFrame\\UI-StatusBar")
 	self.delayBar:SetVertexColor(0.8, 0, 0, 0.8)
 	self.delayBar:Hide()	
-	self:SecureHook("CastingBarFrame_OnUpdate");
+--	self:SecureHook("CastingBarFrame_OnUpdate");
+	self:HookScript(CastingBarFrame, "OnUpdate", "CastingBarFrame_OnUpdate")
 end
 
 function C:Toggle(switch)
@@ -180,7 +181,7 @@ function C:UNIT_SPELLCAST_INTERRUPTED(event, unit)
 end
 ----- END  ----
 
-function C:CastingBarFrame_OnUpdate(frame, elapsed, ...)
+function C:CastingBarFrame_OnUpdate(frame)
 	if frame.unit ~= "player" then return end	
 
 	local currentTime = GetTime();
@@ -207,10 +208,10 @@ function C:CastingBarFrame_OnUpdate(frame, elapsed, ...)
 		else
 			-- 正计时
 			if(castTime > 0)then
-				CastingBarFrameText:SetText(format("%s ("..CASTCURR.."/"..CASTMAX..")", self.spellName, timeLeft, duration));
+				CastingBarFrame.Text :SetText(format("%s ("..CASTCURR.."/"..CASTMAX..")", self.spellName, timeLeft, duration));
 				--self.delayText:SetText(format(CASTCURR.."/"..CASTMAX, timeLeft, duration))
 			else
-				CastingBarFrameText:SetText(format("%s ("..CASTCURR.."/"..CASTMAX..")", self.spellName, duration, duration));
+				CastingBarFrame.Text :SetText(format("%s ("..CASTCURR.."/"..CASTMAX..")", self.spellName, duration, duration));
 				--self.delayText:SetText(format(CASTCURR.."/"..CASTMAX, duration, duration));
 			end
 		end		

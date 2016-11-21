@@ -9,6 +9,9 @@ local after40300 = select(4, GetBuildInfo())>40200 --if DEBUG_MODE then after403
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
+
+
+
 lib.events = lib.events or  LibStub("CallbackHandler-1.0"):New(lib)
 lib.frame = lib.frame or CreateFrame("Frame", MAJOR.."_Frame")
 lib.timer = LibStub("AceTimer-3.0")
@@ -67,10 +70,13 @@ f:SetScript("OnUpdate", function(self,elapsed)
 			if elapsed < LibInspectLessTimeout then --登录的第一个时间很长
 				lib:debug("timeout, fire InspectLess_Next");
 				lib.events:Fire("InspectLess_Next", false, true)
+
+
 			end
 		end
 		--waiting和timeout都是在真正触发NotifyInspect之后设置的，由于timeout比waiting大，所以timeout的时候waiting肯定是0
 	end
+
 	
 	--  waiting: 观察间隔时间
 	if waiting > 0 then
@@ -78,6 +84,7 @@ f:SetScript("OnUpdate", function(self,elapsed)
 		if waiting<=0 and (BlockingAllForNextManual or ShowResumeMessage) then
 			--DEFAULT_CHAT_FRAME:AddMessage("InspectLess: "..L["You can now inspect others."], 0.8, 1, 0)
 			ShowResumeMessage = false
+
 		end
 
 		if waiting<=0 then
@@ -85,10 +92,12 @@ f:SetScript("OnUpdate", function(self,elapsed)
 			local locked = (lib.unit or lib.guid) and not lib.ready
 			if locked then
 				--DEFAULT_CHAT_FRAME:AddMessage("InspectLess: "..string.format(L["Request receive no response, player '%s' might just logged off. And because the buggy BLIZZARD, you are probably forbidden to inspect until you restart your client."], lib.name), 0.8, 1, 0)
+
 			end
 			InspectLessLastGUID = nil
 			lib:debug("fire InspectLess_Next");
 			lib.events:Fire("InspectLess_Next", lib.ready, false)
+
 		end
 	end
 end)
@@ -198,13 +207,25 @@ lib:hook("NotifyInspect", function(unit)
 
         if ManualCalling then BlockingAllForNextManual = false end
 
+
+
+
+
+
         lib:debug( (ManualCalling and "manual" or "addon").." inspecting done.".."    "..UnitName(unit));
     end
 end)
+
 ]]
 function lib:IsNotBlocking()
     return waiting <=0 and not BlockingAllForNextManual
 end
+
+
+
+
+
+
 
 --循环检查玩家的装备是否已经获取到
 function lib.CheckInspectItems(guid)
@@ -215,15 +236,18 @@ function lib.CheckInspectItems(guid)
 			lib.done = true
 			lib:debug("fired ItemReady, "..unit);
 			lib.events:Fire("InspectLess_InspectItemReady", unit, lib.guid, lib.ready)
+
 		else
 			lib.timer:ScheduleTimer(lib.CheckInspectItems, 0.1, guid)
 			--CoreScheduleBucket("LibInspectLessChecker", 0.1, lib.CheckInspectItems, guid)
+
 		end
 	else
 		lib.fail = true
 		if lib.unit then
 			lib:debug("fired ItemFail, "..lib.unit);
 			lib.events:Fire("InspectLess_InspectItemFail", lib.unit, lib.guid, lib.ready)
+
 		end
 	end
 end
@@ -239,7 +263,7 @@ end
 function lib:ADDON_LOADED(addon)
     if addon=="Blizzard_InspectUI" then
         f:UnregisterEvent("ADDON_LOADED");
-	--[[
+
         lib:hook("InspectPaperDollFrame_SetLevel", function()
             if InspectFrame.unit then
                 local _, class = UnitClass(InspectFrame.unit);
@@ -249,6 +273,7 @@ function lib:ADDON_LOADED(addon)
             end
         end)
 
+	--[[
         local BlizzardInspectHook = function(name, unit_or_self)
             ManualCalling = true
 
@@ -294,6 +319,7 @@ function lib:ADDON_LOADED(addon)
             ManualCalling = false
 
         end
+
         lib:hook("InspectFrame_Show", function(unit)
             return BlizzardInspectHook("InspectFrame_Show", unit)
         end)
@@ -301,6 +327,7 @@ function lib:ADDON_LOADED(addon)
         lib:hook("InspectFrame_UnitChanged", function(self)
             return BlizzardInspectHook("InspectFrame_UnitChanged", self)
         end)
+
 	]]
     end
 end
@@ -313,14 +340,15 @@ function lib:FindUnit(guid)
         return InspectFrame.unit
     else
         --experimental
-        if UnitInRaid("player") then
+        if IsInRaid() then
+
             for i=1, GetNumGroupMembers() do
                 if UnitGUID("raid"..i)==guid then
                     return "raid"..i
                 end
             end
-        elseif GetNumSubgroupMembers() > 0 then
-            for i=1, GetNumSubgroupMembers() do
+        elseif IsInGroup() and not IsInRaid() then
+           for i=1, GetNumSubgroupMembers() do
                 if UnitGUID("party"..i)==guid then
                     return "party"..i
                 end

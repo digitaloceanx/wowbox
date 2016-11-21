@@ -300,6 +300,7 @@ local function GetFilteredFollowers(type_id)
          container.count = count
          container.free = free
          container.all_maxed = all_maxed
+         container.type = follower_type
          tsort(container, SortFollowersByLevel)
       end
 
@@ -567,7 +568,7 @@ local function GarrisonMissionFrame_SetFollowerPortrait_More(portraitFrame, foll
       boosted = true
    end
 
-   if level == GARRISON_FOLLOWER_MAX_LEVEL then
+   if followerInfo.isMaxLevel then
       local level_border = portraitFrame.LevelBorder
       level_border:SetAtlas("GarrMission_PortraitRing_iLvlBorder")
       level_border:SetWidth(70)
@@ -1011,6 +1012,13 @@ local function GarrisonFollowerList_Update_More(self)
    end
 end
 hooksecurefunc(GarrisonMissionFrame.FollowerList, "UpdateData", GarrisonFollowerList_Update_More)
+
+GarrisonLandingPageMinimapButton:HookScript("OnClick", function(self, button, down)
+   if not (button == "RightButton" and not down) then return end
+   HideUIPanel(GarrisonLandingPage)
+   ShowGarrisonLandingPage(LE_GARRISON_TYPE_6_0)
+end)
+GarrisonLandingPageMinimapButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
 gmm_buttons.StartMission = MissionPage.StartMissionButton
 

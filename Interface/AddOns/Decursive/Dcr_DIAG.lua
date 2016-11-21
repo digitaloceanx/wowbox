@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
 
-    Decursive (v 2.7.4.7-3-ga9c60fa) add-on for World of Warcraft UI
+    Decursive (v 2.7.4.7-9-gdc22693) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
     Starting from 2009-10-31 and until said otherwise by its author, Decursive
@@ -17,7 +17,7 @@
     Decursive is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY.
 
-    This file was last updated on 2016-08-14T12:49:05Z
+    This file was last updated on 2016-09-12T00:21:19Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ local DebugTextTable    = T._DebugTextTable;
 local Reported          = {};
 
 local UNPACKAGED = "@pro" .. "ject-version@";
-local VERSION = "2.7.4.7-3-ga9c60fa";
+local VERSION = "2.7.4.7-9-gdc22693";
 
 T._LoadedFiles = {};
 T._LoadedFiles["Dcr_DIAG.lua"] = false; -- here for consistency but useless in this particular file
@@ -264,7 +264,7 @@ do
         _Debug(unpack(TIandBI));
 
 
-        DebugHeader = ("%s\n2.7.4.7-3-ga9c60fa  %s(%s)  CT: %0.4f D: %s %s %s BDTHFAd: %s nDrE: %d Embeded: %s W: %d LA: %d TA: %d NDRTA: %d BUIE: %d TI: [dc:%d, lc:%d, y:%d, LEBY:%d, LB:%d, TTE:%u] (%s, %s, %s, %s)"):format(instructionsHeader, -- "%s\n
+        DebugHeader = ("%s\n2.7.4.7-9-gdc22693  %s(%s)  CT: %0.4f D: %s %s %s BDTHFAd: %s nDrE: %d Embeded: %s W: %d LA: %d TA: %d NDRTA: %d BUIE: %d TI: [dc:%d, lc:%d, y:%d, LEBY:%d, LB:%d, TTE:%u] (%s, %s, %s, %s)"):format(instructionsHeader, -- "%s\n
         tostring(DC.MyClass), tostring(UnitLevel("player") or "??"), NiceTime(), date(), GetLocale(), -- %s(%s)  CT: %0.4f D: %s %s
         BugGrabber and "BG" .. (T.BugGrabber and "e" or "") or "NBG", -- %s
         tostring(T._BDT_HotFix1_applyed), -- BDTHFAd: %s
@@ -294,8 +294,15 @@ do
         end
 
         -- get running add-ons list
-        local success, errorm, loadedAddonList;
-        success, errorm, loadedAddonList = pcall(GetAddonListAsString);
+        local ALASsuccess, ALASerrorm, loadedAddonList;
+        ALASsuccess, ALASerrorm, loadedAddonList = pcall(GetAddonListAsString);
+
+        
+        local ACsuccess, ACerrorm, actionsConfiguration;
+        ACsuccess, ACerrorm, actionsConfiguration = pcall(T._ExportActionsConfiguration);
+
+        local CSCsuccess, CSCerrorm, customSpellConfiguration;
+        CSCsuccess, CSCerrorm, customSpellConfiguration = pcall(T._ExportCustomSpellConfiguration);
 
         local headerSucess, headerGenErrorm;
         if not DebugHeader then
@@ -305,7 +312,11 @@ do
         end
 
 
-        T._DebugText = (headerSucess and DebugHeader or (HeaderFailOver .. 'Report header gen failed: ' .. (headerGenErrorm and headerGenErrorm or ""))) .. table.concat(T._DebugTextTable, "") .. "\n\nLoaded Addons:\n\n" .. (success and loadedAddonList or errorm) .. "\n-- --";
+        T._DebugText = (headerSucess and DebugHeader or (HeaderFailOver .. 'Report header gen failed: ' .. (headerGenErrorm and headerGenErrorm or "")))
+        .. table.concat(T._DebugTextTable, "")
+        .. "\n\n-- --\n" .. (ACsuccess and actionsConfiguration or ACerrorm) .. "\n-- --"
+        .. (CSCsuccess and customSpellConfiguration or CSCerrorm) .. "\n-- --"
+        .. "\n\nLoaded Addons:\n\n" .. (ALASsuccess and loadedAddonList or ALASerrorm) .. "\n-- --";
 
         if _G.DecursiveDebuggingFrameText then
             _G.DecursiveDebuggingFrameText:SetText(T._DebugText);
@@ -695,14 +706,16 @@ do
 
         for spellID, spellData in pairs(D.classprofile.UserSpells) do
             if not spellData.IsDefault then
-                 customSpellConfText[#customSpellConfText + 1] = ("    %s (id: %d) - %s - %s - %s - B: %d - Ts: %s -  Macro: %s\n"):format(
-                 (GetSpellInfo(spellID)), spellID, --                                 3    4    5       6        7            8
+                 customSpellConfText[#customSpellConfText + 1] = ("    %s (id: %d) - %s - %s - %s - B: %d - Ts: %s - UF: %s - Macro: %s\n"):format(
+                 --                                                                  3    4    5       6        7        8           9
+                 tostring(spellData.IsItem and (GetItemInfo(spellID * -1)) or (GetSpellInfo(spellID))), spellID,
                  spellData.Disabled and "OFF" or "ON", -- 3
                  spellData.Pet and "PET" or "PLAYER", -- 4
                  spellData.IsItem and "ITEM" or "SPELL", -- 5
                  spellData.Better, -- 6
-                 table.concat(spellData.Types, ";"),
-                 spellData.MacroText and spellData.MacroText or "false" -- 8
+                 D:tAsString(spellData.Types), -- 7
+                 D:tAsString(spellData.UnitFiltering), -- 8
+                 spellData.MacroText and spellData.MacroText or "false" -- 9
                  );
             end
         end
@@ -932,9 +945,6 @@ do
                     PrintMessage("|cFF00FF00Event library functionning properly!|r");
                     PrintMessage("|cFF00FF00Everything seems to be OK.|r");
                     AddDebugText("Event library functionning properly, Everything seems to be OK");
-                    -- get a list of current actions assignments
-                    AddDebugText(pcall(T._ExportActionsConfiguration));
-                    AddDebugText(pcall(T._ExportCustomSpellConfiguration));
                     -- open the diagnostic window
                     T._ShowDebugReport(true);
                     return;
@@ -981,4 +991,4 @@ do
     end
 end
 
-T._LoadedFiles["Dcr_DIAG.lua"] = "2.7.4.7-3-ga9c60fa";
+T._LoadedFiles["Dcr_DIAG.lua"] = "2.7.4.7-9-gdc22693";

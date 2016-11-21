@@ -1,13 +1,11 @@
------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------
 -- Upvalued Lua API.
------------------------------------------------------------------------
-local _G = getfenv(0)
-
+-- ----------------------------------------------------------------------------
 local pairs = _G.pairs
 
------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------
 -- AddOn namespace.
------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------
 local FOLDER_NAME, private = ...
 
 local LibStub = _G.LibStub
@@ -17,9 +15,9 @@ local Dialog = LibStub("LibDialog-1.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("Archy", false)
 local LSM = LibStub("LibSharedMedia-3.0")
 
------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------
 -- Constants.
------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------
 local FRAME_ANCHOR_OPTIONS = {
 	["TOPLEFT"] = L["Top Left"],
 	["TOPRIGHT"] = L["Top Right"],
@@ -33,9 +31,9 @@ local FONT_OUTLINES = {
 	["THICKOUTLINE"] = L["Thick Outline"],
 }
 
------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------
 -- Config option functions.
------------------------------------------------------------------------
+-- ----------------------------------------------------------------------------
 Dialog:Register("ArchyConfirmThemeChange", {
 	text = _G.REQUIRES_RELOAD,
 	buttons = {
@@ -1244,7 +1242,7 @@ local function GetDigSiteOptions()
 									get = function() return digsiteSettings.font.name end,
 									set = function(_, value)
 										digsiteSettings.font.name = value
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 								fontSize = {
@@ -1258,7 +1256,7 @@ local function GetDigSiteOptions()
 									get = function() return digsiteSettings.font.size end,
 									set = function(_, value)
 										digsiteSettings.font.size = value
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 								fontOutline = {
@@ -1270,7 +1268,7 @@ local function GetDigSiteOptions()
 									get = function() return digsiteSettings.font.outline end,
 									set = function(_, value)
 										digsiteSettings.font.outline = value
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 								fontShadow = {
@@ -1281,7 +1279,7 @@ local function GetDigSiteOptions()
 									get = function() return digsiteSettings.font.shadow end,
 									set = function(_, value)
 										digsiteSettings.font.shadow = value
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 								fontColor = {
@@ -1298,7 +1296,7 @@ local function GetDigSiteOptions()
 										digsiteSettings.font.color.g = g
 										digsiteSettings.font.color.b = b
 										digsiteSettings.font.color.a = a
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 							},
@@ -1320,7 +1318,7 @@ local function GetDigSiteOptions()
 									get = function() return digsiteSettings.zoneFont.name end,
 									set = function(_, value)
 										digsiteSettings.zoneFont.name = value
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 								fontSize = {
@@ -1334,7 +1332,7 @@ local function GetDigSiteOptions()
 									get = function() return digsiteSettings.zoneFont.size end,
 									set = function(_, value)
 										digsiteSettings.zoneFont.size = value
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 								fontOutline = {
@@ -1346,7 +1344,7 @@ local function GetDigSiteOptions()
 									get = function() return digsiteSettings.zoneFont.outline end,
 									set = function(_, value)
 										digsiteSettings.zoneFont.outline = value
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 								fontShadow = {
@@ -1357,7 +1355,7 @@ local function GetDigSiteOptions()
 									get = function() return digsiteSettings.zoneFont.shadow end,
 									set = function(_, value)
 										digsiteSettings.zoneFont.shadow = value
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 								fontColor = {
@@ -1374,7 +1372,7 @@ local function GetDigSiteOptions()
 										digsiteSettings.zoneFont.color.g = g
 										digsiteSettings.zoneFont.color.b = b
 										digsiteSettings.zoneFont.color.a = a
-										Archy:ConfigUpdated("digsite', 'font")
+										Archy:ConfigUpdated("digsite", "font")
 									end,
 								},
 							},
@@ -1615,7 +1613,7 @@ local function GetTooltipOptions()
 					end,
 					set = function(_, value)
 						tooltipSettings.filterDigsitesByContinent = value
-						Archy:ConfigUpdated("digsite', 'tooltip")
+						Archy:ConfigUpdated("digsite", "tooltip")
 					end,
 				},
 				scale = {

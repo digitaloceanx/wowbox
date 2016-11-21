@@ -33,6 +33,7 @@ if (GetLocale() == "zhCN") then
 	
 	QUEST_DuowanQuestEnable = "启用任务增强"
 	QUEST_DuowanQuestOpenCfg = "打开设置"
+	DuowanWorldQuestTracker = "世界任务追踪"
 elseif (GetLocale() == "zhTW") then
 	QUEST_TITLE						= "任務增強";
 	QUESTHUBBER_ENABLE					= "顯示可接任務";
@@ -64,6 +65,7 @@ elseif (GetLocale() == "zhTW") then
 	QUEST_TOMTOM_TIP = "啓用箭頭指引";
 	QUEST_DuowanQuestEnable = "啓用任務增強"
 	QUEST_DuowanQuestOpenCfg = "打開設置"
+	DuowanWorldQuestTracker = "世界任务追踪"
 else
 	QUEST_TITLE						= "任务增强";
 	QUESTHUBBER_ENABLE					= "显示可接任务";
@@ -93,6 +95,7 @@ else
 	QUEST_TOMTOM_TIP = "启用箭头指引";
 	QUEST_DuowanQuestEnable = "启用任务增强"
 	QUEST_DuowanQuestOpenCfg = "打开设置"
+	DuowanWorldQuestTracker = "世界任务追踪"
 end
 
 if dwIsConfigurableAddOn("QuestHelperLite") or dwIsConfigurableAddOn("QuestHubber") or dwIsConfigurableAddOn("DuowanQuest") or dwIsConfigurableAddOn("TurnIn") then
@@ -348,6 +351,27 @@ if (dwIsConfigurableAddOn("DuowanQuest")) then
 		end,
 		1
 	);	
+end
+
+if (dwIsConfigurableAddOn("WorldQuestTracker")) then 
+	dwRegisterCheckButton(
+		"QuestMod",
+		DuowanWorldQuestTracker,
+		nil,
+		"DuowanWorldQuestTrackertEnable",
+		0,
+		function (arg)			
+			if ( arg == 1 ) then
+				if not dwIsAddOnLoaded("WorldQuestTracker") then
+					dwLoadAddOn("WorldQuestTracker");
+				end
+			else
+				if dwIsAddOnLoaded("WorldQuestTracker") then
+					dwRequestReloadUI(nil);
+				end
+			end
+		end
+	);
 end
 
 --[[

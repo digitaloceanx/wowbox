@@ -6,7 +6,7 @@
 ## Notes-zhCN: CT_RaidAssist 外的另一个选择。
 ## Notes-zhTW: CT_RaidAssist 以外的另一個選擇。
 ## Author: Funkydude, Nebula169
-## Version: v7.0.1-1-gdf9cc44
+## Version: v7.0.6
 ## X-Curse-Project-Name: oRA3
 ## X-Curse-Project-ID: ora3
 ## X-Curse-Repository-ID: wow/ora3/mainline

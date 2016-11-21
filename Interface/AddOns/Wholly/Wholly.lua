@@ -313,6 +313,9 @@
 --			Adds the ability to display prerequisites for classes.
 --			Updates Spanish (Spain) localization by Ehren_H.
 --			Changes the Interface to 70000.
+--		058	Adds the ability to control the display of some Blizzard world map icons.
+--			Fixes the placement of the Wholly world map button so it appears when the world map is opened.
+--			Fixes presenting a window when attempting to load an on-demand addon fails.
 --
 --	Known Issues
 --
@@ -348,6 +351,7 @@ local InterfaceOptions_AddCategory			= InterfaceOptions_AddCategory
 local InterfaceOptionsFrame_OpenToCategory	= InterfaceOptionsFrame_OpenToCategory
 local IsControlKeyDown						= IsControlKeyDown
 local IsShiftKeyDown						= IsShiftKeyDown
+local LoadAddOn								= LoadAddOn
 local PlaySound								= PlaySound
 local SetMapByID							= SetMapByID
 local ToggleDropDownMenu					= ToggleDropDownMenu
@@ -400,6 +404,13 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 
 	Wholly = {
 
+		addonLoad = function(self, addonName)
+						local success, failureReason = LoadAddOn(addonName)
+						if not success then
+							print("|cFFFF0000Wholly|r failed to load addon", addonName, failureReason)
+						end
+						return success
+					end,
 		cachedMapCounts = {},
 		cachedPanelQuests = {},		-- quests and their status for map area self.zoneInfo.panel.mapId
 		cachedPinQuests = {},		-- quests and their status for map area self.zoneInfo.pins.mapId
@@ -461,11 +472,15 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 									Wholly:UpdateCoordinateSystem()
 								end,
 		configurationScript9 = function(self)
-								--	UIParentLoadAddOn("Grail-Achievements")
+								--	if WhollyDatabase.loadAchievementData then
+								--		Wholly:addonLoad("Grail-Achievements")
+								--	end
 									Wholly:_InitializeLevelOneData()
 								end,
 		configurationScript10 = function(self)
-								--	UIParentLoadAddOn("Grail-Reputations")
+								--	if WhollyDatabase.loadReputationData then
+								--		Wholly:addonLoad("Grail-Reputations")
+								--	end
 									Wholly:_InitializeLevelOneData()
 								end,
 		configurationScript11 = function(self)
@@ -477,10 +492,20 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 		configurationScript13 = function(self)
 								end,
 		configurationScript14 = function(self)
-								--	UIParentLoadAddOn("Grail-When")
+								--	if WhollyDatabase.loadDateData then
+								--		Wholly:addonLoad("Grail-When")
+								--	end
 								end,
 		configurationScript15 = function(self)
-								--	UIParentLoadAddOn("Grail-Rewards")
+								--	if WhollyDatabase.loadRewardData then
+								--		Wholly:addonLoad("Grail-Rewards")
+								--	end
+								end,
+		configurationScript16 = function(self)
+									WorldMapFrame_Update()
+								end,
+		configurationScript17 = function(self)
+									WorldMap_UpdateQuestBonusObjectives()
 								end,
 		coordinates = nil,
 		currentFrame = nil,
@@ -958,6 +983,10 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 			['IGNORE_REPUTATION_SECTION'] = 'Ignore reputation section of quests',
 			['RESTORE_DIRECTIONAL_ARROWS'] = 'Should not restore directional arrows',
 			['ADD_ADVENTURE_GUIDE'] = 'Display Adventure Guide quests in every zone',
+			['HIDE_WORLD_MAP_FLIGHT_POINTS'] = 'Hide flight points',
+			['HIDE_BLIZZARD_WORLD_MAP_TREASURES'] = 'Hide Blizzard treasures',
+			['HIDE_BLIZZARD_WORLD_MAP_BONUS_OBJECTIVES'] = 'Hide Blizzard bonus objectives',
+			['HIDE_BLIZZARD_WORLD_MAP_QUEST_PINS'] = 'Hide Blizzard quest map pins',
 			},
 		supportedControlMaps = { WorldMapFrame, OmegaMapFrame, },	-- the frame to check for visibility
 		supportedMaps = { WorldMapDetailFrame, OmegaMapDetailFrame, },	-- the frame that is the parent of the pins
@@ -1011,7 +1040,7 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 					local t = {}
 					for _, npc in pairs(locations) do
 						if nil ~= npc.x then
-							local npcName = self:_PrettyNPCString(npc.name, npc.kill, npc.realArea)
+							local npcName = self:_PrettyNPCString(npc.name, npc.kill, npc.realArea) or "***"
 							local uid = TomTom:AddMFWaypoint(npc.mapArea, npc.mapLevel, npc.x/100, npc.y/100,
 									{	persistent = false,
 										title = npcName .. " - " .. self:_QuestName(questId),
@@ -2285,7 +2314,7 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 							nameToUse = nameToUse .. " (" .. npc.dropName .. ')'
 						end
 						self:_QuestInfoSection({self:_PrettyNPCString(nameToUse, npc.kill, npc.realArea), locationString}, preqTable)
-						if meetsCriteria then
+						if meetsCriteria and npc.name then
 							local desiredMacroValue = self.s.SLASH_TARGET .. ' ' .. npc.name
 							if button:GetAttribute("macrotext") ~= desiredMacroValue and not InCombatLockdown() then
 								button:SetAttribute("macrotext", desiredMacroValue)
@@ -2385,7 +2414,7 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 
 			self.tt = { [1] = GameTooltip }
 
-			local f = CreateFrame("Button", nil, WorldMapFrame, "UIPanelButtonTemplate")
+			local f = CreateFrame("Button", nil, WorldMapFrame.BorderFrame, "UIPanelButtonTemplate")
 			f:SetSize(100, 25)
 			if nil == Gatherer_WorldMapDisplay then
 				if Grail.blizzardRelease < 18505 then
@@ -3691,6 +3720,8 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 									local baseFrameLevel = self.supportedPOIMaps[index]:GetFrameLevel()
 									local releaseDelta = (Grail.blizzardRelease < 18505) and -1 or 1
 									local pinTypeDelta = (pin.texType == 'G' or pin.texType == 'W') and 1 or 0
+									pin:SetFrameStrata("DIALOG")	-- treasure map icons still rule when I am set to this level
+									pin:SetFrameStrata("TOOLTIP")
 									pin:SetFrameLevel(baseFrameLevel + releaseDelta + pinTypeDelta)
 									pin:SetPoint("CENTER", frame, "TOPLEFT", xcoord/100*frame:GetWidth(), -ycoord/100*frame:GetHeight())
 									pin:Show()
@@ -5169,6 +5200,10 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 		{ S.MAP_BUTTON, 'displaysMapFrame', 'configurationScript3' },
 		{ S.MAP_DUNGEONS, 'displaysDungeonQuests', 'configurationScript4' },
 		{ S.MAP_UPDATES, 'updatesWorldMapOnZoneChange', 'configurationScript1' },
+		{ S.HIDE_WORLD_MAP_FLIGHT_POINTS, 'hidesWorldMapFlightPoints', 'configurationScript16' },
+		{ S.HIDE_BLIZZARD_WORLD_MAP_TREASURES, 'hidesWorldMapTreasures', 'configurationScript16' },
+		{ S.HIDE_BLIZZARD_WORLD_MAP_BONUS_OBJECTIVES, 'hidesBlizzardWorldMapBonusObjectives', 'configurationScript17' },
+--		{ S.HIDE_BLIZZARD_WORLD_MAP_QUEST_PINS, 'hidesBlizzardWorldMapQuestPins', 'configurationScript17' },
 		}
 	Wholly.configuration[S.WIDE_PANEL] = {
 		{ S.WIDE_PANEL },
@@ -5198,5 +5233,44 @@ if nil == Wholly or Wholly.versionNumber < Wholly_File_Version then
 		{ S.RESTORE_DIRECTIONAL_ARROWS, 'shouldNotRestoreDirectionalArrows', 'configurationScript1' },
 		{ S.ADD_ADVENTURE_GUIDE, 'shouldAddAdventureGuideQuests', 'configurationScript4' },
 		}
+
+hooksecurefunc("WorldMapFrame_Update", function()
+	if WhollyDatabase.hidesWorldMapFlightPoints or WhollyDatabase.hidesWorldMapTreasures then
+		for i = 1, GetNumMapLandmarks() do
+			local _, name, _, textureIndex = GetMapLandmarkInfo(i)
+			local shouldHide = false
+			if WhollyDatabase.hidesWorldMapTreasures and 197 == textureIndex then shouldHide = true end
+			if WhollyDatabase.hidesWorldMapFlightPoints and (textureIndex == 178 or textureIndex == 179 or textureIndex == 180) then shouldHide = true end
+			if shouldHide then
+				local poi = _G["WorldMapFramePOI"..i]
+				if poi then
+				-- The "if poi then" check is probably not needed, but better safe than sorry!
+--					print("Hiding icon for",name)
+					poi:Hide()
+				end
+			end
+		end
+	end
+end)
+
+hooksecurefunc("WorldMap_UpdateQuestBonusObjectives", function()
+	if WhollyDatabase.hidesBlizzardWorldMapBonusObjectives then
+		local mapAreaID = GetCurrentMapAreaID()
+		local taskInfo = C_TaskQuest.GetQuestsForPlayerByMapID(mapAreaID)
+		local numTaskPOIs = 0;
+		if(taskInfo ~= nil) then
+			numTaskPOIs = #taskInfo;
+		end
+		local taskIconCount = 1;
+		if ( numTaskPOIs > 0 ) then
+			for _, info  in next, taskInfo do
+				local taskPOIName = "WorldMapFrameTaskPOI"..taskIconCount;
+				local taskPOI = _G[taskPOIName];
+				taskPOI:Hide();
+				taskIconCount = taskIconCount + 1;
+			end
+		end
+	end
+end)
 
 end

@@ -30,7 +30,7 @@ if (dwIsConfigurableAddOn("JamPlates_Accessories")) then
 		TRINKET_ENABLE,
 		nil,
 		"JAMPLATES_OPTION1",
-		1,
+		0,
 		function (arg)	
 			if (arg == 1) then
 			--	if (not dwIsAddOnLoaded("JamPlates Accessories")) then

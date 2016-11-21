@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
     
-    Decursive (v 2.7.4.7-3-ga9c60fa) add-on for World of Warcraft UI
+    Decursive (v 2.7.4.7-9-gdc22693) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT
     teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
@@ -21,7 +21,7 @@
     Decursive is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY.
 
-    This file was last updated on 2016-08-14T12:49:05Z
+    This file was last updated on 2016-09-12T00:18:29Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -166,6 +166,8 @@ L["HLP_LEFTCLICK"] = "Left-Click"
 L["HLP_LL_ONCLICK_TEXT"] = [=[The Live-List is not meant to be clicked. Please, read the documentation to learn how to use this add-on. Just search for 'Decursive' on WoWAce.com
 (To move this list move the Decursive bar, /dcrshow and left-alt-click to move)]=]
 L["HLP_MIDDLECLICK"] = "Middle-Click"
+L["HLP_MOUSE4"] = "Mouse Button 4"
+L["HLP_MOUSE5"] = "Mouse Button 5"
 L["HLP_NOTHINGTOCURE"] = "There is nothing to cure!"
 L["HLP_RIGHTCLICK"] = "Right-Click"
 L["HLP_USEXBUTTONTOCURE"] = "Use \"%s\" to cure this affliction!"
@@ -286,6 +288,11 @@ Your custom spells always have a higher priority and will override and replace t
 ]=]
 L["OPT_CUSTOMSPELLS_EFFECTIVE_ASSIGNMENTS"] = "Effective spells assignments:"
 L["OPT_CUSTOM_SPELL_UNAVAILABLE"] = "unavailable"
+L["OPT_CUSTOM_SPELL_UNIT_FILTER"] = "Unit Filtering"
+L["OPT_CUSTOM_SPELL_UNIT_FILTER_DESC"] = "Select units that can benefit from this spell"
+L["OPT_CUSTOM_SPELL_UNIT_FILTER_NONE"] = "All units"
+L["OPT_CUSTOM_SPELL_UNIT_FILTER_NONPLAYER"] = "Others only"
+L["OPT_CUSTOM_SPELL_UNIT_FILTER_PLAYER"] = "Player only"
 L["OPT_DEBCHECKEDBYDEF"] = [=[
 
 Checked by default]=]
@@ -487,4 +494,4 @@ L["UNSTABLERELEASE"] = "Unstable release"
 
 
 
-T._LoadedFiles["enUS.lua"] = "2.7.4.7-3-ga9c60fa";
+T._LoadedFiles["enUS.lua"] = "2.7.4.7-9-gdc22693";

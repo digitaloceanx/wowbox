@@ -4,8 +4,7 @@
 ## Title-zhTW:GladiatorlosSA_夏一可語音包
 ## Notes: GSA plugin for Chinese voice set
 ## Author: Yike Xia, Mini_Dragon
-## Dependencies: GladiatorlosSA
-## Version: 20150413
+## Version: 20160725
 ## X-DuowanAddon: PvP
 ## Dependencies: Duowan
 ## X-Revision: Duowan

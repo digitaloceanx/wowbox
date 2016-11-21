@@ -29,9 +29,9 @@ local function Titan_AutoHide_SetIcon(self)
 	-- Get the icon of the icon template
 	local icon = _G[frame.."Icon"]
 	if (TitanPanelGetVar(bar.."_Hide")) then
-		icon:SetTexture("Interface\\AddOns\\Titan\\Artwork\\TitanPanelPushpinOut")
+		icon:SetTexture("Interface\\AddOns\\Titan\\Titan\\Artwork\\TitanPanelPushpinOut")
 	else
-		icon:SetTexture("Interface\\AddOns\\Titan\\Artwork\\TitanPanelPushpinIn")
+		icon:SetTexture("Interface\\AddOns\\Titan\\Titan\\Artwork\\TitanPanelPushpinIn")
 	end	
 end
 

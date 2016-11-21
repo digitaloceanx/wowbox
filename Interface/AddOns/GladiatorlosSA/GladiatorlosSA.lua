@@ -5,8 +5,8 @@
  local L = LibStub("AceLocale-3.0"):GetLocale("GladiatorlosSA")
  local LSM = LibStub("LibSharedMedia-3.0")
  local self, GSA, PlaySoundFile = GladiatorlosSA, GladiatorlosSA, PlaySoundFile
- local GSA_TEXT = "|cff69CCF0GladiatorlosSA2|r (|cffFFF569/gsa|r)"
- local GSA_VERSION = "|cffFF7D0A v2.4.1 |r(|cFF00FF967.0.3 Legion|r)"
+ local GSA_TEXT = "|cff69CCF0GladiatorlosSA|r (|cffFFF569/gsa|r)"
+ local GSA_VERSION = "|cffFF7D0A v1.7a |r(|cFF00FF967.0.3 Legion|r)"
  local GSA_AUTHOR = " by |cffC79C6EOrunno-MoonGuard|r"
  local gsadb
  local soundz,sourcetype,sourceuid,desttype,destuid = {},{},{},{},{}
@@ -109,11 +109,25 @@
 		--mockingBanner = false,
 		--totemicProjection = false,
 		--wildCharge = false,
-		--rushingJadeWind = false,
+		rushingJadeWind = false,
 		--manaTea = false,
-		--purge = false, -- Added to 2.2.2
+		purge = false,
+		spellSteal = false,
 		--tranquilizingShot = false, -- Added to 2.2.2
 		powerWordShield = false, -- Added to 2.2.2
+		diceRoll = false,
+		quakingPalm = false,
+		warStomp = false,
+		arcaneTorrent = false,
+		bloodLust = false,
+		cauterize = false,
+		purgatory = false,
+		cheatDeath = false,
+		implosion = false,
+		waterElemental = false,
+		littleMoon = false,
+		middleMoon = false,
+		explosiveKeg = false,
 		genderVoice = false, -- added to 2.3
 		custom = {},
 		--shieldBarrier = false,
@@ -162,7 +176,7 @@
 	self.db1.RegisterCallback(self, "OnProfileReset", "ChangeProfile")
 	gsadb = self.db1.profile
 	local options = {
-		name = "GladiatorlosSA2",
+		name = "GladiatorlosSA",
 		desc = L["PVP Voice Alert"],
 		type = 'group',
 		args = {
@@ -230,7 +244,7 @@ function GladiatorlosSA:Toggle(switch)
 		self:UnregisterEvent("UNIT_AURA");
 	end
 end
-d
+
 
  function GladiatorlosSA:OnEnable()
 	GladiatorlosSA:RegisterEvent("PLAYER_ENTERING_WORLD")

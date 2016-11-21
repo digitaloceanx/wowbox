@@ -1437,7 +1437,13 @@ function dwGetUnitAvgItemLevel(unit)
 	local ulvl = UnitLevel(unit)
 	local not2hand
 	local findItem = 0
-	
+	local itemM, itemS, itemMlv, itemSlv, itemMMax
+	itemM = GetInventoryItemLink(unit, 16)
+	itemS = GetInventoryItemLink(unit, 17)
+	itemMlv = itemM and ItemUpgradeInfo:GetUpgradedItemLevel(itemM) or 0
+	itemSlv = itemS and ItemUpgradeInfo:GetUpgradedItemLevel(itemS) or 0
+	itemMMax = (itemMlv > itemSlv) and itemMlv or itemSlv
+
 	for i = 1, #SlotName do
 		local slotLink = GetInventoryItemLink(unit, GetInventorySlotInfo(("%sSlot"):format(SlotName[i])))
 		if (slotLink ~= nil) then
@@ -1448,7 +1454,12 @@ function dwGetUnitAvgItemLevel(unit)
 			--	elseif IsPVPItem(slotLink) then
 			--		pvp = pvp + 1
 			--	end
-				total = total + ItemUpgradeInfo:GetUpgradedItemLevel(slotLink)
+				if quality == 6 and ilvl == 750 and (SlotName[i] == "SecondaryHand" or SlotName[i] == "MainHand") then --修正神器副手itemLink字串不含升级物品信息的问题
+					total = total + itemMMax
+				else
+					total = total + ItemUpgradeInfo:GetUpgradedItemLevel(slotLink)
+				end
+			--	total = total + ItemUpgradeInfo:GetUpgradedItemLevel(slotLink)
 			end
 
 			if ((SlotName[i] == 'SecondaryHand') or (SlotName[i] == 'MainHand' and ItemEquipLoc ~= "INVTYPE_2HWEAPON" and ItemEquipLoc ~= "INVTYPE_RANGED" and ItemEquipLoc ~= "INVTYPE_RANGEDRIGHT")) and not not2hand then

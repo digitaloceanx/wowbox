@@ -1,3 +1,17 @@
+local EUF_CLASS_ICON = {
+    ["WARRIOR"] = {0, 0.25, 0, 0.25},
+    ["MAGE"] = {0.25, 0.49609375, 0, 0.25},
+    ["ROGUE"] = {0.49609375, 0.7421875, 0, 0.25},
+    ["DRUID"] = {0.7421875, 0.98828125, 0, 0.25},
+    ["HUNTER"] = {0, 0.25, 0.25, 0.5},
+    ["SHAMAN"] = {0.25, 0.49609375, 0.25, 0.5},
+    ["PRIEST"] = {0.49609375, 0.7421875, 0.25, 0.5},
+    ["WARLOCK"] = {0.7421875, 0.98828125, 0.25, 0.5},
+    ["PALADIN"] = {0, 0.25, 0.5, 0.75},
+    ["DEATHKNIGHT"] = {0.25, 0.49609375, 0.5, 0.75},
+	["MONK"] = {0.49609375, 0.7421875, 0.5, 0.75},
+	["DEMONHUNTER"] = {0.7421875, 0.98828125, 0.5, 0.75}
+}
 
 function EUF_SetClass(portrait, unit)
 	-- Set 8 class icon
@@ -39,7 +53,8 @@ end
 function EUF_SetPortraitTexture(portrait, class)
 	-- Set 8 class icon
 	portrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles");
-	local Coord = CLASS_BUTTONS[class];	
+	local Coord = EUF_CLASS_ICON[class];	
+
 	portrait:SetTexCoord(Coord[1],Coord[2],Coord[3],Coord[4]);
 end
 

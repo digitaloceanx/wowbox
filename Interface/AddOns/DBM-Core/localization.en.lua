@@ -21,7 +21,7 @@ DBM_CORE_WHATS_NEW_LINK				= "In upcoming version of DBM, many features that rel
 --Pre Patch 7.1 Notice
 DBM_CORE_NO_RANGE_SOON				= "Note: range radar will no longer be available within instances in patch 7.1"
 --Post Patch 7.1
-DBM_CORE_NO_RANGE					= "Range Checker/Radar can not be used in instances"
+DBM_CORE_NO_RANGE					= "Range Radar can not be used in instances. Legacy text range frame used instead"
 DBM_CORE_NO_ARROW					= "Arrow can not be used in instances"
 DBM_CORE_NO_HUD						= "HUDMap can not be used in instances"
 
@@ -461,6 +461,8 @@ DBM_CORE_HUD_USAGE	= {
 }
 
 DBM_ARROW_MOVABLE					= "Arrow movable"
+DBM_ARROW_WAY_USAGE					= "/way <x> <y>: Creates an arrow that points to a specific location (using local zone map coordinates)"
+DBM_ARROW_WAY_SUCCESS				= "To hide arrow, do '/dbm arrow hide' or reach arrow"
 DBM_ARROW_ERROR_USAGE	= {
 	"DBM-Arrow usage:",
 	"-----------------",

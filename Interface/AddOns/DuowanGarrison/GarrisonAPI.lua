@@ -5,7 +5,6 @@ getmetatable(L).__call = function(_,k) if T.L then L = T.L return L(k) end retur
 local FOLLOWER_ITEM_LEVEL_CAP, MENTOR_FOLLOWER, INF = T.FOLLOWER_ITEM_LEVEL_CAP, T.MENTOR_FOLLOWER, math.huge
 local unfreeStatusOrder = {[GARRISON_FOLLOWER_WORKING]=2, [GARRISON_FOLLOWER_INACTIVE]=1}
 
-
 hooksecurefunc(C_Garrison, "MarkMissionComplete", function(mid)
 	EV("MP_MARK_MISSION_COMPLETE", mid)
 end)
@@ -743,7 +742,7 @@ do -- CompleteMissions/AbortCompleteMissions
 					if v.currencyID > 0 then
 						_, cur, _, _, _, tmax = GetCurrencyInfo(v.currencyID)
 					else
-						cur, tmax = GetMoney(), 1e10-1
+						cur, tmax = GetMoney(), 1e11-1
 					end
 					if tmax > 0 and (cur+rew-tmax) > rew * T.config.currencyWasteThreshold then
 						mi.skipped, curState, curIndex = true, "NEXT", curIndex + 1
@@ -2696,7 +2695,7 @@ function api.SetTraitTooltip(tip, id, info, showInactive, skipDescription)
 	if info and #info > 0 then
 		tip:AddLine(nl .. L"Followers with this trait:", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 		addFollowerList(tip, info, finfo, nil, showInactive)
-	else
+	elseif id and id < 331 then
 		tip:AddLine(nl .. L"You have no followers with this trait.", 1,0.50,0, 1)
 	end
 	info = info and info.affine
@@ -2722,7 +2721,7 @@ function api.SetThreatTooltip(tip, id, info, missionLevel, showInactive, skipDes
 	if info and #info > 0 then
 		tip:AddLine((skipDescription and "" or "|n") .. L"Can be countered by:", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 		addFollowerList(tip, info, finfo, missionLevel, showInactive, id)
-	else
+	elseif id then
 		local eq = T.EquipmentTraitQuests[T.EquipmentCounters[id]]
 		if eq then
 			tip:AddLine((skipDescription and "" or "|n") .. L"No ships are equipped to handle this mechanic.", 1,0.50,0, 1)

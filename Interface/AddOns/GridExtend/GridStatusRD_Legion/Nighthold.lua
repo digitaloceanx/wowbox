@@ -1,5 +1,6 @@
 --local zone = "The Nighthold"
 local zoneid = 1088
+
 local GridStatusRaidDebuff = GridStatusRaidDebuff;
 local function import(self)
 -- Skorpyron
@@ -91,6 +92,7 @@ GridStatusRaidDebuff:DebuffId(zoneid, 208672, 105, 5, 5) -- Carrion Wave (non-di
 -- Gul'dan
 GridStatusRaidDebuff:DebuffId(zoneid, 208903, 106, 5, 5) -- Burning Claws (non-dispellable) (ground AoE)
 GridStatusRaidDebuff:DebuffId(zoneid, 208802, 107, 5, 5) -- Soul Corrosion (non-dispellable) (DMG + DoT)
+
 end
 
 GridStatusRaidDebuff:Import(import)

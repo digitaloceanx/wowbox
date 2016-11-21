@@ -87,6 +87,33 @@ E:\PROGRA~1\Altova\XMLSpy2006\UI.xsd">
 			<Frame>
 				<Layers>
 					<Layer level="OVERLAY">
+						<!-- 显示生命值2 -->
+						<FontString name="$parentHP2" inherits="dwTextStatusBarText">
+							<Anchors>
+								<Anchor point="BOTTOM" relativeTo="PlayerFrameHealthBar" relativePoint="BOTTOM">
+									<Offset x="-2" y="-2"/>
+								</Anchor>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="0.9"/>
+						</FontString>
+						<!-- 显示生命百分比2 -->
+						<FontString name="$parentHPPercent2" inherits="dwTextStatusBarText">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="PlayerFrameHealthBar" relativePoint="TOPLEFT">
+									<Offset x="8" y="-6"/>
+								</Anchor>
+							</Anchors>
+							<Color r="1" g="0.75" b="0"/>
+						</FontString>
+						<!-- 显示魔法百分比2 -->
+						<FontString name="$parentMP2" inherits="dwTextStatusBarText">
+							<Anchors>
+								<Anchor point="CENTER" relativeTo="PlayerFrameManaBar" relativePoint="CENTER">
+									<Offset x="-2" y="0"/>
+								</Anchor>
+							</Anchors>
+							<Color r="1" g="1" b="1" a="0.9"/>
+						</FontString>
 						<!-- 显示生命值 -->
 						<FontString name="$parentHP" inherits="dwTextStatusBarText">
 							<Anchors>
@@ -127,7 +154,7 @@ E:\PROGRA~1\Altova\XMLSpy2006\UI.xsd">
 				</Layers>
 				<Scripts>
 					<OnLoad>
-						self:SetFrameLevel(self:GetFrameLevel() + 1);
+						self:SetFrameLevel(self:GetFrameLevel() + 3);
 					</OnLoad>
 				</Scripts>
 			</Frame>

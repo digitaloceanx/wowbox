@@ -6,7 +6,7 @@
 ## Title-zhTW: [多玩] 可接任務查詢
 ## Notes-zhTW: 在世界地圖上顯示可接任務
 ## Author: Scott M Harrison
-## Version: 057
+## Version: 058
 ## SavedVariablesPerCharacter: WhollyDatabase
 ## Dependencies: Duowan
 ## X-Revision: Duowan

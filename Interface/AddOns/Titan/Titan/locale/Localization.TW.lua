@@ -202,7 +202,7 @@ L["TITAN_SKINS_TITLE"] = TITAN_PANEL.." Skins";
 L["TITAN_SKINS_OPTIONS_CUSTOM"] = "Skins - Custom";
 L["TITAN_SKINS_TITLE_CUSTOM"] = TITAN_PANEL.." Custom Skins";
 L["TITAN_SKINS_MAIN_DESC"] = "All custom skins are assumed to be in: \n"
-			.."..\\AddOns\\Titan\\Artwork\\Custom\\<Skin Folder>\\ ".."\n"
+			.."..\\AddOns\\Titan\\Titan\\Artwork\\Custom\\<Skin Folder>\\ ".."\n"
 			.."\n"..TITAN_PANEL.." and custom skins are stored under the Custom folder."
 L["TITAN_SKINS_LIST_TITLE"] = "外觀清單";
 L["TITAN_SKINS_SET_DESC"] = "選擇一個 Titan 狀態列的外觀設定。";

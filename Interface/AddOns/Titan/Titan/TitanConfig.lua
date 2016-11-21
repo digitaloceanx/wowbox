@@ -430,7 +430,7 @@ local optionsSkinsCustom = {
 			local v;
 				for _,v in pairs (TitanSkins) do
 					if v.path ~= TitanPanelGetVar("TexturePath") 
-					and v.path ~= "Interface\\AddOns\\Titan\\Artwork\\" 
+					and v.path ~= "Interface\\AddOns\\Titan\\Titan\\Artwork\\" 
 					and v.titan ~= true
 					then
 						Skinlist[v.path] = "|cff19ff19"..v.name.."|r"

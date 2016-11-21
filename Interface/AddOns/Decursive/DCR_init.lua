@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
 
-    Decursive (v 2.7.4.7-3-ga9c60fa) add-on for World of Warcraft UI
+    Decursive (v 2.7.4.7-9-gdc22693) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
     Starting from 2009-10-31 and until said otherwise by its author, Decursive
@@ -17,7 +17,7 @@
     Decursive is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY.
 
-    This file was last updated on 2016-07-26T11:52:32Z
+    This file was last updated on 2016-09-12T00:18:29Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ local function RegisterDecursive_Once() -- {{{
     --@end-debug@]===]
 
     D.name = "Decursive";
-    D.version = "2.7.4.7-3-ga9c60fa";
+    D.version = "2.7.4.7-9-gdc22693";
     D.author = "John Wellesz";
 
     D.DcrFullyInitialized = false;
@@ -421,9 +421,9 @@ local function InitVariables_Once() -- {{{
     -- A table UnitID=>IsDebuffed (boolean)
     D.UnitDebuffed = {};
 
-    D.Revision = "a9c60fa"; -- not used here but some other add-on may request it from outside
-    D.date = "2016-08-17T22:57:44Z";
-    D.version = "2.7.4.7-3-ga9c60fa";
+    D.Revision = "dc22693"; -- not used here but some other add-on may request it from outside
+    D.date = "2016-09-12T00:21:19Z";
+    D.version = "2.7.4.7-9-gdc22693";
 
     if D.date ~= "@project".."-date-iso@" then
         -- @project-timestamp@ doesn't work
@@ -492,7 +492,7 @@ function D:VersionWarnings(forceDisplay) -- {{{
 
             if time() - self.db.global.LastExpirationAlert > 48 * 3600 or forceDisplay then
 
-                T._ShowNotice ("|cff00ff00Decursive version: 2.7.4.7-3-ga9c60fa|r\n\n" .. "|cFFFFAA66" .. L["TOC_VERSION_EXPIRED"] .. "|r");
+                T._ShowNotice ("|cff00ff00Decursive version: 2.7.4.7-9-gdc22693|r\n\n" .. "|cFFFFAA66" .. L["TOC_VERSION_EXPIRED"] .. "|r");
 
                 self.db.global.LastExpirationAlert = time();
             end
@@ -501,7 +501,7 @@ function D:VersionWarnings(forceDisplay) -- {{{
         self.db.global.TocExpiredDetection = false;
     end
 
-    if (("2.7.4.7-3-ga9c60fa"):lower()):find("beta") or ("2.7.4.7-3-ga9c60fa"):find("RC") or ("2.7.4.7-3-ga9c60fa"):find("Candidate") or alpha then
+    if (("2.7.4.7-9-gdc22693"):lower()):find("beta") or ("2.7.4.7-9-gdc22693"):find("RC") or ("2.7.4.7-9-gdc22693"):find("Candidate") or alpha then
 
         D.RunningADevVersion = true;
 
@@ -514,7 +514,7 @@ function D:VersionWarnings(forceDisplay) -- {{{
                 DC.DevVersionExpired = true;
                 -- Display the expiration notice only once evry 48 hours
                 if time() - self.db.global.LastExpirationAlert > 48 * 3600 or forceDisplay then
-                    T._ShowNotice ("|cff00ff00Decursive version: 2.7.4.7-3-ga9c60fa|r\n\n" .. "|cFFFFAA66" .. L["DEV_VERSION_EXPIRED"] .. "|r");
+                    T._ShowNotice ("|cff00ff00Decursive version: 2.7.4.7-9-gdc22693|r\n\n" .. "|cFFFFAA66" .. L["DEV_VERSION_EXPIRED"] .. "|r");
 
                     self.db.global.LastExpirationAlert = time();
                 end
@@ -525,16 +525,16 @@ function D:VersionWarnings(forceDisplay) -- {{{
         end
 
         -- display a warning if this is a developpment version (avoid insults from people who don't know what they're doing)
-        if self.db.global.NonRelease ~= "2.7.4.7-3-ga9c60fa" then
-            self.db.global.NonRelease = "2.7.4.7-3-ga9c60fa";
-            T._ShowNotice ("|cff00ff00Decursive version: 2.7.4.7-3-ga9c60fa|r\n\n" .. "|cFFFFAA66" .. L["DEV_VERSION_ALERT"] .. "|r");
+        if self.db.global.NonRelease ~= "2.7.4.7-9-gdc22693" then
+            self.db.global.NonRelease = "2.7.4.7-9-gdc22693";
+            T._ShowNotice ("|cff00ff00Decursive version: 2.7.4.7-9-gdc22693|r\n\n" .. "|cFFFFAA66" .. L["DEV_VERSION_ALERT"] .. "|r");
         end
     end
 
     --[===[@debug@
     fromCheckOut = true;
     if time() - self.db.global.LastUnpackagedAlert > 24 * 3600  then
-        T._ShowNotice ("|cff00ff00Decursive version: 2.7.4.7-3-ga9c60fa|r\n\n" .. "|cFFFFAA66" ..
+        T._ShowNotice ("|cff00ff00Decursive version: 2.7.4.7-9-gdc22693|r\n\n" .. "|cFFFFAA66" ..
         [[
         |cFFFF0000You're using an unpackaged version of Decursive.|r
         Decursive is not meant to be used this way.
@@ -572,7 +572,7 @@ function D:VersionWarnings(forceDisplay) -- {{{
         if D.db.global.NewerVersionDetected > D.VersionTimeStamp and D.db.global.NewerVersionName ~= D.version then -- it's still newer than this one
             if time() - D.db.global.NewerVersionAlert > 3600 * 24 * 4 then -- it's been more than 4 days since the new version alert was shown
                 if not D.db.global.NewVersionsBugMeNot then -- the user did not disable new version alerts
-                    T._ShowNotice ("|cff55ff55Decursive version: 2.7.4.7-3-ga9c60fa|r\n\n" .. "|cFF55FFFF" .. (L["NEW_VERSION_ALERT"]):format(D.db.global.NewerVersionName or "none", date("%Y-%m-%d", D.db.global.NewerVersionDetected)) .. "|r");
+                    T._ShowNotice ("|cff55ff55Decursive version: 2.7.4.7-9-gdc22693|r\n\n" .. "|cFF55FFFF" .. (L["NEW_VERSION_ALERT"]):format(D.db.global.NewerVersionName or "none", date("%Y-%m-%d", D.db.global.NewerVersionDetected)) .. "|r");
                     D.db.global.NewerVersionAlert = time();
                 end
             end
@@ -1162,6 +1162,7 @@ function D:Configure() --{{{
     local IsSpellKnown = _G.IsSpellKnown;
     local Types = {};
     local UnitFiltering = false;
+    local ActualUnitFiltering = false;
     local PermanentUnitFiltering = false;
     local IsEnhanced = false;
     local SpellName = "";
@@ -1186,7 +1187,12 @@ function D:Configure() --{{{
 
                 Types = spell.Types;
                 UnitFiltering = false;
+                ActualUnitFiltering = false;
                 IsEnhanced = false;
+
+                if spell.UnitFiltering then
+                    UnitFiltering = spell.UnitFiltering;
+                end
 
                 -- Could it be enhanced by something (a talent for example)?
                 if spell.EnhancedBy then
@@ -1214,10 +1220,6 @@ function D:Configure() --{{{
                     end
                 end
 
-                if spell.UnitFiltering then
-                    UnitFiltering = spell.UnitFiltering;
-                end
-
                 -- register it
                 self.Status.FoundSpells[SpellName] = {spell.Pet, spellID, IsEnhanced, spell.Better, spell.MacroText, nil};
                 for _, Type in ipairs (Types) do
@@ -1227,10 +1229,14 @@ function D:Configure() --{{{
                         CuringSpells[Type] = SpellName;
 
                         if UnitFiltering and UnitFiltering[Type] then
-                            --@alpha@
-                            self:Debug("Enhancement for player only for type added",Type);
-                            --@end-alpha@
+                            self:Debug("Spell with unit filtering added :", Type, UnitFiltering[Type]);
                             self.Status.UnitFilteringTypes[Type] = UnitFiltering[Type];
+
+                            if not ActualUnitFiltering then
+                                ActualUnitFiltering = {};
+                            end
+
+                            ActualUnitFiltering[Type] = UnitFiltering[Type];
                         else
                             self.Status.UnitFilteringTypes[Type] = false;
                         end
@@ -1240,11 +1246,11 @@ function D:Configure() --{{{
                     end
                 end
 
-                if UnitFiltering then
+                if ActualUnitFiltering then
                     local filteredTypeCount = 0;
                     local lastfilter = false;
                     -- check if the filters are identical for every type
-                    for _, filter in pairs(UnitFiltering) do
+                    for Type, filter in pairs(ActualUnitFiltering) do
 
                         if not lastfilter then
                             lastfilter = filter;
@@ -1489,7 +1495,7 @@ end -- }}}
 
 
 
-T._LoadedFiles["DCR_init.lua"] = "2.7.4.7-3-ga9c60fa";
+T._LoadedFiles["DCR_init.lua"] = "2.7.4.7-9-gdc22693";
 
 -------------------------------------------------------------------------------
 
@@ -1504,28 +1510,28 @@ Simple replacements
 @project-revision@
     Turns into the highest revision of the entire project in integer form. e.g. 1234
     Note: does not work for git
-f7919ae5d2b9fb7d32aeaf3a02844d38c5f58f6a
+d18ef15c4b407c473cc3cd7431889d6fb9d90c40
     Turns into the hash of the file in hex form. e.g. 106c634df4b3dd4691bf24e148a23e9af35165ea
     Note: does not work for svn
-a9c60fa15fb4be958a852623459ca165a23cdd62
+dc22693f666ee83edb4247444a218ebcd1e45b12
     Turns into the hash of the entire project in hex form. e.g. 106c634df4b3dd4691bf24e148a23e9af35165ea
     Note: does not work for svn
-f7919ae
+d18ef15
     Turns into the abbreviated hash of the file in hex form. e.g. 106c63 Note: does not work for svn
-a9c60fa
+dc22693
     Turns into the abbreviated hash of the entire project in hex form. e.g. 106c63
     Note: does not work for svn
 Archarodim
     Turns into the last author of the file. e.g. ckknight
 Archarodim
     Turns into the last author of the entire project. e.g. ckknight
-2016-07-26T11:52:32Z
+2016-09-12T00:18:29Z
     Turns into the last changed date (by UTC) of the file in ISO 8601. e.g. 2008-05-01T12:34:56Z
-2016-08-17T22:57:44Z
+2016-09-12T00:21:19Z
     Turns into the last changed date (by UTC) of the entire project in ISO 8601. e.g. 2008-05-01T12:34:56Z
-20160726115232
+20160912001829
     Turns into the last changed date (by UTC) of the file in a readable integer fashion. e.g. 20080501123456
-20160817225744
+20160912002119
     Turns into the last changed date (by UTC) of the entire project in a readable integer fashion. e.g. 2008050123456
 @file-timestamp@
     Turns into the last changed date (by UTC) of the file in POSIX timestamp. e.g. 1209663296
@@ -1533,7 +1539,7 @@ Archarodim
 @project-timestamp@
     Turns into the last changed date (by UTC) of the entire project in POSIX timestamp. e.g. 1209663296
     Note: does not work for git
-2.7.4.7-3-ga9c60fa
+2.7.4.7-9-gdc22693
     Turns into an approximate version of the project. The tag name if on a tag, otherwise it's up to the repo.
     :SVN returns something like "r1234"
     :Git returns something like "v0.1-873fc1"

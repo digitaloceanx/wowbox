@@ -7,7 +7,7 @@
 ## Notes-zhTW: 競技場技能語音提示
 ## Author: Abatorlos(of Spinebreaker), DuskAshes, superk521, zuhligan
 ## SavedVariables: GladiatorlosSADB
-## Version: 2.4
+## Version: 1.7a
 ## X-DuowanAddon: PvP
 ## Dependencies: Duowan
 ## X-Revision: Duowan
