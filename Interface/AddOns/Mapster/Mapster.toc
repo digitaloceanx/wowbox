@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Mapster
 ## Notes: Simple Map Mod
 ## Title-zhCN: [多玩] 地图增强
@@ -8,7 +8,7 @@
 ## Author: Nevcairiel
 ## SavedVariables: MapsterDB
 ## X-Category: Map
-## Version: 1.7.0
+## Version: 1.7.4
 ## X-DuowanAddon: 地图
 ## Dependencies: Duowan
 ## X-Revision: Duowan
@@ -27,4 +27,4 @@ FogClear.lua
 Scaling.lua
 
 WorldFlightMap.lua
-WorldMapZoom.lua
+#WorldMapZoom.lua

@@ -1,4 +1,4 @@
-﻿## Interface: 30000
+## Interface: 70100
 ## Title: Fence [|cffeda55fBrowse|r]
 ## Notes: Show single price on a stack of items as well as indicating if an item already has bids on it.
 ## Notes-zhTW: 一個幫助玩家在拍賣場買賣的插件。

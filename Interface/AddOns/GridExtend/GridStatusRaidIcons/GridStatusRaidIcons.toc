@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Author: kunda
 ## Title: GridStatusRaidIcons
 ## Notes: Adds Raid Target Icon status to Grid (Player or Player Target).

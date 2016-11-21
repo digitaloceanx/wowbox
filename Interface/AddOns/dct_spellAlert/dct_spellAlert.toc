@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] DCT [|cffff8080SpellAlert mod|r]
 ## Notes: 为DCT (Dennis's Combat Text) 提供法术预警功能
 ## Title-zhCN: [多玩] 战斗指示器-法术预警

@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
 
-    Decursive (v 2.7.4.7-9-gdc22693) add-on for World of Warcraft UI
+    Decursive (v 2.7.5) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
     Starting from 2009-10-31 and until said otherwise by its author, Decursive
@@ -17,7 +17,7 @@
     Decursive is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY.
 
-    This file was last updated on 2016-09-12T00:21:19Z
+    This file was last updated on 2016-10-06T20:58:51Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ local DebugTextTable    = T._DebugTextTable;
 local Reported          = {};
 
 local UNPACKAGED = "@pro" .. "ject-version@";
-local VERSION = "2.7.4.7-9-gdc22693";
+local VERSION = "2.7.5";
 
 T._LoadedFiles = {};
 T._LoadedFiles["Dcr_DIAG.lua"] = false; -- here for consistency but useless in this particular file
@@ -220,19 +220,26 @@ do
     local DebugHeader = false;
     local HeaderFailOver = "|cFF11FF33Please email the content of this window to <archarodim+DcrReport@teaser.fr>|r\n|cFF009999(Use CTRL+A to select all and then CTRL+C to put the text in your clip-board)|r\n\n";
     local LoadedAddonNum = 0;
+    local TotalAddonMemoryUsage = 0;
 
     local function GetAddonListAsString ()
         local addonCount = GetNumAddOns();
         local loadedAddonList = {};
-        local name, security, _;
+        local version, memoryUsage, name, security, _;
+
+        TotalAddonMemoryUsage = 0;
+        UpdateAddOnMemoryUsage();
 
         for addonID=1, addonCount do
             name, _, _, _, _, security, _ = GetAddOnInfo(addonID)
 
             if security == 'INSECURE' and IsAddOnLoaded(addonID) then
-                local version = GetAddOnMetadata(addonID, "Version");
+                version = GetAddOnMetadata(addonID, "Version");
+                memoryUsage = GetAddOnMemoryUsage(addonID);
 
-                table.insert(loadedAddonList, ("%s (%s)[%d]"):format(name, version or 'N/A', addonID));
+                TotalAddonMemoryUsage = TotalAddonMemoryUsage + memoryUsage;
+
+                table.insert(loadedAddonList, ("%s (%s)[%d]{MU: %d}"):format(name, version or 'N/A', addonID, memoryUsage));
 
             end
         end
@@ -264,7 +271,9 @@ do
         _Debug(unpack(TIandBI));
 
 
-        DebugHeader = ("%s\n2.7.4.7-9-gdc22693  %s(%s)  CT: %0.4f D: %s %s %s BDTHFAd: %s nDrE: %d Embeded: %s W: %d LA: %d TA: %d NDRTA: %d BUIE: %d TI: [dc:%d, lc:%d, y:%d, LEBY:%d, LB:%d, TTE:%u] (%s, %s, %s, %s)"):format(instructionsHeader, -- "%s\n
+        -- TODO: add add-on memory usage stats and prevent grabage creation in critical part to avoid triggering the grabage collector...
+
+        DebugHeader = ("%s\n2.7.5  %s(%s)  CT: %0.4f D: %s %s %s BDTHFAd: %s nDrE: %d Embeded: %s W: %d (LA: %d TAMU: %d) TA: %d NDRTA: %d BUIE: %d TI: [dc:%d, lc:%d, y:%d, LEBY:%d, LB:%d, TTE:%u] (%s, %s, %s, %s)"):format(instructionsHeader, -- "%s\n
         tostring(DC.MyClass), tostring(UnitLevel("player") or "??"), NiceTime(), date(), GetLocale(), -- %s(%s)  CT: %0.4f D: %s %s
         BugGrabber and "BG" .. (T.BugGrabber and "e" or "") or "NBG", -- %s
         tostring(T._BDT_HotFix1_applyed), -- BDTHFAd: %s
@@ -272,6 +281,7 @@ do
         tostring(T._EmbeddedMode), -- Embeded: %s
         IsWindowsClient() and 1 or 0, -- W: %d
         LoadedAddonNum, -- LA: %d
+        TotalAddonMemoryUsage, -- TAMU: %d
         T._TaintingAccusations, -- TA: %d
         T._NDRTaintingAccusations, -- NDRTA: %d
         T._BlizzardUIErrors, -- BUIE: %d
@@ -480,10 +490,10 @@ function T._onError(event, errorObject)
 
             -- if the error happened inside blizzard_debugtools, use Blizzards's BasicScriptErrorsText
             if (errorm:lower()):find("blizzard_debugtools") then
-                --@alpha@
+                --[===[@alpha@
                 _G.BasicScriptErrorsText:SetText(errorm);
                 _G.BasicScriptErrors:Show();
-                --@end-alpha@
+                --@end-alpha@]===]
                 return;
             end
 
@@ -515,11 +525,11 @@ function T._DecursiveErrorHandler(err, ...)
 
     --A check to see if the error is happening inside the Blizzard 'debug' tool himself...
     if errl:find("blizzard_debugtools") then
-        --@alpha@
+        --[===[@alpha@
         if ( GetCVarBool("scriptErrors") ) then
             print (("|cFFFF0000%s|r"):format(err));
         end
-        --@end-alpha@
+        --@end-alpha@]===]
         return;
     end
 
@@ -662,23 +672,7 @@ end
 
 T._ShowNotice = function (notice)
 
- --   if not StaticPopupDialogs["DECURSIVE_NOTICE_FRAME"] then
-        -- the beautiful notice popup : {{{ -
- --       StaticPopupDialogs["DECURSIVE_NOTICE_FRAME"] = {
- --           text = "|cFFFF0000Decursive Notice:|r\n%s",
- --           button1 = "OK",
- --           OnAccept = function()
- --               return false;
---            end,
-  --          timeout = 0,
-  --          whileDead = 1,
-  --          hideOnEscape = false,
-  --          showAlert = 1,
-  --          preferredIndex = 3,
- --       }; -- }}}
- --   end
 
-    StaticPopup_Show ("DECURSIVE_NOTICE_FRAME", notice);
 end
 
 
@@ -991,4 +985,4 @@ do
     end
 end
 
-T._LoadedFiles["Dcr_DIAG.lua"] = "2.7.4.7-9-gdc22693";
+T._LoadedFiles["Dcr_DIAG.lua"] = "2.7.5";

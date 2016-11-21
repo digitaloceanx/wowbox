@@ -1,16 +1,16 @@
-﻿## Interface: 70000
+﻿## Interface: 70100
 ## Title: Broker: Garrison
 ## Title-zhCN: [多玩] 要塞资讯
 ## Notes-zhCN: 在屏幕顶部增加一条显示游戏中咨询的信息条
 ## Notes: Display Garrison missons for all Characters
 ## Author: smb
-## Version: 2.0.8.1
+## Version: 2.0.8.1-4-g75e431b
 ## X-Category: Miscellaneous
 ## SavedVariables: Broker_GarrisonDB
 ## X-Email: sb@sbuehl.com
 ## OptionalDeps: Ace3, CallbackHandler-1.0, LibQTip-1.0, LibStub, LibSink-2.0, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibDataBroker-1.1, LibToast-1.0, AdiDebug, LibDBIcon-1.0
 ## X-Embeds: Ace3, CallbackHandler-1.0, LibQTip-1.0, LibStub, LibSink-2.0, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibDataBroker-1.1, LibToast-1.0, LibDBIcon-1.0
-## X-Curse-Packaged-Version: 2.0.8.1
+## X-Curse-Packaged-Version: 2.0.8.1-4-g75e431b
 ## X-Curse-Project-Name: Broker Garrison
 ## X-Curse-Project-ID: broker-garrison
 ## X-Curse-Repository-ID: wow/broker-garrison/mainline

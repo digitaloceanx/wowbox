@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: |cff00ff00NPCMark|r
 ## Title-zhTW: [多玩] NPC標記(|cff00ff00NPCMark|r)
 ## Title-zhCN: [多玩] NPC标记(|cff00ff00NPCMark|r)

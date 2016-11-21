@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: GatherMate
 ## Notes: Collects Herbs, Mines, Gas Clouds and Fishing locations and adds them to the worldmap and minimap
 ## Title-zhCN: [多玩] 采集助手 GatherMate
@@ -10,11 +10,11 @@
 ## X-Credits: OttoDeFe for the launher icon.
 ## SavedVariables: GatherMate2DB, GatherMate2HerbDB, GatherMate2MineDB, GatherMate2FishDB, GatherMate2GasDB, GatherMate2TreasureDB, GatherMate2ArchaeologyDB
 ## X-Category: Map
-## Version: 1.37.1-1-g0a5d844
+## Version: 1.38.1
 ## X-License: ARR
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Always: delayed
-## X-Curse-Packaged-Version: 1.37.1-1-g0a5d844
+## X-Curse-Packaged-Version: 1.38.1
 ## X-Curse-Project-Name: GatherMate2
 ## X-Curse-Project-ID: gathermate2
 ## X-Curse-Repository-ID: wow/gathermate2/mainline

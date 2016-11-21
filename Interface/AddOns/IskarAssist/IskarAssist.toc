@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: Iskar Assist
 ## Title-zhCN: 艾斯卡助手
 ## Notes: Helps with the Encounter agaist Iskar on Hellfire Citadel.

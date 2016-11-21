@@ -29,12 +29,14 @@ function EventAlert_Icon_Options_Frame_Init()
 	EA_Icon_Options_Frame_SpecFlag_Energy:SetChecked(EA_Config.SpecPowerCheck.Energy);
 	EA_Icon_Options_Frame_SpecFlag_Rage:SetChecked(EA_Config.SpecPowerCheck.Rage);
 	EA_Icon_Options_Frame_SpecFlag_Focus:SetChecked(EA_Config.SpecPowerCheck.Focus);
-	EA_Icon_Options_Frame_SpecFlag_ShadowOrbs:SetChecked(EA_Config.SpecPowerCheck.ShadowOrbs);
+	EA_Icon_Options_Frame_SpecFlag_Focus_Pet:SetChecked(EA_Config.SpecPowerCheck.FocusPet);
+	EA_Icon_Options_Frame_SpecFlag_Insanity:SetChecked(EA_Config.SpecPowerCheck.Insanity);
 	--EA_Icon_Options_Frame_SpecFlag_DemonicFury:SetChecked(EA_Config.SpecPowerCheck.DemonicFury);
 	--EA_Icon_Options_Frame_SpecFlag_BurningEmbers:SetChecked(EA_Config.SpecPowerCheck.BurningEmbers);
 	EA_Icon_Options_Frame_SpecFlag_ArcaneCharges:SetChecked(EA_Config.SpecPowerCheck.ArcaneCharges);
 	EA_Icon_Options_Frame_SpecFlag_Maelstrom:SetChecked(EA_Config.SpecPowerCheck.Maelstrom);
 	EA_Icon_Options_Frame_SpecFlag_Fury:SetChecked(EA_Config.SpecPowerCheck.Fury);
+	EA_Icon_Options_Frame_SpecFlag_Pain:SetChecked(EA_Config.SpecPowerCheck.Pain);
 end
 
 function EventAlert_Icon_Options_Frame_ToggleAlertFrame()
@@ -72,7 +74,7 @@ function EventAlert_Icon_Options_Frame_SetAlertFrameText(eaf, spellName, toSetTe
 	if (eaf ~= nil) then
 		if (toSetTextAndShow) then
 			if (EA_Config.ShowName == true) then
-				eaf.spellName:SetText(spellName);
+				eaf.spellName:SetText(spellName);				
 			else
 				eaf.spellName:SetText("");
 			end
@@ -81,11 +83,11 @@ function EventAlert_Icon_Options_Frame_SetAlertFrameText(eaf, spellName, toSetTe
 		eaf.spellTimer:ClearAllPoints();
 		if (EA_Config.ShowTimer == true) then
 			if (EA_Config.ChangeTimer == true) then
-				eaf.spellTimer:SetPoint("CENTER", 0, 0);
+				eaf.spellTimer:SetPoint("CENTER", eaf, "CENTER", 0, 0);
 				eaf.spellTimer:SetFont("Fonts\\FRIZQT__.TTF", EA_Config.TimerFontSize, "OUTLINE");
 				if (toSetTextAndShow) then eaf.spellTimer:SetText("TIME\nLEFT") end;
 			else
-				eaf.spellTimer:SetPoint("TOP", 0, EA_Config.TimerFontSize*1.1);
+				eaf.spellTimer:SetPoint("BOTTOM", eaf, "TOP", 0, 0);
 				eaf.spellTimer:SetFont("Fonts\\FRIZQT__.TTF", EA_Config.TimerFontSize, "OUTLINE");
 				if (toSetTextAndShow) then eaf.spellTimer:SetText("TIME LEFT") end;
 			end
@@ -210,8 +212,8 @@ function EventAlert_Icon_Options_Frame_PaintAlertFrame()
 			EventAlert_Icon_Options_Frame_SetAlertFrameText(EAFrameSpec_10120, "", false);  -- Monk Light Force (Chi)
 		end
 	elseif (EA_playerClass == EA_CLASS_PRIEST) then	--  支援暗牧暗影寶珠(瘋狂)
-		if (EA_Config.SpecPowerCheck.LightForce) then
-			EventAlert_Icon_Options_Frame_SetAlertFrameText(EAFrameSpec_10130, "", false);  -- Monk Light Force (Chi)
+		if (EA_Config.SpecPowerCheck.Insanity) then
+			EventAlert_Icon_Options_Frame_SetAlertFrameText(EAFrameSpec_10130, "", false);  -- Shadwo Priest Insanity
 		end
 	elseif (EA_playerClass == EA_CLASS_WARRIOR) then --  支援戰士怒氣
 		if (EA_Config.SpecPowerCheck.Rage) then
@@ -233,33 +235,41 @@ function EventAlert_Icon_Options_Frame_PaintAlertFrame()
 		if (EA_Config.SpecPowerCheck.Maelstrom) then
 			EventAlert_Icon_Options_Frame_SetAlertFrameText(EAFrameSpec_10110, "", false);  -- Shaman Maelstrom
 		end
-	elseif (EA_playerClass == EA_CLASS_DEMONHUNTER) then --  支援增強薩元素薩的元能(漩渦)
+	elseif (EA_playerClass == EA_CLASS_DEMONHUNTER) then --  支援惡魔獵人魔怒
 		if (EA_Config.SpecPowerCheck.Fury) then
 			EventAlert_Icon_Options_Frame_SetAlertFrameText(EAFrameSpec_10170, "", false);  -- Demonhunter Fury
+		end
+		if (EA_Config.SpecPowerCheck.Pain) then
+			EventAlert_Icon_Options_Frame_SetAlertFrameText(EAFrameSpec_10180, "", false);  -- Demonhunter Pain
 		end
 	end
 end
 
+
 function EventAlert_Icon_Options_Frame_AdjustTimerFontSize()
+	--若計時顯示在框架內
 	if (EA_Config.ChangeTimer == true) then
-		if EA_Config.IsUseFloat==true then
-			EA_Config.TimerFontSize = 14 + (EA_Config.IconSize - 40) * 0.4;
-			EA_Config.StackFontSize = 16 + (EA_Config.IconSize - 40) * 0.3;
+		-- 若使用了小數點倒數
+		if (EA_Config.UseFloatSec > 0) then
+			EA_Config.TimerFontSize = (EA_Config.IconSize ) * 0.4		--框架內倒數大小比例(有小數點)
 		else
-			EA_Config.TimerFontSize = 24 + (EA_Config.IconSize - 60) * 0.4;
-			EA_Config.StackFontSize = 16 + (EA_Config.IconSize - 60) * 0.3;
+			EA_Config.TimerFontSize = (EA_Config.IconSize ) * 0.5		--框架內倒數大小比例(無小數點)
 		end
+		EA_Config.StackFontSize = (EA_Config.IconSize ) * 0.3			--堆疊計數大小比例
 	else
-			EA_Config.TimerFontSize = 28 + (EA_Config.IconSize - 60) * 0.4;
-			EA_Config.StackFontSize = 18 + (EA_Config.IconSize - 60) * 0.3;
-		
+		EA_Config.TimerFontSize = (EA_Config.IconSize ) * 0.65			--框架外倒數大小比例
+		EA_Config.StackFontSize = (EA_Config.IconSize ) * 0.45			--堆疊計數大小比例
 	end
-	EA_Config.SNameFontSize = EA_Config.IconSize / 4;
-	if EA_Config.SNameFontSize < 10 then EA_Config.SNameFontSize = 10 end;
+	
+	
+	
+	EA_Config.SNameFontSize = EA_Config.IconSize * 0.3					--名稱大小比例
+	--if EA_Config.SNameFontSize < 10 then EA_Config.SNameFontSize = 10 end;
 
 	EventAlert_PositionFrames();
 	EventAlert_TarPositionFrames();
 	EventAlert_ScdPositionFrames();
+	EventAlert_SpecialFrame_Update()
 end
 
 function EventAlert_Icon_Options_Frame_ResetFrame()

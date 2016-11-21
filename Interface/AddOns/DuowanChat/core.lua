@@ -659,7 +659,7 @@ end
 function DuowanChat:CopyChat()
 	local frame = SELECTED_CHAT_FRAME or DEFAULT_CHAT_FRAME;
 	wipe(self.lines);
-	 self:AddLines(self.lines, frame:GetRegions());
+	 self:AddLines(self.lines, frame.FontStringContainer:GetRegions());
 	self.str = table.concat(self.lines, "\n");
 	wipe(self.lines);
 	 

@@ -1,4 +1,4 @@
-<!-- $Id: Accountant_Classic.xml 151 2016-08-05 07:29:44Z arith $ -->
+<!-- $Id: Accountant_Classic.xml 154 2016-08-21 15:07:11Z arith $ -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="Accountant_Classic.lua"/>
@@ -19,7 +19,7 @@
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeTo="UIParent">
 				<Offset>
-					<AbsDimension x="90" y="0" />
+					<AbsDimension x="10" y="-80" />
 				</Offset>
 			</Anchor>
 		</Anchors>

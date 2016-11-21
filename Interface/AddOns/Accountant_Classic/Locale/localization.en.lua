@@ -4,7 +4,7 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
 local L = AceLocale:NewLocale("Accountant_Classic", "enUS", true, is_silent);
 
 if not L then return end
-L["ACCLOC_TITLE"] = "Accountant Classic"
+
 L["ACCLOC_ABOUT"] = "About"
 L["ACCLOC_AUC"] = "Auction House"
 L["ACCLOC_BUTPOS"] = "Minimap Button Position"

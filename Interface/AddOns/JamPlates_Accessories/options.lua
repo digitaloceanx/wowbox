@@ -16,7 +16,6 @@ end
 
 main.okay = function() end
 main.cancel = function() end
-main.default = function() end --mayhap
 main.refresh = function() end--]]
 main.default = function()
 	local guid = core.PLAYER_GUID
@@ -34,12 +33,19 @@ main.default = function()
 	end
 end
 
+hooksecurefunc('InterfaceOptionsFrame_OpenToCategory', function(name)
+	if name == main.name then
+		core:Callback('InterfaceOptionsFrame_OpenToCategory', core)
+	end
+end)
+
 local tooltip = CreateFrame("GameTooltip", addonName .. "Tooltip", nil, "GameTooltipTemplate")
 
 core:AddCallback('VariablesLoaded', 'options', function(self)
 	local OptionsScrollFrame = CreateFrame('ScrollFrame', gsub(addonName, " ", "") .. 'OptionsScrollFrame', main, 'UIPanelScrollFrameTemplate')
 	OptionsScrollFrame:SetPoint('TOPLEFT', main, 'TOPLEFT', 10, -32)
 	OptionsScrollFrame:SetPoint('BOTTOMRIGHT', main, 'BOTTOMRIGHT', -30, 10)
+	OptionsScrollFrame:SetClipsChildren(true)
 	
 	local OptionsScrollChild = CreateFrame('Frame', '$parentChild', OptionsScrollFrame)
 	OptionsScrollChild:SetPoint('TOPLEFT', OptionsScrollFrame, 'TOPLEFT')
@@ -328,103 +334,256 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		ddm:SetPoint('TOPLEFT', Label, 'TOPRIGHT', 11, 6)
 		return Label
 	end
-
-
-	-- do this in case I add a Spell list as well; for viewing player spells saved by addon... which I did.  Damn I'm good.
-	local function List_OnClick(self)
-		if not MouseIsOver(self:GetParent()) then return end
-		for x, v in pairs(self.list) do
-			if MouseIsOver(x) then
-				local info = self.list[x]
-				self.button:SetDisabledTexture(info.icon)
-				self.button.info = core:CopyTable(info, self.button.info)
-				self.button:SetText(info.link)
-				self.selected = x
-				self.highlight:SetAllPoints(x)
-				break
-			end
-		end
-	end
-	local tables = {}
-	local fontStrings = {}
-	local function recyctable(tab)
-		if tab then
-			tables[#tables +1] = tab
-			return nil
-		elseif #tables > 0 then
-			tab = tables[#tables]
-			tables[#tables] = nil
-			return tab
+	
+	local function GetTableReference(type)
+		if type == 'spells' then
+			return core.spells
 		else
-			return {}
+			return core.db[type].filter
 		end
 	end
-	local function recycleFS(self, fs)
-		local tab = self.list
-		local ret
-		if fs then
-			fs:SetPoint('TOPLEFT', UIParent, 'BOTTOMRIGHT', 1, -1)
-			fs:Hide()
-			tab[fs] = recyctable(tab[fs])
-			ret = nil
-		elseif #tab > 0 then
-			ret = fontStrings[#fontStrings]
-			ret:Show()
-			tab[ret] = recyctable()
-			fontStrings[#fontStrings] = nil
-		else
-			ret = self:CreateFontString( nil, 'ARTWORK', 'GameFontNormal' )
-			tab[ret] = recyctable()
+	
+	
+	local function CreateSampleButton(parent, prefix)
+		local sampleFrame = CreateFrame('Button', '$parent' .. prefix, parent, 'UIPanelButtonTemplate')
+		sampleFrame:SetSize( 32, 32 )
+		sampleFrame:Disable()
+		sampleFrame.defaultDisabledTexture = sampleFrame:GetDisabledTexture()
+		sampleFrame.info = {}
+		function sampleFrame:Clear()
+			self:SetDisabledTexture(self.defaultDisabledTexture)
+			self:SetText('')
+			self.info = nil
 		end
-		self.list = tab
-		return ret
-	end
-	local function AddListItem(self, id)
-		local str = recycleFS(self)
-		local name, _, icon = GetSpellInfo(id)
-		local link = GetSpellLink(id)
-		self.list[str].name = name
-		self.list[str].icon = icon
-		self.list[str].id = id
-		self.list[str].link = link
-		str:SetText( name or 'error' )
-		if self.prev then
-			str:SetPoint('TOPLEFT', self.prev, 'BOTTOMLEFT', 0, -5)
-		else
-			str:SetPoint('TOPLEFT', self, 'TOPLEFT', 5, -5)
-		end
-		self.prev = str
-		self:SetHeight( self:GetHeight() + str:GetStringHeight() + 5 )
-	end
-	local function RemoveListItem(self, fs)
-		local prev = self
-		for x, v in pairs(self.list) do
-			if x ~= fs then
-				if prev ~= self then
-					x:SetPoint('TOPLEFT', prev, 'BOTTOMLEFT', 0, -5)
-				else
-					x:SetPoint('TOPLEFT', prev, 'TOPLEFT', 5, -5)
-				end
-				prev = x
-			end
-		end
-		if #self.list -1 == 0 then
-			self.prev = nil
-		elseif prev ~= self then
-			self.prev = prev
-		end
-		self:SetHeight( self:GetHeight() - fs:GetStringHeight() - 5 )
+		sampleFrame:SetMotionScriptsWhileDisabled(true)
 		
-		fs = recycleFS(self, fs)
+		sampleFrame:HookScript('OnEnter', function(self)
+			if self.info then
+				GameTooltip:SetOwner(self, 'ANCHOR_CURSOR')
+				GameTooltip:SetSpellByID(self.info.id)
+				GameTooltip:Show()
+			end
+		end)
+		sampleFrame:HookScript('OnLeave', function(self)
+			GameTooltip:Hide()
+		end)
+		return sampleFrame
 	end
-	local function ClearList(self)
-		for x, v in pairs(self.list) do
-			recycleFS(self, x)
+	
+	local function CreateRemoveButton(parent, prefix, type)
+		local removeButton = CreateFrame('Button', '$parent' .. prefix, parent, 'UIPanelButtonTemplate')
+		--removeButton:SetPoint('TOPLEFT', scrollFrame, 'TOPRIGHT', 33, 0)
+		removeButton:SetSize( 90, 32 )
+		removeButton:SetText( at.L['Remove'] )
+		removeButton:Disable()
+		removeButton:HookScript('OnClick', function(self)
+			core.db[type].filter[parent.selected.id] = nil
+			JamPlatesAccessoriesDB[JamPlatesAccessoriesCP][type].filter = core:CopyTable(core.db[type].filter)
+			parent.highlight:Hide()
+			parent.selected = nil
+			parent:Update()
+			self:Disable()
+		end)
+		removeButton:HookScript('OnHide', function(self)
+			--parent:Clear()
+			self:Disable()
+		end)
+		parent.OnClickCallback[#parent.OnClickCallback +1] = function(self)
+			if parent.selected then
+				removeButton:Enable()
+			end
 		end
-		self:SetHeight( 0 )
-		self.prev = nil
+		return removeButton
 	end
+	
+	local function CreateSpellIDEditBox(parent, prefix, sampleFrame, type)
+		local SpellID_TextField = CreateFrame( 'EditBox', "$parent" .. prefix, parent, 'InputBoxTemplate')
+		SpellID_TextField:SetAutoFocus(false)
+		SpellID_TextField:ClearFocus()
+		SpellID_TextField:SetSize(100, 32)
+		SpellID_TextField:SetJustifyH('CENTER')
+		local function CleanUpSample(self)
+			sampleFrame:Clear()
+			self:SetText('')
+			self:ClearFocus()
+		end
+		
+		SpellID_TextField:HookScript('OnEnter', function(self)
+			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+			GameTooltip:AddLine(at.L["Only accepts a spell ID value."], 1, 1, 1)
+			GameTooltip:AddLine(at.L["Literally numbers only."], 1, 0, 0)
+			GameTooltip:Show()
+		end)
+		SpellID_TextField:HookScript('OnLeave', function(self)
+			GameTooltip:Hide()
+		end)
+		
+		SpellID_TextField:HookScript('OnEnterPressed', function(self)
+			local num = tonumber(self:GetText())
+			if num and sampleFrame.info and not core.db[type].filter[num] then
+				core.db[type].filter[num] = sampleFrame.info
+				parent:Update()
+				JamPlatesAccessoriesDB[JamPlatesAccessoriesCP][type].filter[num] = sampleFrame.info
+			end
+			CleanUpSample(self)
+		end)
+		SpellID_TextField:HookScript('OnMouseUp', function(self)
+			self:SetText('')
+			self:SetFocus()
+		end)
+		SpellID_TextField:HookScript('OnEscapePressed', CleanUpSample)
+		SpellID_TextField:HookScript('OnEditFocusLost', CleanUpSample)
+		SpellID_TextField:HookScript('OnHide', CleanUpSample)
+		SpellID_TextField:HookScript('OnTextChanged', function(self, text)
+			if not text then return end
+			text = self:GetText()
+			local num = tonumber(text)
+			if num then
+				local id = tonumber(self:GetText())
+				local link = GetSpellLink(id)
+				if link then
+					local name, _, icon = GetSpellInfo(id)
+					sampleFrame:SetDisabledTexture(icon)
+					sampleFrame:SetText(link)
+					sampleFrame.info = {
+						name = name,
+						icon = icon,
+						id = id,
+						link = link,
+					}
+				else
+					sampleFrame:Clear()
+				end
+			else
+				local pat
+				if text:find('%a') then
+					pat = '%a'
+				elseif text:find('%c') then
+					pat = '%c'
+				elseif text:find('%p') then
+					pat = '%p'
+				elseif text:find('%s') then
+					pat = '%s'
+				end
+				text = self:GetText()
+				self:SetText(gsub(text, pat, ''))
+			end
+		end)
+		return SpellID_TextField
+	end
+	
+	
+	local function CreateList(name, parent, type, width, rows)
+		local scrollFrame = CreateFrame('ScrollFrame', '$parent' .. name, parent, 'MinimalScrollFrameTemplate')
+		scrollFrame:SetWidth(width)
+		scrollFrame.ScrollBar:SetValueStep(1)
+		scrollFrame.ScrollBar:SetObeyStepOnDrag(true)
+		
+		scrollFrame.OnClickCallback = {}
+		
+		local highlight = CreateFrame('Frame', nil, scrollFrame)
+		local texture = highlight:CreateTexture()
+		texture:SetTexture('Interface\\BUTTONS\\WHITE8x8')
+		texture:SetVertexColor(0.0, 1, 1, 0.5)
+		texture:SetAllPoints(highlight)
+		scrollFrame.highlight = highlight
+		
+		local function ListItem_OnClick(self)
+			if self.id ~= nil then
+				scrollFrame.selected = self
+				highlight:ClearAllPoints()
+				highlight:SetPoint('TOPLEFT', self, 'TOPLEFT')
+				highlight:SetPoint('BOTTOMLEFT', self, 'BOTTOMLEFT')
+				highlight:SetWidth(self:GetParent():GetWidth())
+				for x = 1, #scrollFrame.OnClickCallback do
+					scrollFrame.OnClickCallback[x](self)
+				end
+			end
+		end
+		
+		
+		local buttons = {}
+		local prev
+		local NUM_ROWS = rows or 11
+		for x = 1, NUM_ROWS do
+			local frame = CreateFrame('Button', '$parentButton' .. x, scrollFrame)
+			frame:SetSize(16, 16)
+			frame:SetEnabled(false)
+			frame:SetHitRectInsets(0, 16 - scrollFrame:GetWidth(), 0, 0)
+			frame:ClearAllPoints()
+			if x == 1 then
+				frame:SetPoint('TOPLEFT', scrollFrame, 'TOPLEFT', 8)
+			else
+				frame:SetPoint('TOPLEFT', prev, 'BOTTOMLEFT')
+			end
+			frame:HookScript('OnClick', ListItem_OnClick)
+			
+			frame:HookScript('OnEnter', function(self)
+				if self.id then
+					GameTooltip:SetOwner(frame, 'ANCHOR_LEFT')
+					GameTooltip:SetSpellByID(self.id)
+					GameTooltip:Show()
+				end
+			end)
+			frame:HookScript('OnLeave', function(self)
+				GameTooltip:Hide()
+			end)
+			
+			local fs = frame:CreateFontString(nil, nil, "GameFontHighlightLeft")
+			fs:SetPoint('LEFT', frame, 'RIGHT')
+			frame.fs = fs
+			frame:SetFontString(fs)
+			buttons[x] = frame
+			prev = frame
+		end
+		
+		local function ScrollFrame_Update(self, value)
+			value = value or scrollFrame.ScrollBar:GetValue()
+			if not value or value < 1 then
+				value = 1
+			end
+			local offsetMax = value + NUM_ROWS
+			local count = 0
+			for id, v in pairs(GetTableReference(type)) do
+				count = count +1
+				if count >= offsetMax then
+					break
+				elseif count >= value and count < offsetMax then -- and count - value < NUM_ROWS then
+					--local name, _, icon = GetSpellInfo(id)
+					local link = GetSpellLink(id)
+					local button = buttons[count - value +1]
+					button.fs:SetText(link .. '  ID: ' .. id)
+					button.name = v.name
+					button.icon = v.icon
+					button.id = id
+					button.link = link
+					button:SetNormalTexture(v.icon)
+					button:SetEnabled(true)
+				end
+			end
+			for x = count +1, NUM_ROWS do
+				local button = buttons[x]
+				button.fs:SetText('')
+				button.name = nil
+				button.icon = nil
+				button.id = nil
+				button.link = nil
+				button:SetNormalTexture(nil)
+				button:SetEnabled(false)
+			end
+		end
+		scrollFrame.Update = ScrollFrame_Update
 
+		core:AddCallback('InterfaceOptionsFrame_OpenToCategory', nil, function(self)
+			local num = self:GetN(GetTableReference(type))
+			if num > NUM_ROWS then
+				scrollFrame.ScrollBar:SetMinMaxValues(1, num - NUM_ROWS)
+			end
+			ScrollFrame_Update(scrollFrame.ScrollBar, scrollFrame.ScrollBar:GetValue())
+		end)
+		scrollFrame.ScrollBar:HookScript("OnValueChanged", ScrollFrame_Update)
+		return scrollFrame
+	end
 
 	
 	local totalHeight = 0
@@ -447,14 +606,22 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		EnableAuras:SetPoint('TOPLEFT', EnableDefaultAuras, 'BOTTOMLEFT', 0, -12)
 		EnableAuras.key = 'aura'
 		EnableAuras:HookScript('OnClick', ToggleFeature)
-		
+		--[[
+		local mine = false
 		EnableDefaultAuras:HookScript('OnClick', function(self)
-			ToggleFeature(EnableAuras)
-			if EnableAuras:GetChecked() then
-				EnableAuras:SetChecked(false)
+			if not mine then
+				mine = true
+				EnableAuras:Click()
+				mine = false
 			end
-			EnableAuras:SetEnabled(not self:GetChecked())
 		end)
+		EnableAuras:HookScript('OnClick', function(self)
+			if not mine then
+				mine = true
+				EnableDefaultAuras:Click()
+				mine = false
+			end
+		end)--]]
 		
 		
 		local EnableTrack = CreateCheckButton(at.L['Enable Aura Watch'], self, 'tracker', 'enabled', {at.L["Enable aura tracking, seperating specified auras from the default display."], at.L["These ignore the inverted setting."]}, 100, 8)
@@ -471,6 +638,11 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		EnableCombat:SetPoint('LEFT', EnableThreat.label, 'RIGHT', 12, 0)
 		EnableCombat.key = 'combat'
 		EnableCombat:HookScript('OnClick', ToggleFeature)
+		
+		local EnableResource = CreateCheckButton(at.L['Enable Resource'], self, 'resource', 'enabled', {at.L["Display combat indicator."]}, 100, 8)
+		EnableResource:SetPoint('LEFT', EnableCombat.label, 'RIGHT', 12, 0)
+		EnableResource.key = 'resource'
+		EnableResource:HookScript('OnClick', ToggleFeature)
 		
 		self:SetHeight(180)
 		totalHeight = totalHeight + 180
@@ -505,8 +677,15 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		ShowHostileDebuffs:SetPoint('LEFT', ShowHostileBuffs.label, 'RIGHT', 14, 0)
 				
 		
+		local EnableTimer = CreateCheckButton(at.L['Enable timer'], self, 'aura', 'showTime', {at.L["Enable the addons aura timers."]})
+		EnableTimer:SetPoint('TOPLEFT', ShowHostileBuffs, 'BOTTOMLEFT', 0, -8)
+		
+		local EnableDefaultTimer = CreateCheckButton(at.L['Enable default timer'], self, 'aura', 'showDefaultTime', {at.L["Enable the default aura timers."], at.L["You will have to enable the option for actionbar cooldown timers in your Interface Options."]})
+		EnableDefaultTimer:SetPoint('LEFT', EnableTimer.label, 'RIGHT', 14, 0)
+				
+		
 		local ChangeGrowth = CreateCheckButton(at.L['Reverse Row Growth'], self, 'aura', 'growth', {at.L["Grow auras down instead of up."]})
-		ChangeGrowth:SetPoint('TOPLEFT', ShowHostileBuffs, 'BOTTOMLEFT', 0, -4)
+		ChangeGrowth:SetPoint('TOPLEFT', EnableTimer, 'BOTTOMLEFT', 0, -8)
 		
 		local ChangeDirection = CreateCheckButton(at.L['Reverse Column Direction'], self, 'aura', 'direction', {at.L["Grow auras left instead of right."]})
 		ChangeDirection:SetPoint('LEFT', ChangeGrowth.label, 'RIGHT', 14, 0)
@@ -564,10 +743,17 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		ShowHostileBuffs:SetPoint('TOPLEFT', ShowFriendlyBuffs, 'BOTTOMLEFT', 0, -4)
 		local ShowHostileDebuffs = CreateCheckButton(at.L['Show hostile debuffs'], self, 'tracker', 'showHostileDebuff', {at.L["Show hostile debuffs."]})
 		ShowHostileDebuffs:SetPoint('LEFT', ShowHostileBuffs.label, 'RIGHT', 14, 0)
+				
+		
+		local EnableTimer = CreateCheckButton(at.L['Enable timer'], self, 'tracker', 'showTime', {at.L["Enable the addons aura timers."]})
+		EnableTimer:SetPoint('TOPLEFT', ShowHostileBuffs, 'BOTTOMLEFT', 0, -8)
+		
+		local EnableDefaultTimer = CreateCheckButton(at.L['Enable default timer'], self, 'tracker', 'direction', {at.L["Enable the default aura timers."], at.L["You will have to enable the option for actionbar cooldown timers in your Interface Options."]})
+		EnableDefaultTimer:SetPoint('LEFT', EnableTimer.label, 'RIGHT', 14, 0)
 		
 		
 		local ChangeGrowth = CreateCheckButton(at.L['Reverse Row Growth'], self, 'tracker', 'growth', {at.L["Grow auras down instead of up."]})
-		ChangeGrowth:SetPoint('TOPLEFT', ShowHostileBuffs, 'BOTTOMLEFT', 0, -4)
+		ChangeGrowth:SetPoint('TOPLEFT', EnableTimer, 'BOTTOMLEFT', 0, -4)
 		
 		local ChangeDirection = CreateCheckButton(at.L['Reverse Column Direction'], self, 'tracker', 'direction', {at.L["Grow auras left instead of right."]})
 		ChangeDirection:SetPoint('LEFT', ChangeGrowth.label, 'RIGHT', 14, 0)
@@ -661,6 +847,24 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		totalHeight = totalHeight + 220
 	end)
 	
+	CreateContainer(at.L['Resource'], function(self)
+		local Anchor = CreateDropDownMenu(at.L['Anchor'], self, 'resource', 'anchor', anchorTip, 180, 8)
+		Anchor:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -16)
+		
+		local FrameAnchor = CreateDropDownMenu(at.L['Relative'], self, 'resource', 'relative', relativeTip, 180, 8)
+		FrameAnchor:SetPoint('TOPLEFT', Anchor, 'TOPLEFT', 0, -32)
+		
+		local StartX = CreateTextField('X', self, 'resource', 'x', xTip, 100, 8)
+		StartX:SetPoint('TOPLEFT', FrameAnchor, 'TOPLEFT', 0, -32)
+		
+		local StartY = CreateTextField('Y', self, 'resource', 'y', yTip, 100, 8)
+		StartY:SetPoint('LEFT', StartX, 'RIGHT', 136, 0)
+		
+		
+		self:SetHeight(120)
+		totalHeight = totalHeight + 120
+	end)
+	
 	
 	CreateContainer(at.L['Profiles'], function(self)
 		local ProfileDropDown = CreateDropDownMenu(at.L['Load Profile'], self, 'aura', 'load profile', {at.L["Load a profile from another character."], at.L["Default is not default settings, they are user defined defaults to be used by multiple characters."]}, 180, 8)
@@ -673,411 +877,134 @@ core:AddCallback('VariablesLoaded', 'options', function(self)
 		totalHeight = totalHeight + 90
 	end)
 	
+	local auraList
 	CreateContainer(at.L['Aura List'], function(self)
 		
-		local scrollFrame = CreateFrame('ScrollFrame', '$parentAuraScrollList', self, 'UIPanelScrollFrameTemplate')
-		scrollFrame:SetWidth(200)
+		local scrollFrame = CreateList("AuraScrollList", self, 'spells', 300)
 		scrollFrame:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -10)
 		scrollFrame:SetPoint('BOTTOMLEFT', self, 'BOTTOMLEFT', 10, 10)
+		auraList = scrollFrame
 		
-		local FilterFrame = CreateFrame('Frame', nil, scrollFrame)
-		local highlight = FilterFrame:CreateTexture()
-		highlight:SetTexture(0.3, 0.3, 0.3, 1)
-		FilterFrame.highlight = highlight
-		scrollFrame:SetScrollChild(FilterFrame)
-		FilterFrame.AddListItem = AddListItem
-		FilterFrame.RemoveListItem = RemoveListItem
-		FilterFrame.ClearList = ClearList
-		FilterFrame:SetSize(200, 0)
-		FilterFrame:SetScript('OnMouseUp', List_OnClick)
-		FilterFrame.list = {}
-		local function FF_OnShow(self)
-			self:ClearList()
-			for x, v in pairs(core.spells) do
-				self:AddListItem(x)
+		local prev
+		function scrollFrame:CreateAddButton(parent, prefix, text, type)
+			local addButton = CreateFrame('Button', '$parent' .. prefix, scrollFrame, 'UIPanelButtonTemplate')
+			addButton:SetSize( 90, 32 )
+			addButton:SetText( text )
+			addButton:Disable()
+			if not prev then
+				addButton:SetPoint('LEFT', scrollFrame, 'RIGHT', 33, 0)
+			else
+				addButton:SetPoint('TOP', prev, 'BOTTOM', 0, -4)
 			end
+			prev = addButton
+			
+			scrollFrame.OnClickCallback[#scrollFrame.OnClickCallback +1] = function(self)
+				if scrollFrame.selected then
+					addButton:Enable()
+				end
+			end
+			addButton:HookScript('OnClick', function(self)
+				local tab = auraList.selected
+				core.db[type].filter[tab.id] = {
+					name = tab.name,
+					icon = tab.icon,
+					debuffType = tab.debuffType,
+				}
+				JamPlatesAccessoriesDB[JamPlatesAccessoriesCP][type].filter = core:CopyTable(core.db[type].filter)
+				parent:Update()
+				--auraList.highlight:Hide()
+				--auraList.selected = nil
+				self:Disable()
+			end)
+			addButton:HookScript('OnHide', function(self)
+				self:Disable()
+			end)
+			return addButton
 		end
-		FilterFrame:HookScript("OnShow", FF_OnShow)
-		FF_OnShow(FilterFrame)
-		
-		
 		
 		local warning = scrollFrame:CreateFontString( nil, 'ARTWORK', 'GameFontNormal' )
 		warning:SetPoint('TOPLEFT', scrollFrame, 'TOPRIGHT', 32, -16)
 		warning:SetVertexColor( 1, 0, 0)
 		warning:SetText(at.L['Warning!  List gets long.'])
 		
-		local sampleFrame = CreateFrame('Button', '$parentSpellSample', self, 'UIPanelButtonTemplate')
-		sampleFrame:SetSize( 64, 64 )
-		sampleFrame:Disable()
-		sampleFrame.defaultDisabledTexture = sampleFrame:GetDisabledTexture()
-		sampleFrame.info = {}
-		function sampleFrame:Clear()
-			self.info = wipe(self.info)
-			self:SetDisabledTexture(self.defaultDisabledTexture)
-			self:SetText('')
-		end
-		sampleFrame:SetMotionScriptsWhileDisabled(true)
-		
-		sampleFrame:HookScript('OnEnter', function(self)
-			if self.info and self.info.id then
-				GameTooltip:SetOwner(self, 'ANCHOR_CURSOR')
-				GameTooltip:SetSpellByID(self.info.id)
-				GameTooltip:Show()
-			end
-		end)
-		sampleFrame:HookScript('OnLeave', function(self)
-			GameTooltip:Hide()
-		end)
-		
-		local spellID = sampleFrame:CreateFontString( nil, 'ARTWORK', 'GameFontNormal' )
-		spellID:SetPoint('TOPLEFT', sampleFrame, 'BOTTOMLEFT', 0, -4)
-		spellID:SetText(at.L["Spell ID:  "])
-		hooksecurefunc(sampleFrame, 'SetText', function(self)
-			spellID:SetText(at.L["Spell ID:  "] .. (self.info and self.info.id or 'none'))
-		end)
-		
-		FilterFrame.button = sampleFrame	
-
-		Profile_OnChange[#Profile_OnChange +1] = function()
-			sampleFrame:Clear()
-			FilterFrame:ClearList()
-			FF_OnShow(FilterFrame)
-		end
-		
-		sampleFrame:SetPoint('LEFT', scrollFrame, 'RIGHT', 64, -32)
-		sampleFrame:GetFontString():ClearAllPoints()
-		sampleFrame:GetFontString():SetPoint('LEFT', sampleFrame, 'RIGHT', 0, 0)
-		
 		self:SetHeight(200)
 		totalHeight = totalHeight + 200
 	end)
-	
 	
 	CreateContainer(at.L['Spell Filter'], function(self)
 		
-		local scrollFrame = CreateFrame('ScrollFrame', '$parentFilterScrollList', self, 'UIPanelScrollFrameTemplate')
-		scrollFrame:SetWidth(200)
+		local scrollFrame = CreateList("FilterScrollList", self, 'aura', 300)
 		scrollFrame:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -10)
 		scrollFrame:SetPoint('BOTTOMLEFT', self, 'BOTTOMLEFT', 10, 10)
 		
-		local FilterFrame = CreateFrame('Frame', nil, scrollFrame)
-		local highlight = FilterFrame:CreateTexture()
-		highlight:SetTexture(0.3, 0.3, 0.3, 1)
-		FilterFrame.highlight = highlight
-		scrollFrame:SetScrollChild(FilterFrame)
-		FilterFrame.AddListItem = AddListItem
-		FilterFrame.RemoveListItem = RemoveListItem
-		FilterFrame.ClearList = ClearList
-		FilterFrame:SetSize(200, 0)
-		FilterFrame:SetScript('OnMouseUp', List_OnClick)
-		FilterFrame.list = {}
-		for x, v in pairs(core.db.aura.filter) do
-			FilterFrame:AddListItem(x)
-		end
+		local sampleFrame = CreateSampleButton(self, 'FilterSample')
+		--sampleFrame:SetPoint('TOPLEFT', SpellID_TextField, 'BOTTOMLEFT', 0, -15)
 		
-		local sampleFrame = CreateFrame('Button', '$parentSpellSample', self, 'UIPanelButtonTemplate')
-		sampleFrame:SetSize( 32, 32 )
-		sampleFrame:Disable()
-		sampleFrame.defaultDisabledTexture = sampleFrame:GetDisabledTexture()
-		sampleFrame.info = {}
-		function sampleFrame:Clear()
-			self.info = wipe(self.info)
-			self:SetDisabledTexture(self.defaultDisabledTexture)
-			self:SetText('')
-		end
-		sampleFrame:SetMotionScriptsWhileDisabled(true)
+		local removeButton = CreateRemoveButton(scrollFrame, 'RemoveFilterListItem', 'aura')
+		--removeButton:SetPoint('TOPLEFT', scrollFrame, 'TOPRIGHT', 33, 0)
 		
-		sampleFrame:HookScript('OnEnter', function(self)
-			if self.info and self.info.id then
-				GameTooltip:SetOwner(self, 'ANCHOR_CURSOR')
-				GameTooltip:SetSpellByID(self.info.id)
-				GameTooltip:Show()
-			end
-		end)
-		sampleFrame:HookScript('OnLeave', function(self)
-			GameTooltip:Hide()
-		end)
-		
-		FilterFrame.button = sampleFrame
-		
-		
-
-		local removeButton = CreateFrame('Button', '$parentRemoveListItem', self, 'UIPanelButtonTemplate')
-		removeButton:SetSize( 90, 32 )
-		removeButton:SetText( at.L['Remove'] )
-		removeButton:Disable()
-		FilterFrame:HookScript('OnMouseUp', function(self)
-			if self.button.info then
-				removeButton:Enable()
-			end
-		end)
-		removeButton:HookScript('OnClick', function(self)
-			core.db.aura.filter[sampleFrame.info.id] = nil
-			FilterFrame:RemoveListItem(FilterFrame.selected)
-			JamPlatesAccessoriesDB[JamPlatesAccessoriesCP].aura.filter = core:CopyTable(core.db.aura.filter)
-			sampleFrame:Clear()
-			highlight:Hide()
-			self:Disable()
-		end)
-		removeButton:HookScript('OnHide', function(self)
-			sampleFrame:Clear()
-			self:Disable()
-		end)
-		
+		--local addButton = CreateFrame('Button', '$parentAddFilterListItem', self, 'UIPanelButtonTemplate')
+		local addButton = auraList:CreateAddButton(scrollFrame, 'AddFilterListItem', at.L['Filter Aura'], 'aura')
 
 		Profile_OnChange[#Profile_OnChange +1] = function()
 			sampleFrame:Clear()
 			removeButton:Disable()
-			FilterFrame:ClearList()
-			for x,v in pairs(core.db.aura.filter) do
-				FilterFrame:AddListItem(x)
-			end
+			scrollFrame:Update()
 		end
 		
 
 		
-		local SpellID_TextField = CreateFrame( 'EditBox', "$parentSpellIDTextField", self, 'InputBoxTemplate')
-		SpellID_TextField:SetAutoFocus(false)
-		SpellID_TextField:ClearFocus()
-		SpellID_TextField:SetSize(100, 32)
-		SpellID_TextField:SetJustifyH('CENTER')
-		local function CleanUpSample(self)
-			sampleFrame:Clear()
-			self:SetText('')
-			self:ClearFocus()
-		end
+		--local SpellID_TextField = CreateFrame( 'EditBox', "$parentSpellIDTextField", self, 'InputBoxTemplate')
+		local SpellID_TextField = CreateSpellIDEditBox(scrollFrame, 'AuraSpellIDEditBox', sampleFrame, 'aura')
 		
-		SpellID_TextField:HookScript('OnEnter', function(self)
-			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-			GameTooltip:AddLine(at.L["Only accepts a spell ID value."], 1, 1, 1)
-			GameTooltip:AddLine(at.L["Literally numbers only."], 1, 0, 0)
-			GameTooltip:Show()
-		end)
-		SpellID_TextField:HookScript('OnLeave', function(self)
-			GameTooltip:Hide()
-		end)
-		
-		SpellID_TextField:HookScript('OnEnterPressed', function(self)
-			local num = tonumber(self:GetText())
-			if num and sampleFrame.info.id and not core.db.aura.filter[num] then
-				core.db.aura.filter[num] = true
-				FilterFrame:AddListItem(num)
-				JamPlatesAccessoriesDB[JamPlatesAccessoriesCP].aura.filter[num] = true
-			end
-			CleanUpSample(self)
-		end)
-		SpellID_TextField:HookScript('OnMouseUp', function(self)
-			self:SetText('')
-			self:SetFocus()
-		end)
-		SpellID_TextField:HookScript('OnEscapePressed', CleanUpSample)
-		SpellID_TextField:HookScript('OnEditFocusLost', CleanUpSample)
-		SpellID_TextField:HookScript('OnHide', CleanUpSample)
-		SpellID_TextField:HookScript('OnChar', function(self, text)
-			local num = tonumber(text)
-			if num then
-				local id = tonumber(self:GetText())
-				local link = GetSpellLink(id)
-				if link then
-					local name, _, icon = GetSpellInfo(id)
-					sampleFrame:SetDisabledTexture(icon)
-					sampleFrame:SetText(link)
-					sampleFrame.info.name = name
-					sampleFrame.info.icon = icon
-					sampleFrame.info.id = id
-					sampleFrame.info.link = link
-				else
-					sampleFrame:Clear()
-				end
-			else
-				local pat
-				if text:find('%a') then
-					pat = '%a'
-				elseif text:find('%c') then
-					pat = '%c'
-				elseif text:find('%p') then
-					pat = '%p'
-				elseif text:find('%s') then
-					pat = '%s'
-				end
-				text = self:GetText()
-				self:SetText(gsub(text, pat, ''))
-			end
-		end)
 		
 		
 		-- Set points
-		SpellID_TextField:SetPoint('TOPLEFT', scrollFrame, 'TOPRIGHT', 32, 0)
+		SpellID_TextField:SetPoint('TOPLEFT', scrollFrame, 'TOPRIGHT', 33, 0)
 		SpellID_TextField:SetPoint('RIGHT', self, 'RIGHT', -10, 0)
 		sampleFrame:SetPoint('TOPLEFT', SpellID_TextField, 'BOTTOMLEFT', 0, -15)
 		sampleFrame:GetFontString():ClearAllPoints()
 		sampleFrame:GetFontString():SetPoint('LEFT', sampleFrame, 'RIGHT', 0, 0)
-		removeButton:SetPoint('TOPLEFT', sampleFrame, 'BOTTOMLEFT', 0, -15)
+		removeButton:SetPoint('TOPLEFT', sampleFrame, 'BOTTOMLEFT', 0, -15)--]]
 		
 		self:SetHeight(200)
 		totalHeight = totalHeight + 200
 	end)
 	
+	
 	CreateContainer(at.L['Aura Watch'], function(self)		
-		local scrollFrame = CreateFrame('ScrollFrame', '$parentWatchScrollList', self, 'UIPanelScrollFrameTemplate')
-		scrollFrame:SetWidth(200)
+		
+		local scrollFrame = CreateList("WatchScrollList", self, 'tracker', 300)
 		scrollFrame:SetPoint('TOPLEFT', self, 'TOPLEFT', 10, -10)
 		scrollFrame:SetPoint('BOTTOMLEFT', self, 'BOTTOMLEFT', 10, 10)
 		
-		local FilterFrame = CreateFrame('Frame', nil, scrollFrame)
-		local highlight = FilterFrame:CreateTexture()
-		highlight:SetTexture(0.3, 0.3, 0.3, 1)
-		FilterFrame.highlight = highlight
-		scrollFrame:SetScrollChild(FilterFrame)
-		FilterFrame.AddListItem = AddListItem
-		FilterFrame.RemoveListItem = RemoveListItem
-		FilterFrame.ClearList = ClearList
-		FilterFrame:SetSize(200, 0)
-		FilterFrame:SetScript('OnMouseUp', List_OnClick)
-		FilterFrame.list = {}
-		for x, v in pairs(core.db.tracker.filter) do
-			FilterFrame:AddListItem(x)
-		end
+		local sampleFrame = CreateSampleButton(self, 'WatchSample')
 		
-		local sampleFrame = CreateFrame('Button', '$parentSpellSample', self, 'UIPanelButtonTemplate')
-		sampleFrame:SetSize( 32, 32 )
-		sampleFrame:Disable()
-		sampleFrame.defaultDisabledTexture = sampleFrame:GetDisabledTexture()
-		sampleFrame.info = {}
-		function sampleFrame:Clear()
-			self.info = wipe(self.info)
-			self:SetDisabledTexture(self.defaultDisabledTexture)
-			self:SetText('')
-		end
-		sampleFrame:SetMotionScriptsWhileDisabled(true)
-		
-		sampleFrame:HookScript('OnEnter', function(self)
-			if self.info and self.info.id then
-				GameTooltip:SetOwner(self, 'ANCHOR_CURSOR')
-				GameTooltip:SetSpellByID(self.info.id)
-				GameTooltip:Show()
-			end
-		end)
-		sampleFrame:HookScript('OnLeave', function(self)
-			GameTooltip:Hide()
-		end)
-		
-		FilterFrame.button = sampleFrame
+		local removeButton = CreateRemoveButton(scrollFrame, 'RemoveWatchListItem', 'watch')
 		
 		
-
-		local removeButton = CreateFrame('Button', '$parentRemoveListItem', self, 'UIPanelButtonTemplate')
-		removeButton:SetSize( 90, 32 )
-		removeButton:SetText( 'Remove' )
-		removeButton:Disable()
-		FilterFrame:HookScript('OnMouseUp', function(self)
-			if self.button.info then
-				removeButton:Enable()
-			end
-		end)
-		removeButton:HookScript('OnClick', function(self)
-			core.db.tracker.filter[sampleFrame.info.id] = nil
-			FilterFrame:RemoveListItem(FilterFrame.selected)
-			JamPlatesAccessoriesDB[JamPlatesAccessoriesCP].tracker.filter = core:CopyTable(core.db.tracker.filter)
-			sampleFrame:Clear()
-			highlight:Hide()
-			self:Disable()
-		end)
-		removeButton:HookScript('OnHide', function(self)
-			sampleFrame:Clear()
-			self:Disable()
-		end)
+		local addButton = auraList:CreateAddButton(scrollFrame, 'AddWatchListItem', at.L['Watch Aura'], 'aura')
 		
 
 		Profile_OnChange[#Profile_OnChange +1] = function()
 			sampleFrame:Clear()
 			removeButton:Disable()
-			FilterFrame:ClearList()
-			for x,v in pairs(core.db.tracker.filter) do
-				FilterFrame:AddListItem(x)
-			end
+			scrollFrame:Update()
 		end
 		
 
 		
-		local SpellID_TextField = CreateFrame( 'EditBox', "$parentSpellIDTextField", self, 'InputBoxTemplate')
-		SpellID_TextField:SetAutoFocus(false)
-		SpellID_TextField:ClearFocus()
-		SpellID_TextField:SetSize(100, 32)
-		SpellID_TextField:SetJustifyH('CENTER')
-		local function CleanUpSample(self)
-			sampleFrame:Clear()
-			self:SetText('')
-			self:ClearFocus()
-		end
-		
-		SpellID_TextField:HookScript('OnEnter', function(self)
-			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-			GameTooltip:AddLine(at.L["Only accepts a spell ID value."], 1, 1, 1)
-			GameTooltip:AddLine(at.L["Literally numbers only."], 1, 0, 0)
-			GameTooltip:Show()
-		end)
-		SpellID_TextField:HookScript('OnLeave', function(self)
-			GameTooltip:Hide()
-		end)
-		
-		SpellID_TextField:HookScript('OnEnterPressed', function(self)
-			local num = tonumber(self:GetText())
-			if num and sampleFrame.info.id and not core.db.tracker.filter[num] then
-				core.db.tracker.filter[num] = true
-				FilterFrame:AddListItem(num)
-				JamPlatesAccessoriesDB[JamPlatesAccessoriesCP].tracker.filter[num] = true
-			end
-			CleanUpSample(self)
-		end)
-		SpellID_TextField:HookScript('OnMouseUp', function(self)
-			self:SetText('')
-			self:SetFocus()
-		end)
-		SpellID_TextField:HookScript('OnEscapePressed', CleanUpSample)
-		SpellID_TextField:HookScript('OnEditFocusLost', CleanUpSample)
-		SpellID_TextField:HookScript('OnHide', CleanUpSample)
-		SpellID_TextField:HookScript('OnChar', function(self, text)
-			local num = tonumber(text)
-			if num then
-				local id = tonumber(self:GetText())
-				local link = GetSpellLink(id)
-				if link then
-					local name, _, icon = GetSpellInfo(id)
-					sampleFrame:SetDisabledTexture(icon)
-					sampleFrame:SetText(link)
-					sampleFrame.info.name = name
-					sampleFrame.info.icon = icon
-					sampleFrame.info.id = id
-					sampleFrame.info.link = link
-				else
-					sampleFrame:Clear()
-				end
-			else
-				local pat
-				if text:find('%a') then
-					pat = '%a'
-				elseif text:find('%c') then
-					pat = '%c'
-				elseif text:find('%p') then
-					pat = '%p'
-				elseif text:find('%s') then
-					pat = '%s'
-				end
-				text = self:GetText()
-				self:SetText(gsub(text, pat, ''))
-			end
-		end)
+		local SpellID_TextField = CreateSpellIDEditBox(scrollFrame, 'WatchSpellIDEditBox', sampleFrame, 'watch')
 		
 		
 		-- Set points
-		SpellID_TextField:SetPoint('TOPLEFT', scrollFrame, 'TOPRIGHT', 32, 0)
+		SpellID_TextField:SetPoint('TOPLEFT', scrollFrame, 'TOPRIGHT', 33, 0)
 		SpellID_TextField:SetPoint('RIGHT', self, 'RIGHT', -10, 0)
 		sampleFrame:SetPoint('TOPLEFT', SpellID_TextField, 'BOTTOMLEFT', 0, -15)
 		sampleFrame:GetFontString():ClearAllPoints()
 		sampleFrame:GetFontString():SetPoint('LEFT', sampleFrame, 'RIGHT', 0, 0)
-		removeButton:SetPoint('TOPLEFT', sampleFrame, 'BOTTOMLEFT', 0, -15)
+		removeButton:SetPoint('TOPLEFT', sampleFrame, 'BOTTOMLEFT', 0, -15)--]]
+		
 		
 		self:SetHeight(200)
 		totalHeight = totalHeight + 200

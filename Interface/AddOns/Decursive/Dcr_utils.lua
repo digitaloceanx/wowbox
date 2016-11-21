@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
     
-    Decursive (v 2.7.4.7-9-gdc22693) add-on for World of Warcraft UI
+    Decursive (v 2.7.5) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
     Starting from 2009-10-31 and until said otherwise by its author, Decursive
@@ -17,7 +17,7 @@
     Decursive is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY.
 
-    This file was last updated on 2016-09-12T00:18:29Z
+    This file was last updated on 2016-10-06T21:19:47Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -100,9 +100,13 @@ D.IsSpellInRange = function (spellName, unit)
 end
 
 
-function D:ColorText (text, color) --{{{
+function D:ColorText (text, color)
     return "|c".. color .. text .. "|r";
-end --}}}
+end
+
+function D:ColorTextNA (text, color)
+    return "|cFF".. color .. text .. "|r";
+end
 
 function D:RemoveColor (text)
     return str_sub(text, 11, -3);
@@ -372,11 +376,7 @@ function D:ThisSetParentText(frame, text) --{{{
 end --}}}
 
 function D:DisplayTooltip(Message, RelativeTo, AnchorType, x, y) --{{{
-        if not AnchorType then
-            AnchorType = "ANCHOR_LEFT";
-        end
-        DcrDisplay_Tooltip:SetOwner(RelativeTo, AnchorType, x, y);
-        DcrDisplay_Tooltip:ClearLines();
+        DcrDisplay_Tooltip:SetOwner(RelativeTo, AnchorType or "ANCHOR_LEFT", x, y);
         DcrDisplay_Tooltip:SetText(Message);
         DcrDisplay_Tooltip:Show();
 end --}}}
@@ -559,6 +559,29 @@ end
 
 function D:NiceTime()
     return tonumber(("%.4f"):format(GetTime() - DC.StartTime));
+end
+
+
+do
+
+    -- /run LibStub("AceAddon-3.0"):GetAddon("Decursive"):RuncombatCrash()
+    local combatcrash;
+    function D:RuncombatCrash()
+        D:Debug("RCC: Last run:", combatcrash);
+        if not InCombatLockdown() then
+            D:Debug("RCC: Not in combat");
+            return;
+        end
+
+        local crashstart = debugprofilestop();
+
+        D:Debug("RCC: Hang started");
+
+        repeat
+            combatcrash = debugprofilestop() - crashstart;
+        until false
+    end
+
 end
 
 do
@@ -820,4 +843,4 @@ do
 end
 
 
-T._LoadedFiles["Dcr_utils.lua"] = "2.7.4.7-9-gdc22693";
+T._LoadedFiles["Dcr_utils.lua"] = "2.7.5";

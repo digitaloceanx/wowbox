@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Hunter Mod
 ## Title-zhCN: [多玩] 猎人助手
 ## Title-zhTW: [多玩] 獵人幫手

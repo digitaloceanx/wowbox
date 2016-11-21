@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] BagBrother
 ## Title-zhCN: [多玩] 离线银行
 ## Title-zhTW: [多玩] 离线银

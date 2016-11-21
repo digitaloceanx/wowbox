@@ -86,6 +86,7 @@ function JamPlatesAcessories_SetLocale(locale)
 					["The indicator scale."] = "The indicator scale.",
 					
 					-- hmmmm?
+					["Enable Resource"] = 'Enable Resource',
 					['Combo Point'] = 'Combo Point',
 					['Point Width'] = 'Combo Point Width',
 					["Combo point width."] = "Combo point width.",
@@ -252,6 +253,7 @@ function JamPlatesAcessories_SetLocale(locale)
 					['Threat Scale'] = '仇恨比例',
 					["The threat scale."] = "仇恨的比例",
 					
+					['Enable Resource'] = '启用职业资源',
 					['Combat'] = '战斗标记',
 					['Combat Indicator Width'] = '战斗标记宽度',
 					["The indicator width."] = "标记的宽度.",

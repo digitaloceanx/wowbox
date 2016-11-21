@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: Fence
 ## Notes: An auction house AddOn to make the life of each fence easier.
 ## Title-zhTW: [多玩] 拍賣助手 Fence

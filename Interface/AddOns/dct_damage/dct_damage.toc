@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] DCT Damage
 ## Title-zhCN: [多玩] 战斗指示器-伤害模块
 ## Title-zhTW: [多玩] 戰鬥指示器-傷害模組

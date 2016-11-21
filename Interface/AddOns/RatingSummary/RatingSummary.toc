@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] RatingSummary
 ## Notes: Compare your equipments bonus of all status with other players.
 ## Title-zhCN: [多玩] 装备属性合计 RatingSummary

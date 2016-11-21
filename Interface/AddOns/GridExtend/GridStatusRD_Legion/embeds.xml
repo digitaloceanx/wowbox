@@ -3,4 +3,5 @@
 	<Script file="BrokenIsles.lua"/>
 	<script file="EmeraldNightmare.lua"/>
 	<script file="Nighthold.lua"/>
+	<script file="TrialofValor.lua"/>
 </Ui>

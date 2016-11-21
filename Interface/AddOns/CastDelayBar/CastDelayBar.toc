@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] CastDelayBar
 ## Notes: 
 ## Title-zhCN: [多玩] 施法延迟条 CastDelayBar

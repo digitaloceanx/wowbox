@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] HandyNotes_DraenorTreasures
 ## Title-zhCN: [多玩] 地图标记-德拉诺宝藏模块
 ## Title-zhTW: [多玩] 地圖標記-德拉諾定期模塊

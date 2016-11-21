@@ -1,5 +1,5 @@
 ﻿--[[
-$Id: Accountant_Classic.lua 151 2016-08-05 07:29:44Z arith $
+$Id: Accountant_Classic.lua 154 2016-08-21 15:07:11Z arith $
 ]]
 --[[
  Accountant
@@ -84,7 +84,7 @@ local cmonth = date("%m");
 
 local AccountantClassicDefaultOptions = {
 	showbutton = true, 
-	showmoneyinfo = true, 
+	showmoneyinfo = false, --disble screen moneny 
 	showintrotip = true,
 	showmoneyonbutton = true,
 	showsessiononbutton = true,
@@ -218,7 +218,7 @@ local function AccountantClassic_InitOptions()
 	AccountantClassic_Profile = Accountant_ClassicSaveData[AccountantClassic_Server][AccountantClassic_Player];
 
 	if (AccountantClassic_Profile["options"].showmoneyinfo == nil) then
-		AccountantClassic_Profile["options"].showmoneyinfo = true;
+		AccountantClassic_Profile["options"].showmoneyinfo = false;
 	end
 	if (AccountantClassic_Profile["options"].showintrotip == nil) then
 		AccountantClassic_Profile["options"].showintrotip = false;
@@ -242,8 +242,8 @@ local function AccountantClassic_InitOptions()
 		AccountantClassic_Profile["options"]["month"] = cmonth;
 	end
 	if (AccountantClassic_Profile["options"].moneyinfoframe_x == nil) then
-		AccountantClassic_Profile["options"].moneyinfoframe_x = 90;
-		AccountantClassic_Profile["options"].moneyinfoframe_y = 0;
+		AccountantClassic_Profile["options"].moneyinfoframe_x = 10;
+		AccountantClassic_Profile["options"].moneyinfoframe_y = -80;
 	end
 	if (AccountantClassic_Profile["options"].faction == nil) then
 		AccountantClassic_Profile["options"].faction = AccountantClassic_Faction;

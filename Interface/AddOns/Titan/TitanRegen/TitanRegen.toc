@@ -1,4 +1,4 @@
-## Interface: 30100
+## Interface: 70100
 ## Title: Titan Panel [|cffeda55fRegen|r] |cff00aa004.2.5.30100|r
 ## Notes: Adds a regen monitor to Titan panel to show HP/MANA regen
 ## Author: Titan Development Team (http://www.titanpanel.org)

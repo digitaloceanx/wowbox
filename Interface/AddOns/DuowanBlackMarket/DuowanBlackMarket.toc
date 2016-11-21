@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] DuowanBlackMarket
 ## Title-zhCN: [多玩] 黒市助手
 ## Title-zhTW: [多玩] 黒市助手

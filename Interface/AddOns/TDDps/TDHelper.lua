@@ -11,6 +11,8 @@ _Netherwinds		= 160452;
 _DrumsOfFury		= 178207;
 _Exhaustion			= 57723;
 
+local INF = 2147483647;
+
 local _Bloodlusts = {_Bloodlust, _TimeWrap, _Heroism, _AncientHysteria, _Netherwinds, _DrumsOfFury};
 
 ----------------------------------------------
@@ -46,6 +48,18 @@ end
 ----------------------------------------------
 -- Is aura on player
 ----------------------------------------------
+function TD_PersistentAura(name)
+	local spellName = GetSpellInfo(name);
+	local aura, _, _, count = UnitAura('player', spellName);
+	if aura then
+		return true, count;
+	end
+	return false, 0;
+end
+
+----------------------------------------------
+-- Is aura on player
+----------------------------------------------
 function TD_Aura(name, timeShift)
 	timeShift = timeShift or 0.2;
 	local spellName = GetSpellInfo(name);
@@ -56,6 +70,18 @@ function TD_Aura(name, timeShift)
 	return false, 0;
 end
 
+----------------------------------------------
+-- Is aura on specific unit
+----------------------------------------------
+function TD_UnitAura(name, timeShift, unit)
+	timeShift = timeShift or 0.2;
+	local spellName = GetSpellInfo(name);
+	local _, _, _, count, _, _, expirationTime = UnitAura(unit, spellName);
+	if expirationTime ~= nil and (expirationTime - GetTime()) > timeShift then
+		return true, count;
+	end
+	return false, 0;
+end
 
 ----------------------------------------------
 -- Is aura on target
@@ -65,9 +91,10 @@ function TD_TargetAura(name, timeShift)
 	local spellName = GetSpellInfo(name) or name;
 	local _, _, _, _, _, _, expirationTime = UnitAura('target', spellName, nil, 'PLAYER|HARMFUL'); 
 	if expirationTime ~= nil and (expirationTime - GetTime()) > timeShift then
-		return true;
+		local cd = expirationTime - GetTime() - (timeShift or 0);
+		return true, cd;
 	end
-	return false;
+	return false, 0;
 end
 
 ----------------------------------------------
@@ -147,6 +174,34 @@ function TD_SpellAvailable(spell, timeShift)
 end
 
 ----------------------------------------------
+-- Extract tooltip number
+----------------------------------------------
+function TD_ExtractTooltip(spell, pattern)
+	local _pattern = gsub(pattern, "%%s", "([%%d%.,]+)");
+
+	if not TDSpellTooltip then
+		CreateFrame('GameTooltip', 'TDSpellTooltip', UIParent, 'GameTooltipTemplate');
+		TDSpellTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+	end
+	TDSpellTooltip:SetSpellByID(spell);
+
+	for i = 2, 4 do
+		local line = _G['TDSpellTooltipTextLeft' .. i];
+		local text = line:GetText();
+
+		if text then
+			local cost = strmatch(text, _pattern);
+			if cost then
+				cost = cost and tonumber((gsub(cost, "%D", "")));
+				return cost;
+			end
+		end
+	end
+
+	return 0;
+end
+
+----------------------------------------------
 -- Spell Cooldown
 ----------------------------------------------
 function TD_Cooldown(spell, timeShift)
@@ -158,6 +213,44 @@ function TD_Cooldown(spell, timeShift)
 	else
 		return 100000;
 	end;
+end
+
+----------------------------------------------
+-- Time to die - NOT YET WORKING
+----------------------------------------------
+--TD_Hp0, TD_T0, TD_Hpm, TD_Tm
+function TD_TimeToDie(health)
+	local unit = UnitGUID('target');
+	if unit ~= TDDps_TargetGuid then
+		--print('phial');
+		return INF;
+	end
+
+	health = health or UnitHealth('target');
+
+	if health == UnitHealthMax('target') then
+		TD_Hp0, TD_T0, TD_Hpm, TD_Tm = nil, nil, nil, nil;
+		--print('phial2');
+		return INF;
+	end
+
+	local time = GetTime();
+
+	if not TD_Hp0 then
+		TD_Hp0, TD_T0 = health, time;
+		TD_Hpm, TD_Tm = health, time;
+		--print('phial3');
+		return INF;
+	end
+
+	TD_Hpm = (TD_Hpm + health) * .5;
+	TD_Tm = (TD_Tm + time) * .5;
+
+	if TD_Hpm >= TD_Hp0 then
+		TD_Hp0, TD_T0, TD_Hpm, TD_Tm = nil, nil, nil, nil;
+	else
+		return health * (TD_T0 - TD_Tm) / (TD_Hpm - TD_Hp0);
+	end
 end
 
 ----------------------------------------------

@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: Love
 ## Notes: 提供一些简单的辅助游戏的便捷工具
 ## Title-zhCN: [多玩] 爱心工具
@@ -10,8 +10,8 @@
 ## Dependencies: Duowan
 ## X-Revision: Duowan
 ## LoadOnDemand: 
-## SavedVariables: LoveDB, ezIconsDB, FlashTaskbarDB, ACHIEVEMENTSEARCH_DB, TalentSetManager_Options
-## SavedVariablesPerCharacter: TalentSetManager_Saves
+## SavedVariables: EasyObliterate_Data, LoveDB, ezIconsDB, FlashTaskbarDB, ACHIEVEMENTSEARCH_DB, TalentSetManager_Options
+## SavedVariablesPerCharacter: TalentSetManager_Saves, EasyObliterate_IgnoreList, NomiCakesDatas
 
 locale\localization.xml
 Love.lua
@@ -22,7 +22,7 @@ template.xml
 RaidMark.lua
 BFTalent.lua
 POI.lua
-Pitch.lua
+#Pitch.lua
 FlashTaskBar.lua
 #AchievementSearch.lua
 
@@ -31,3 +31,6 @@ QuickCompare\QuickCompare.xml
 #TalentSetManager\localization.lua
 #TalentSetManager\TalentSetManager.lua
 #TalentSetManager\components.xml
+
+NomiCakes.lua
+Easy_Obliterate.lua

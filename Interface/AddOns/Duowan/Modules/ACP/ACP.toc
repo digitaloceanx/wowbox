@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Addon Control Panel
 ## Notes: Adds an addon manager in game via the 'Addons' menu. Special support for multi-part addons. Based on rMCP by Rophy.
 ## Title-zhCN: [多玩] 插件管理 ACP

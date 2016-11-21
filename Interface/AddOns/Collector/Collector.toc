@@ -1,10 +1,9 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: Collector
 ## Title-zhCN: |cffff565e[网易]|r 魔兽达人
 ## Notes-zhCN: 可以让你离开要塞的插件
-## Version: 70000.01
+## Version: 70100.01
 ## SavedVariables: COLLECTOR_DB
-## Dependencies: Blizzard_Collections
 ## X-WoWBox-Ver: 1
 ## Dependencies: Duowan
 ## X-Revision: Duowan

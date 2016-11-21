@@ -237,7 +237,7 @@ hooksecurefunc("WorldMapFrame_Update",function(...)
 	for i=1, NUM_WORLDMAP_POIS do
 		local worldMapPOIName = "WorldMapFramePOI"..i;
 		local worldMapPOI = _G[worldMapPOIName];
-		local _, name, description, textureIndex, x, y, mapLinkID, inBattleMap, graveyardID, areaID, poiID, isObjectIcon, atlasIcon = GetMapLandmarkInfo(i);
+		local name, description, textureIndex, x, y, mapLinkID, inBattleMap, graveyardID, areaID, poiID, isObjectIcon, atlasIcon = GetMapLandmarkInfo(i);
 		if npcs[name] and npcs[name].QuestID then
 			local com = IsQuestFlaggedCompleted(tonumber(npcs[name].QuestID))
 			message = (com and " |cffffff00完成|r" or " |cffff0000未完成|r")

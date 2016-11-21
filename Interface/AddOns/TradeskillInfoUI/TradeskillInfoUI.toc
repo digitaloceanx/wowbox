@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] TradeskillInfo UI
 ## Title-zhCN: [多玩] 商业技能信息库 设置 TradeskillInfoUI
 ## Title-zhTW: [多玩] 商業技能資訊庫 設置 TradeskillInfoUI

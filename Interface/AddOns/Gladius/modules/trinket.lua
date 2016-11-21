@@ -130,6 +130,10 @@ function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
 	if spell == GetSpellInfo(195710) then
 		self:UpdateTrinket(unit, 180)
 	end
+	-- Gladiator's Medallion
+	if spell == GetSpellInfo(208683) then
+		self:UpdateTrinket(unit, 120)
+	end
 	-- Every Man For Himself
 	if spell == GetSpellInfo(59752) then
 		self:UpdateTrinket(unit, 30)
@@ -326,7 +330,7 @@ function Trinket:Show(unit)
 					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
 				end
 			else
-				trinketIcon = 338784
+				trinketIcon = 1322720
 			end
 		else
 			if Gladius.db.trinketFaction then
@@ -336,7 +340,7 @@ function Trinket:Show(unit)
 					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
 				end
 			else
-				trinketIcon = 338784
+				trinketIcon = 1322720
 			end
 		end
 		self.frame[unit].texture:SetTexture(trinketIcon)

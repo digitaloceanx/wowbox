@@ -1297,6 +1297,7 @@ end
 
 _G.oRA3 = addon -- Set global
 
+
 ----------------------------
 -- Duowan Interface
 function oRA3_OpenConfig()

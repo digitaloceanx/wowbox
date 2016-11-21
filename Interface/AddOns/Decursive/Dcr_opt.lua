@@ -1,7 +1,7 @@
 --[[
     This file is part of Decursive.
     
-    Decursive (v 2.7.4.7-9-gdc22693) add-on for World of Warcraft UI
+    Decursive (v 2.7.5) add-on for World of Warcraft UI
     Copyright (C) 2006-2014 John Wellesz (archarodim AT teaser.fr) ( http://www.2072productions.com/to/decursive.php )
 
     Starting from 2009-10-31 and until said otherwise by its author, Decursive
@@ -17,7 +17,7 @@
     Decursive is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY.
     
-    This file was last updated on 2016-09-12T00:18:29Z
+    This file was last updated on 2016-09-21T07:06:01Z
 --]]
 -------------------------------------------------------------------------------
 
@@ -1719,7 +1719,7 @@ local function GetStaticOptions ()
                                     "\n\n|cFFDDDD00 %s|r:\n   %s"..
                                     "\n\n|cFFDDDD00 %s|r:\n   %s\n\n   %s"
                                 ):format(
-                                    "2.7.4.7-9-gdc22693", "John Wellesz", ("2016-09-12T00:21:19Z"):sub(1,10),
+                                    "2.7.5", "John Wellesz", ("2016-10-27T01:00:37Z"):sub(1,10),
                                     L["ABOUT_NOTES"],
                                     L["ABOUT_LICENSE"],         GetAddOnMetadata("Decursive", "X-License") or 'All Rights Reserved',
                                     L["ABOUT_SHAREDLIBS"],      GetAddOnMetadata("Decursive", "X-Embeds")  or 'GetAddOnMetadata() failure',
@@ -1929,7 +1929,7 @@ function D:SetCureOrder (ToChange)
     end
 
     local LostSpells = {}; -- an orphanage for the lost spells :'(
-    local FoundSpell = 0; -- we wouldn't need that if #table was always returning something meaningful...
+    local FoundSpell = 0;
 
     -- re-compute the position of each spell type
     for Type, Num in pairs (CureOrder) do
@@ -1944,7 +1944,7 @@ function D:SetCureOrder (ToChange)
     end
 
    -- take care of the lost spells here
-   -- Sort the lost spells so that they can be readded in the correct order
+   -- Sort the lost spells so that they can be read in the correct order
    LostSpells =  D:tSortUsingKeys(LostSpells);
 
    -- Place the lost spells after the found ones but with <0 values so they
@@ -3083,6 +3083,6 @@ function D:QuickAccess (CallingObject, button) -- {{{
 end -- }}}
 
 
-T._LoadedFiles["Dcr_opt.lua"] = "2.7.4.7-9-gdc22693";
+T._LoadedFiles["Dcr_opt.lua"] = "2.7.5";
 
 -- Closer

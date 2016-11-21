@@ -26,6 +26,7 @@ local format = string.format
 
 local wmfOnShow, dropdownScaleFix, WorldMapFrameGetAlpha
 local db
+
 function Mapster:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("MapsterDB", defaults, true)
 	db = self.db.profile
@@ -61,9 +62,6 @@ function Mapster:OnEnable()
 	self:SecureHook("WorldMapPOIFrame_AnchorPOI")
 	self:SecureHook("EncounterJournal_AddMapButtons")
 
-	self:RawHook(WorldMapPlayerLower, "SetPoint", "WorldMapPlayerSetPoint", true)
-	self:RawHook(WorldMapPlayerUpper, "SetPoint", "WorldMapPlayerSetPoint", true)
-
 	self:SecureHook("HelpPlate_Show")
 	self:SecureHook("HelpPlate_Hide")
 	self:SecureHook("HelpPlate_Button_AnimGroup_Show_OnFinished")
@@ -78,7 +76,7 @@ function Mapster:OnEnable()
 	-- load settings
 	self:SetAlpha()
 	self:SetArrow()
-	self:SetMapScale()
+	self:SetScale()
 	--self:UpdateMouseInteractivity()
 
 	-- Update digsites, the Blizzard map doesn't set this properly on load
@@ -133,14 +131,6 @@ function Mapster:NavBar_ToggleMenu(frame)
 	end
 end
 
-function Mapster:WorldMapPlayerSetPoint(frame, point, relFrame, relPoint, x, y)
-	if x and y then
-		x = x / db.arrowScale
-		y = y / db.arrowScale
-	end
-	return self.hooks[frame].SetPoint(frame, point, relFrame, relPoint, x, y)
-end
-
 function Mapster:WorldMapFrame_CalculateHitTranslations(frame)
 	frame.scale = WorldMapFrame:GetScale() * UIParent:GetScale()
 end
@@ -154,20 +144,19 @@ function Mapster:WorldMapPOIFrame_AnchorPOI(poiButton, posX, posY)
 end
 
 function Mapster:EncounterJournal_AddMapButtons()
-	local index = 1
-	local bossButton = _G["EJMapButton"..index]
-
 	local width = WorldMapDetailFrame:GetWidth() / db.ejScale
 	local height = WorldMapDetailFrame:GetHeight() / db.ejScale
 
-	while bossButton do
-		if bossButton:IsShown() then
-			local x, y = EJ_GetMapEncounter(index, WorldMapFrame.fromJournal)
+	local index = 1
+	local x, y, instanceID, name = EJ_GetMapEncounter(index, WorldMapFrame.fromJournal)
+	while name do
+		local bossButton = _G["EJMapButton"..index]
+		if bossButton and bossButton:IsShown() then
 			bossButton:SetScale(db.ejScale)
 			bossButton:SetPoint("CENTER", WorldMapBossButtonFrame, "BOTTOMLEFT", x*width, y*height);
 		end
 		index = index + 1
-		bossButton = _G["EJMapButton"..index]
+		x, y, instanceID, name = EJ_GetMapEncounter(index, WorldMapFrame.fromJournal)
 	end
 end
 
@@ -238,7 +227,7 @@ function dropdownScaleFix()
 end
 
 function Mapster:SetAlpha()
-	WorldMapFrame:SetAlpha(db.alpha or 1)
+	WorldMapFrame:SetAlpha(db.alpha)
 end
 
 function WorldMapFrameGetAlpha(frame)
@@ -254,7 +243,6 @@ end
 
 function Mapster:WorldMapFrame_AnimateAlpha(frame, useStartDelay, anim, otherAnim, startAlpha, endAlpha)
 	if frame == WorldMapFrame then
-		if not db.alpha then db.alpha = 1 end
 		if anim == frame.AnimAlphaIn and endAlpha ~= db.alpha then
 			startAlpha = anim.Alpha:GetFromAlpha()
 			local duration = ((db.alpha - startAlpha) / (db.alpha - WORLD_MAP_MIN_ALPHA)) * tonumber(GetCVar("mapAnimDuration"));
@@ -275,14 +263,13 @@ function Mapster:WorldMapFrame_AnimateAlpha(frame, useStartDelay, anim, otherAni
 end
 
 function Mapster:SetArrow()
-	WorldMapPlayerUpper:SetScale(db.arrowScale or 0.9)
-	WorldMapPlayerLower:SetScale(db.arrowScale or 0.9)
+	-- TODO, can we still do this?
 end
 
-function Mapster:SetMapScale()
-	WorldMapFrame:SetScale(db.scale or 1)
+function Mapster:SetScale()
+	WorldMapFrame:SetScale(db.scale)
 	if HelpPlate.__Mapster then
-		HelpPlate:SetScale(db.scale or 1)
+		HelpPlate:SetScale(db.scale)
 	end
 
 	WorldMapBlobFrame_UpdateBlobs()

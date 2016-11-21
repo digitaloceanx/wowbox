@@ -3,7 +3,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Accountant_Classic", "zhTW", false)
 
 if not L then return end
-L["ACCLOC_TITLE"] = "收支統計"
+
 L["ACCLOC_ABOUT"] = "關於"
 L["ACCLOC_AUC"] = "拍賣場"
 L["ACCLOC_BUTPOS"] = "小地圖按鈕位置"

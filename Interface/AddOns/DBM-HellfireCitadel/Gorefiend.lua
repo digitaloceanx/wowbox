@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1372, "DBM-HellfireCitadel", nil, 669)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 5 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 8 $"):sub(12, -3))
 mod:SetCreatureID(90199)
 mod:SetEncounterID(1783)
 mod:SetZone()
@@ -163,7 +163,7 @@ function mod:OnCombatStart(delay)
 	end
 	timerCrushingDarknessCD:Start(5-delay)
 	timerTouchofDoomCD:Start(9-delay)
-	if not self:IsFaceroll() then
+	if not self:IsEasy() then
 		timerSharedFateCD:Start(19-delay, 1)
 	end
 	timerFeastofSouls:Start(-delay)
@@ -464,7 +464,7 @@ function mod:OnSync(msg)
 		end
 		timerCrushingDarknessCD:Start(5)
 		timerTouchofDoomCD:Start(9)
-		if not self:IsFaceroll() then
+		if not self:IsEasy() then
 			timerSharedFateCD:Start(19, 1)
 		end
 		timerFeastofSouls:Start()

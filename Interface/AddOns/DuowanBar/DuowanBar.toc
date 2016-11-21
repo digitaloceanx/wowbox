@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] DuowanBar
 ## Notes: 提供真正额外的动作条, 使用该动作条必须将配置上传到多玩
 ## Title-zhCN: [多玩] 多玩动作条

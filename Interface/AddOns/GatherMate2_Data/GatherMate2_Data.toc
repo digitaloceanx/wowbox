@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Notes: Wowhead Data dump for GatherMate2
 ## Notes-zhTW: Wowhead 資料轉存至採集助手
 ## Notes-zhCN: Wowhead 资料转存至采集助手
@@ -8,8 +8,8 @@
 ## Author: kagaro, Xinhuan
 ## X-Category: Map
 ## X-Email: sal.scotto@gmail.com
-## Version: v30.0
-## X-Generated-Version: $Revision: 436 $
+## Version: v30.1
+## X-Generated-Version: $Revision: 455 $
 ## Dependencies: GatherMate2
 ## X-Curse-Packaged-Version: v30.0
 ## X-Curse-Project-Name: GatherMate2_Data

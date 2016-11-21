@@ -1,10 +1,10 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] JamPlates Accessories
 ## Title-zhCN: [多玩] 姓名版增强
 ## Notes-zhCN: 在姓名版上显示你和你宠物施放的Buff/Debuff
 ## Title-zhTW: [多玩] 姓名版增强
 ## Notes-zhTW: 在姓名版上顯示你和你寵物施放的Buff/Debuff
-## Version: 7.0.2.1
+## Version: 7.1.1.2
 ## Author: Jeruku
 ## SpecialMentions: Talasonx
 ## Notes: Adds de/buffs, threat and combo points to nameplates.
@@ -23,5 +23,6 @@ core.lua
 auras.lua
 threat.lua
 combat.lua
+resource.lua
 locale.lua
 options.lua

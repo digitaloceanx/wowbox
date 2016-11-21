@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Enigma Unit Frames
 ## Notes: Enhanced Unit Frames including HP/MP values, class, race, level tag, and more ...
 ## Title-zhCN: [多玩] 头像增强 EN_UnitFrames

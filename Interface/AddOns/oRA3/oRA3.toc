@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+﻿## Interface: 70100
 ## Title: oRA3
 ## Title-zhCN: [多玩] 团队助手
 ## Title-zhTW: [多玩] 團隊助手
@@ -6,7 +6,7 @@
 ## Notes-zhCN: CT_RaidAssist 外的另一个选择。
 ## Notes-zhTW: CT_RaidAssist 以外的另一個選擇。
 ## Author: Funkydude, Nebula169
-## Version: v7.0.6
+## Version: v7.1.0-2-g5178e14
 ## X-Curse-Project-Name: oRA3
 ## X-Curse-Project-ID: ora3
 ## X-Curse-Repository-ID: wow/ora3/mainline
@@ -29,7 +29,7 @@ modules\BattleRes.lua
 modules\Consumables.lua
 modules\Cooldowns\module.xml
 modules\GuildRepairs.lua
-modules\Rings.lua
+
 modules\Loot.lua
 modules\ReadyCheck.lua
 # modules with no settings

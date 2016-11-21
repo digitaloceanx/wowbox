@@ -88,7 +88,8 @@ function EventAlert_CreateFrames()
 	EA_Target_Events_Frame_SpellScrollFrame:SetHeight(EA_OptHeight - 100);
 	EA_SCD_Events_Frame_SpellScrollFrame:SetHeight(EA_OptHeight - 100);
 	EA_Group_Events_Frame_SpellScrollFrame:SetHeight(EA_OptHeight - 100);
-
+	
+	CreateFrames_CreateMinimapOptionFrame()
 end
 
 
@@ -164,7 +165,8 @@ function CreateFrames_CreateSpellFrame(index, typeIndex)
 	eaf.overgrow = false;
 
 	eaf.spellName:SetFontObject(ChatFontNormal);
-	eaf.spellName:SetPoint("BOTTOM", 0, -15);
+	eaf.spellName:SetPoint("TOP", eaf, "BOTTOM", 0, -0.1 * EA_Config.IconSize);
+	--eaf.spellName:SetPoint("BOTTOM", 0, -15);
 
 	eaf.spellTimer:SetFontObject(ChatFontNormal);
 	eaf.spellTimer:SetPoint("TOP", 0, EA_Config.TimerFontSize*1.1);
@@ -244,13 +246,13 @@ function CreateFrames_SpecialFrames_Show(index)
 	eaf:ClearAllPoints();
 	eaf:SetFrameStrata("HIGH");
 	eaf.spellName:SetFontObject(ChatFontNormal);
-	eaf.spellName:SetPoint("BOTTOM", 0, -15);
+	eaf.spellName:SetPoint("TOP", eaf, "BOTTOM", 0, -EA_Config.IconSize * 0.1);
 
 	eaf.spellTimer:SetFontObject(ChatFontNormal);
-	eaf.spellTimer:SetPoint("TOP", 0, EA_Config.TimerFontSize*1.1);
+	eaf.spellTimer:SetPoint("CENTER", eaf, "CENTER", 0, EA_Config.TimerFontSize * 0.8);
 
 	eaf.spellStack:SetFontObject(ChatFontNormal);
-	eaf.spellStack:SetPoint("BOTTOMRIGHT", 0, 15);
+	eaf.spellStack:SetPoint("BOTTOMRIGHT", eaf, "BOTTOMRIGHT", 0, EA_Config.IconSize * 0.1);
 
 	eaf:SetWidth(EA_Config.IconSize);
 	eaf:SetHeight(EA_Config.IconSize);
@@ -277,25 +279,21 @@ function CreateFrames_SpecialFrames_Show(index)
 		-- 術士靈魂碎片的圖案
 		eaf:SetBackdrop({bgFile = "Interface/Icons/Inv_Misc_Gem_Amethyst_02"});
 	elseif index == EA_SpecPower.LunarPower.frameindex[1] then
-		-- 鳥D日蝕能量的圖案
+		-- 鳥D星能的圖案
 		--eaf:SetBackdrop({bgFile = "Interface/Icons/Ability_Druid_Eclipse"});
 		local specIcon = select(3,GetSpellInfo(77492))
-		eaf.texture:SetTexture(specIcon)
-	elseif index == EA_SpecPower.LunarPower.frameindex[2] then
-		-- 鳥D月蝕能量的圖案
-		--eaf:SetBackdrop({bgFile = "Interface/Icons/Ability_Druid_EclipseOrange"});
-		local specIcon = select(3,GetSpellInfo(77492))
-		eaf.texture:SetTexture(specIcon)
+		eaf.texture:SetTexture(specIcon)	
 	elseif index == EA_SpecPower.HolyPower.frameindex[1] then
 		-- 聖騎士的聖能圖案
 		eaf:SetBackdrop({bgFile = "Interface/Icons/Spell_Holy_PowerwordBarrier"});		
 	elseif index == EA_SpecPower.LightForce.frameindex[1] then
 		-- 武僧真氣的圖案
 		eaf:SetBackdrop({bgFile = "Interface/Icons/Ability_Monk_HealthSphere"});			
-	elseif index == EA_SpecPower.ShadowOrbs.frameindex[1] then
+	elseif index == EA_SpecPower.Insanity.frameindex[1] then
 		-- 暗牧瘋狂值的圖案
-		--eaf:SetBackdrop({bgFile = "Interface/Icons/Spell_Priest_ShadowOrbs"});			
-		local specIcon = select(3,GetSpellInfo(77486))
+		--eaf:SetBackdrop({bgFile = "Interface/Icons/Spell_Priest_Insanity"});			
+		--local specIcon = select(3,GetSpellInfo(77486))
+		local specIcon = 1386550
 		eaf.texture:SetTexture(specIcon)
 	elseif index == EA_SpecPower.BurningEmbers.frameindex[1] then
 		-- 術士燃火餘燼的圖案
@@ -323,6 +321,11 @@ function CreateFrames_SpecialFrames_Show(index)
 		-- 惡魔獵人魔怒圖案
 		local specIcon
 		specIcon = 1305156
+		eaf.texture:SetTexture(specIcon)
+	elseif index == EA_SpecPower.Pain.frameindex[1] then		
+		-- 惡魔獵人魔痛圖案
+		local specIcon
+		local specIcon = select(3,GetSpellInfo(203747))		
 		eaf.texture:SetTexture(specIcon)
 	end
 	
@@ -365,7 +368,7 @@ function CreateFrames_EventsFrame_CreateScrollFrame(ParentFrameObj, ScrollFrameH
 end
 
 function CreateFrames_CreateSpellListIcon(SpellID, FrameNamePrefix, ParentFrameObj, LocOffsetX, LocOffsetY, IconPath)
-	SpellID = tonumber(SpellID);
+	SpellID = tonumber(SpellID);	
 	local SpellIcon = _G[FrameNamePrefix..SpellID];
 	if (SpellIcon == nil) then
 		SpellIcon = CreateFrame("Frame", FrameNamePrefix..SpellID, ParentFrameObj);
@@ -421,7 +424,8 @@ end
 
 
 function CreateFrames_CreateSpellListChkbox(SpellID, FrameNamePrefix, ParentFrameObj, LocOffsetX, LocOffsetY, SpellName, SpellRank, FrameIndex, EditboxObj)
-	SpellID = tonumber(SpellID);
+	
+	SpellID = tonumber(SpellID);	
 	local iTooltipSpellID = SpellID;
 
 	local fValue = true;
@@ -523,8 +527,9 @@ function CreateFrames_CfgBtn_SaveSpellCondition(self)
 		SC_Stack = nil;
 	end
 
-	SC_Self = EA_SpellCondition_Frame_Self:GetChecked();
-
+	SC_Self = EA_SpellCondition_Frame_Self:GetChecked()
+	
+	
 	--CHKBOX 的勾選資訊回傳函數 GetChecked() : true表示打勾, false(nil)表示無打勾
 	--if (SC_Self == 1) then 
 	--	SC_Self = true;
@@ -625,6 +630,7 @@ function CreateFrames_CfgBtn_LoadSpellCondition(self)
 	local SC_Stack, SC_Self, SC_OverGrow, SC_RedSecText, SC_OrderWtd = nil, nil, nil, nil, nil;
 	local Chk_Stack, Chk_OverGrow, Chk_RedSecText, Chk_OrderWtd = false, false, false, false;
 	local function CreateFrames_CfgBtnFun_GetFromSave(EAItem)
+		
 		SC_Stack = EAItem.stack;
 		SC_Self = EAItem.self;
 		SC_OverGrow = EAItem.overgrow;
@@ -648,9 +654,7 @@ function CreateFrames_CfgBtn_LoadSpellCondition(self)
 	else
 		Chk_Stack = true;
 	end
-	if (SC_Self == nil) then
-		SC_Self =  true;
-	end
+	
 	if (SC_OverGrow == nil or SC_OverGrow <=0) then
 		Chk_OverGrow = false;
 		SC_OverGrow = 100;
@@ -1004,8 +1008,8 @@ function CreateFrames_EventsFrame_RefreshSpellList(FrameIndex)
 end
 
 
-local GC_PowerType={[0]="MANA", [1]="RAGE", [2]="FOCUS", [3]="ENERGY", [4]="HAPPINESS", [5]="RUNES", [6]="RUNIC_POWER", [7]="SOUL_SHARDS", [8]="LUNAR_POWER", 
-	[9]="HOLY_POWER", [10]="ALT_POWER", [11]="DARK_FORCE", [12]="LIGHT_FORCE", [13]="INSANITY", [14]="BURNING_EMBERS", [15]="DEMONIC_FURY"};
+local GC_PowerType={[0]="MANA", [1]="RAGE", [2]="FOCUS", [3]="ENERGY", [4]="COMBO_POINT", [5]="RUNES", [6]="RUNIC_POWER", [7]="SOUL_SHARDS", [8]="LUNAR_POWER", 
+	[9]="HOLY_POWER", [10]="ALT_POWER", [11]="MAELSTROM", [12]="LIGHT_FORCE", [13]="INSANITY", [14]="BURNING_EMBERS", [15]="DEMONIC_FURY", [16]="ARCANE_CHARGES", [17]="FURY",[18]="PAIN"};
 function CreateFrames_CreateGroupCheckFrame(iGroupIndex)
 	local FrameNamePrefix = "EAGrpFrame_";
 	local aGroupChecks = EA_GrpItems[EA_playerClass][iGroupIndex];
@@ -1179,10 +1183,10 @@ function CreateFrames_EventsFrame_AddSpell(FrameIndex)
 				CreateFrames_EventsFrame_ClearSpellList(FrameIndex);
 				-- 為了便於分享法術id 所以儲存時增加儲存法術名稱
 				local sname = GetSpellInfo(spellID);
-				if (FrameIndex==1 and EA_Items[EA_playerClass][spellID] == nil) then EA_Items[EA_playerClass][spellID] = {enable=true,name=sname} end;
+				if (FrameIndex==1 and EA_Items[EA_playerClass][spellID] == nil) then EA_Items[EA_playerClass][spellID] = {enable=true,name=sname,self=true} end;
 				if (FrameIndex==2 and EA_AltItems[EA_playerClass][spellID] == nil) then EA_AltItems[EA_playerClass][spellID] = {enable=true,name=sname} end;
 				if (FrameIndex==3 and EA_Items[EA_CLASS_OTHER][spellID] == nil) then EA_Items[EA_CLASS_OTHER][spellID] = {enable=true,name=sname} end;
-				if (FrameIndex==4 and EA_TarItems[EA_playerClass][spellID] == nil) then EA_TarItems[EA_playerClass][spellID] = {enable=true,name=sname} end;
+				if (FrameIndex==4 and EA_TarItems[EA_playerClass][spellID] == nil) then EA_TarItems[EA_playerClass][spellID] = {enable=true,name=sname,self=true} end;
 				if (FrameIndex==5 and EA_ScdItems[EA_playerClass][spellID] == nil) then EA_ScdItems[EA_playerClass][spellID] = {enable=true,name=sname} end;
 				CreateFrames_CreateSpellFrame(spellID, typeIndex);
 				CreateFrames_EventsFrame_RefreshSpellList(FrameIndex);
@@ -1294,3 +1298,68 @@ function CreateFrames_EventsFrame_RemoveAllSpells(FrameIndex)
 end
 
 --------------------------------------------------------------------------------
+
+function CreateFrames_CreateMinimapOptionFrame()
+	
+	local eaf = CreateFrame("BUTTON","EA_MinimapOption",Minimap)
+	
+	eaf:SetWidth(30)
+	eaf:SetHeight(30)
+	eaf:SetPoint("TOPRIGHT",Minimap,"BOTTOMRIGHT",10,-60)
+	eaf:SetAlpha(0.7)
+	eaf:SetBackdrop({bgFile = "Interface/Icons/Trade_Engineering"})	
+	--啟用滑鼠相關功能
+	eaf:EnableMouse(true)	
+	--啟用可移動框架功能
+	eaf:SetMovable(true)						
+	--註冊滑鼠左鍵按下事件
+	eaf:RegisterForClicks("LeftButtonDown")
+	--註冊滑鼠右鍵拖曳事件
+	eaf:RegisterForDrag("RightButton")
+	
+	eaf:SetScript("OnClick", function(self,button)																	
+									if not(EA_Options_Frame:IsVisible()) then			
+										EA_Options_Frame:Show()
+									else						
+										EA_Options_Frame:Hide()
+									end
+							end
+				)
+	eaf:SetScript("OnDragStart", function(self,button)																	
+									eaf:StartMoving()
+							end
+				)					
+	eaf:SetScript("OnDragStop", function(self,button)																	
+									eaf:StopMovingOrSizing()
+							end
+				)					
+	eaf:SetScript("OnReceiveDrag", function(self)
+									--self 為拖曳後新位置的框架物件
+									local newX = self:GetLeft()
+									local newY = self:GetTop()
+									return
+							end
+				)									
+	eaf:SetScript("OnEnter", function()	
+								eaf:SetAlpha(1)	
+								GameTooltip:SetOwner(eaf,"BOTTOM_LEFT")
+								local t=""
+								t = t..EA_XCMD_CMDHELP["TITLE"].."\n"
+								t = t..EA_XCMD_CMDHELP["OPT"].."\n"
+								t = t..EA_XCMD_CMDHELP["HELP"].."\n"
+								for k,v in pairs(EA_XCMD_CMDHELP) do
+									if v[1] then t = t..v[1].."\n"..v[2].."\n" end									
+								end
+								GameTooltip:SetText(t)
+							end	)
+	eaf:SetScript("OnLeave", function()	
+								eaf:SetAlpha(0.8)
+								GameTooltip:Hide()
+							end	)
+							
+	if EA_Config.OPTION_ICON == true then
+		EA_MinimapOption:Show()
+	else
+		EA_MinimapOption:Hide()
+	end
+end

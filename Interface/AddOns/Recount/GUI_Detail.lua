@@ -4,7 +4,7 @@ local Graph = LibStub:GetLibrary("LibGraph-2.0")
 local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 
-local revision = tonumber(string.sub("$Revision: 1390 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1392 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -1487,12 +1487,13 @@ function Recount:UpdateSummaryMode(name)
 	end
 
 	local healing = data2.Healing or 0
+	local absorbs = data2.Absorbs or 0
 	local overhealing = data2.Overhealing or 0
 	local healingtaken = data2.HealingTaken or 0
 	local timeheal = data2.TimeHeal or 0
 	local hot_time = data2.HOT_Time or 0
 
-	theFrame.Healing.Total:SetValue(healing.." ("..(math.floor(10 * healing / (activetime) + 0.5) / 10)..")")
+	theFrame.Healing.Total:SetValue((healing + absorbs).." ("..(math.floor(10 * (healing + absorbs) / (activetime) + 0.5) / 10)..")")
 	theFrame.Healing.Taken:SetValue(healingtaken)
 	theFrame.Healing.Overhealing:SetValue(overhealing.." ("..(math.floor(10 * overhealing / (activetime) + 0.5) / 10)..")".." ("..(math.floor(1000 * overhealing / (overhealing + healing + Epsilon) + 0.5) / 10).."%)")
 	theFrame.Healing.Time:SetValue(timeheal.."s ("..math.floor(100 * timeheal / (TotalTime + Epsilon) + 0.5).."%)")

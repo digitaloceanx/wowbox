@@ -285,8 +285,8 @@ end
 
 function Addon:ShowOptions()
 	if LoadAddOn('Combuctor_Config') then
-		InterfaceOptionsFrame_OpenToCategory(ADDON)
-		InterfaceOptionsFrame_OpenToCategory(ADDON) -- sometimes once not enough
+		InterfaceOptionsFrame_OpenToCategory(Combuctor.optionFrame)
+		InterfaceOptionsFrame_OpenToCategory(Combuctor.optionFrame) -- sometimes once not enough
 	end
 end
 

@@ -1,4 +1,4 @@
-ï»¿_TD = _TD or {};
+_TD = _TD or {};
 
 _TD['DPS_Enabled'] 	= 0;
 _TD['DPS_OnEnable'] = nil;
@@ -15,6 +15,10 @@ _tdError = '|cFFF0563D';
 _tdSuccess = '|cFFBCCF02';
 
 local _DPS_time = 0;
+-- Globals for time to die
+TDDps_TargetGuid = nil;
+TD_Hp0, TD_T0, TD_Hpm, TD_Tm = nil, nil, nil, nil;
+
 local Classes = {
 	[1] = 'Warrior',
 	[2] = 'Paladin',
@@ -27,32 +31,41 @@ local Classes = {
 	[9] = 'Warlock',
 	[10] = 'Monk',
 	[11] = 'Druid',
+	[12] = 'DemonHunter',
 }
 local TDDps_Frame = CreateFrame('Frame', 'TDDps_Frame');
 TDDps_Frame.rotationEnabled = false;
 
 local L = {}
 if GetLocale() == 'zhCN' then
-	L[': Disabling'] = ': ç¦ç”¨'
-	L[': Enabling'] = ': å¯ç”¨'
-	L[': Initialized'] = ': åˆå§‹åŒ–'
-	L[': No addon selected, cannot enable'] = ': æ— å½“å‰èŒä¸šæˆ–å¤©èµ‹æ¨¡å—'
-	L[': Auto enable on combat!'] = ': è¿›å…¥æˆ˜æ–—è‡ªåŠ¨å¯ç”¨!'
-	L[': Invalid player class, please contact author of addon.'] = ': æœªçŸ¥ç©å®¶èŒä¸š, è¯·è”ç³»ä½œè€….'
+	L['Disabling'] = '½ûÓÃ'
+	L['Enabling'] = 'ÆôÓÃ'
+	L['Initialized'] = '³õÊ¼»¯'
+	L['No addon selected, cannot enable'] = 'ÎŞµ±Ç°Ö°Òµ»òÌì¸³Ä£¿é'
+	L['Auto enable on combat!'] = '½øÈëÕ½¶·×Ô¶¯ÆôÓÃ!'
+	L['Invalid player class, please contact author of addon.'] = 'Î´ÖªÍæ¼ÒÖ°Òµ, ÇëÁªÏµ×÷Õß.'
 elseif GetLocale() == 'zhTW' then
-	L[': Disabling'] = ': ç¦ç”¨'
-	L[': Enabling'] = ': å•Ÿç”¨'
-	L[': Initialized'] = ': åˆå§‹åŒ–'
-	L[': No addon selected, cannot enable'] = ': ç„¡ç•¶å‰è·æ¥­æˆ–å¤©è³¦æ¨¡çµ„'
-	L[': Auto enable on combat!'] = ': é€²å…¥æˆ°é¬¥è‡ªå‹•å•Ÿç”¨!'
-	L[': Invalid player class, please contact author of addon.'] = ': æœªçŸ¥ç©å®¶è·æ¥­, è«‹è¯ç¹«ä½œè€….'
+	L['Disabling'] = '½ûÓÃ'
+	L['Enabling'] = '†¢ÓÃ'
+	L['Initialized'] = '³õÊ¼»¯'
+	L['No addon selected, cannot enable'] = 'Ÿo®”Ç°Âš˜I»òÌìÙxÄ£½M'
+	L['Auto enable on combat!'] = 'ßMÈë‘ğôY×Ô„Ó†¢ÓÃ!'
+	L['Invalid player class, please contact author of addon.'] = 'Î´ÖªÍæ¼ÒÂš˜I, ÕˆÂ“ÀM×÷Õß.'
 else
-	L[': Disabling'] = ': Disabling'
-	L[': Enabling'] = ': Enabling'
-	L[': Initialized'] = ': Initialized'
-	L[': No addon selected, cannot enable'] = ': No addon selected, cannot enable'
-	L[': Auto enable on combat!'] = ': Auto enable on combat!'
-	L[': Invalid player class, please contact author of addon.'] = ': Invalid player class, please contact author of addon.'
+	L['Disabling'] = 'Disabling'
+	L['Enabling'] = 'Enabling'
+	L['Initialized'] = 'Initialized'
+	L['No addon selected, cannot enable'] = 'No addon selected, cannot enable'
+	L['Auto enable on combat!'] = 'Auto enable on combat!'
+	L['Invalid player class, please contact author of addon.'] = 'Invalid player class, please contact author of addon.'
+end
+
+function TDDps_Print(color, message)
+	if TDDps_Options.disabledInfo then
+		return;
+	end
+
+	print(color .. TDDpsName .. ': ' .. L[message]);
 end
 
 ----------------------------------------------
@@ -63,7 +76,7 @@ function TDDps_DisableAddon()
 		return;
 	end
 	TDButton_DestroyAllOverlays();
-	print(_tdInfo .. TDDpsName .. L[': Disabling']);
+	TDDps_Print(_tdInfo, 'Disabling');
 	TDDps_Frame:SetScript('OnUpdate', nil);
 	DPS_Skill = nil;
 	TDDps_Frame.rotationEnabled = false;
@@ -85,36 +98,35 @@ function TDDps_InitAddon()
 
 	TDDps_Frame:SetScript('OnEvent', TDDps_OnEvent);
 
-	print(_tdInfo .. TDDpsName .. L[': Initialized']);
+	TDDps_Print(_tdInfo, 'Initialized');
 end
 
 ----------------------------------------------
 -- Enable dps addon functionality
 ----------------------------------------------
 function TDDps_EnableAddon(mode)
-	print(_tdInfo .. TDDpsName .. L[': Enabling']);
+	TDDps_Print(_tdInfo, 'Enabling');
 
 	if _TD['DPS_NextSpell'] == nil then
-		print(_tdError .. TDDpsName .. L[': No addon selected, cannot enable']);
 		return;
 	end
-	
+
 	if _TD['DPS_Enabled'] == 1 then
 		return;
 	end
-	
+
 	_TD['DPS_Mode'] = mode;
 
 	TDButton_Fetch();
-	
+
 	if _TD['DPS_OnEnable'] then
 		_TD['DPS_OnEnable']();
 	end
 
 	TDDps_Frame:SetScript('OnUpdate', TDDps_OnUpdate);
-	
+
 	_TD['DPS_Enabled'] = 1;
-	print(_tdSuccess .. TDDpsName .. L[': Enabled']);
+	TDDps_Print(_tdSuccess, 'Enabled');
 end
 
 ----------------------------------------------
@@ -128,11 +140,13 @@ function TDDps_InvokeNextSpell()
 	--	print(_tdError .. TDDpsName .. L[': No addon selected, cannot enable']);
 		return;
 	end
-
 	DPS_Skill = _TD['DPS_NextSpell']();
 
 	if (oldSkill ~= DPS_Skill or oldSkill == nil) and DPS_Skill ~= nil then
 		TDButton_GlowNextSpellId(DPS_Skill);
+	end
+	if DPS_Skill == nill and oldSkill ~= nil then
+		TDButton_GlowClear();
 	end
 end
 
@@ -147,6 +161,15 @@ function TDDps_OnEvent(self, event)
 	elseif event == 'PLAYER_ENTERING_WORLD' then
 		TDButton_UpdateButtonGlow();
 	end
+	if event == 'PLAYER_TARGET_CHANGED' then
+		TD_Hp0, TD_T0, TD_Hpm, TD_Tm = nil, nil, nil, nil;
+
+		if UnitExists('target') and not UnitIsFriend('player', 'target') then
+			TDDps_TargetGuid = UnitGUID('target');
+		else
+			TDDps_TargetGuid = nil;
+		end
+	end
 	if TDDps_Frame.rotationEnabled then
 		if event == 'PLAYER_TARGET_CHANGED' then
 			if (UnitIsFriend('player', 'target')) then
@@ -157,12 +180,12 @@ function TDDps_OnEvent(self, event)
 		end
 	end
 	if event == 'PLAYER_REGEN_DISABLED' and TDDps_Options.onCombatEnter and not TDDps_Frame.rotationEnabled then
-		print(_tdSuccess .. TDDpsName .. L[': Auto enable on combat!']);
+		TDDps_Print(_tdSuccess, 'Auto enable on combat!');
 		TDDps_Frame.rotationEnabled = true;
 		TDDps_LoadModule();
 	end
 --	if event == 'PLAYER_REGEN_ENABLED' then
---		print(_tdSuccess .. TDDpsName .. ': Auto disable on combat!');
+--		TDDps_Print(_tdSuccess, 'Auto disable on combat!');
 --		TDDps_Frame.rotationEnabled = false;
 --		TDDps_DisableAddon();
 --	end
@@ -187,26 +210,29 @@ function TDDps_LoadModule()
 
 	local _, _, classId = UnitClass('player');
 	if Classes[classId] == nil then
-		print(_tdError .. TDDpsName .. L[': Invalid player class, please contact author of addon.']);
+		TDDps_Print(_tdError, 'Invalid player class, please contact author of addon.');
 		return;
 	end
 
 	local module = 'TDDps_' .. Classes[classId];
 
-	-- if not IsAddOnLoaded(module) then
-		-- LoadAddOn(module)
-	-- end
+	if not IsAddOnLoaded(module) then
+		LoadAddOn(module);
+	end
 
-	-- if not IsAddOnLoaded(module) then
-		-- print(_tdError .. TDDpsName .. ': Could not find class module.');
-		-- return;
-	-- end
+	if not IsAddOnLoaded(module) then
+		TDDps_Print(_tdError, 'Could not find class module.');
+		return;
+	end
 
 	local mode = GetSpecialization();
 	local init = module .. '_EnableAddon';
-	
-	if _G[init] then
-		_G[init](mode);
+
+	_G[init](mode);
+
+	if _TD['DPS_NextSpell'] == nil then
+		TDDps_Frame.rotationEnabled = false;
+		TDDps_Print(_tdError, 'Specialization is not supported.');
 	end
 end
 

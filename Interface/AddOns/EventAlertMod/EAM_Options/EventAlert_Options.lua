@@ -464,10 +464,12 @@ function EAFun_GroupEvent_SaveFrameToGroupEvent()
 
 					-- EventType "UNIT_POWER"
 					fGetValue, sReturnValue = EAFun_GroupEvent_GetValueFromFrameItem(sSubCheckFramePrefix.."_SubCheckEventTypeDowndown", true);
+					
 					aTempSubCheckItem.EventType = sReturnValue;
 
 					-- UnitType
 					fGetValue, sReturnValue = EAFun_GroupEvent_GetValueFromFrameItem(sSubCheckFramePrefix.."_SubCheckUnitTypeDowndown", true);
+					
 					aTempSubCheckItem.UnitType = sReturnValue;
 
 					-- (Optional)Check cooldown
@@ -477,6 +479,7 @@ function EAFun_GroupEvent_SaveFrameToGroupEvent()
 					if (aTempSubCheckItem.EventType == "UNIT_POWER") then
 						-- PowerType
 						fGetValue, sReturnValue = EAFun_GroupEvent_GetValueFromFrameItem(sSubCheckFramePrefix.."_SubCheckPowerTypeDowndown", true);
+						
 						aTempSubCheckItem.PowerTypeNum = sReturnValue;
 
 						-- CompType: 1:<, 2:<=, 3:=, 4:>=, 5:>

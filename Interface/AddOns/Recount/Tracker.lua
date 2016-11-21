@@ -4,7 +4,7 @@ local AceLocale = LibStub("AceLocale-3.0")
 local L = AceLocale:GetLocale("Recount")
 local BossIDs = LibStub("LibBossIDs-1.0")
 
-local revision = tonumber(string.sub("$Revision: 1390 $", 12, -3))
+local revision = tonumber(string.sub("$Revision: 1392 $", 12, -3))
 if Recount.Version < revision then
 	Recount.Version = revision
 end
@@ -2060,7 +2060,7 @@ function Recount:AddHealData(source, victim, ability, healtype, amount, overheal
 	end
 
 	if overheal and overheal ~= 0 then 
-		Recount.cleventtext = Recount.cleventtext .." ("..overheal..L[" overheal"]..")"
+		Recount.cleventtext = Recount.cleventtext .." ("..overheal.." "..L["Overheal"]..")"
 	end
 
 	if absorbed and absorbed > 0 then

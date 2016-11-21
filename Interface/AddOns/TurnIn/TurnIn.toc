@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: TurnIn
 ## Title-zhCN: [多玩] 自动交接任务
 ## Title-zhTW: [多玩] 自動交接任務

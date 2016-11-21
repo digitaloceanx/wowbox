@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: GridClickSets
 ## Notes: Set the clicking action for Grid buttons
 ## Title-zhCN: [多玩] 点击施法

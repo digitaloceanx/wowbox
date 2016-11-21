@@ -1,0 +1,12 @@
+## Title: TDDps_Druid
+## Version: 1.2
+## Author: Kaminari
+## Interface: 70100
+## Dependencies: TDDps
+## LoadOnDemand: 1
+## X-Curse-Packaged-Version: v1.2
+## X-Curse-Project-Name: TDDps Druid
+## X-Curse-Project-ID: tddps-druid
+## X-Curse-Repository-ID: wow/tddps-druid/mainline
+
+main.lua

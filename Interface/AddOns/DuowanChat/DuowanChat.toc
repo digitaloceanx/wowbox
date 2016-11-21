@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: DuowanChat
 ## Title-zhCN: [多玩] 多玩聊天
 ## Title-zhTW: [多玩] 多玩聊天

@@ -1,4 +1,4 @@
-﻿## Interface: 30000
+## Interface: 70100
 ## Title: Fence [|cffeda55fAutoFill|r]
 ## Notes: Remember the prices of items you put into the auction house.
 ## Notes-deDE: Ein Auktionshaus AddOn, um das Leben eines jeden Hehlers zu vereinfachen.

@@ -1,167 +1,33 @@
 ﻿function GladiatorlosSA:GetSpellList ()
 	return {
 		auraApplied ={					-- aura applied [spellid] = ".mp3 file name",
-
-		--general
-
-			--demon hunter
+		-- GENERAL
+		
+			[195901] = "trinket1",
+			[214027] = "trinket1",
+			-- Backlash (Aura Applied)
+			
+			[87204] = "backlashFear", -- Vampiric Touch Dispel (Priest)
+			[196364] = "backlashSilence", -- Unstable Affliction Dispel (Warlock)
+		
+			-- Demon Hunter (Aura Applied)
 			[198589] = "blur",
+			[212800] = "blur",
 			[196718] = "darkness",
+			[209426] = "darkness",
 			[162264] = "metamorphosis",
-			[187827] = "metamorphosis",
+			[187827] = "metamorphosis", -- Vengeance
 			[188501] = "spectralSight",
 			[196555] = "netherwalk",
 			[207810] = "netherBond",
-		
-			--druid
-				-- OLD
-			[61336] = "survivalInstincts", -- 求生本能
-			[22812] = "barkskin", -- 樹皮術
-			[132158] = "naturesSwiftness", -- 自然迅捷
-			[22842] = "frenziedRegeneration", -- 狂暴恢復
-			[1850] = "dash", -- 疾奔
-			[50334] = "berserk", -- 狂暴
-			[69369] = "predatorSwiftness", -- PredatorSwiftness 猛獸迅捷
-				-- Mist of Pandaria
-			[124974] = "natureVigil",
-			[112071] = "celestialAlignment", -- Replaced in legion
-			[102342] = "ironBark",
-			[102351] = "canarionWard",
-				-- WoD
-			[155835] = "BristlingFur",
-				-- Legion
-			[29166] = "innervate",
-			[194223] = "celestialAlignment",
-			[200851] = "rageOfSleeper",
 			
-
-			--paladin
-				-- OLD
-			[1022] = "handOfProtection", -- 保護
-			[1044] = "handOfFreedom", -- 自由
-			[642] = "divineShield", -- 無敵
-			[6940] = "sacrifice", -- 犧牲祝福
-			[31884] = "avengingWrath",
-			[31842] = "avengingWrath",
-				-- Mist of pandaria
-			[114039] = "handOfPurity",
-			[105809] = "holyAvenger",
-			[114917] = "healingExecution",
-				-- WoD
-			[152262] = "Seraphim",
-			[204150] = "lightAegis",
-			[31850] = "ardentDefender",
-			[205191] = "eyeForAnEye",
-			[184662] = "vengeanceShield",
-			[224668] = "crusade",
-			[86659] = "ancientKings",
-			[228049] = "forgottenQueens",
-
-			--rogue
-				-- OLD
-			--[51713] = "shadowDance", -- 暗影之舞
-			[185313] = "shadowDance",
-			[2983] = "sprint", -- 疾跑
-			[31224] = "cloakOfShadows", -- 斗篷
-			[13750] = "adrenalineRush", -- 衝動
-			[5277] = "evasion", -- 閃避
-			[74001] = "combatReadiness", -- 戰鬥就緒
-			[51690] = "killingSpree", -- added to 2.2.2
-				-- Mist of pandaria
-			[114018] = "shroudOfConcealment",
-				-- WoD
-			[152151] = "ShadowReflection",
-			[84747] = "deepInsight",
-			[84746] = "moderateInsight",
-				-- Legion
-			[121471] = "shadowBlades",
-			[199754] = "riposte",
-			[31230] = "cheatDeath",
-			[202665] = "dreadblades",
-
-			--warrior
-				-- OLD
-			[55694] = "enragedRegeneration", -- 狂怒恢復
-			[871] = "shieldWall", --盾墻
-			[18499] = "berserkerRage", -- 狂暴之怒
-			[23920] = "spellReflection", -- 盾反
-			[12328] = "sweepingStrikes", -- 橫掃攻擊
-			[46924] = "bladestorm", -- 劍刃風暴
-			[1719] = "battleCry", -- 魯莽
-			[118038] = "dieByTheSword", -- add 2.3.6
-				-- Mist of pandaria
-			[114029] = "safeguard",
-			[114030] = "vigilance",
-			[107574] = "avatar",
-			[12292] = "bloodbath", -- old death wish
-				-- Legion
-			[198817] = "sharpenBlade",
-			[197690] = "defensestance",
-
-			--priest
-				-- OLD
-			[81700] = "Archangel", -- add 2.2.2
-			[33206] = "painSuppression", -- 痛苦壓制
-			[6346] = "fearWard", -- 反恐
-			[47585] = "dispersion", -- 消散
-			[47788] = "guardianSpirit",
-			[109964] = "spiritShell",
-			[17] = "powerWordShield", -- added to 2.2.2
-				-- Mist of pandaria
-			[10060] = "powerInfusion",
-				-- Legion
-			[197862] = "archangelHealing",
-			[197871] = "archangelDamage",
-			[200183] = "apotheosis",
-			[213610] = "holyWard",
-			[197268] = "rayOfHope",
-			[193223] = "surrenderToMadness",
-
-			--shaman
-				-- OLD
-			[52127] = "waterShield", -- 水盾
-			[30823] = "shamanisticRage", -- 薩滿之怒
-			[974] = "earthShield", -- 大地之盾
-			[16188] = "ancestralSwiftness", -- 自然迅捷
-			[79206] = "spiritwalkersGrace",
-			[16166] = "elementalMastery",
-				-- Mist of pandaria
-			[114050] = "ascendance",
-			[114051] = "ascendance",
-			[114052] = "ascendance",
-			[118350] = "empower", -- moved from castsucces
-			[118347] = "reinforce", -- moved from castsuccess
-				-- Legion
-			[210918] = "etherealForm",
-			[108271] = "astralShift",
-			[204293] = "spiritLink",
-
-			--mage
-				-- OLD
-			[45438] = "iceBlock", -- 寒冰屏障
-			[12042] = "arcanePower", -- 秘法強化
-			[12472] = "icyVeins", --冰脈
-				-- Mist of pandaria
-			[12043] = "presenceOfMind",
-			[108839] = "iceFloes",
-			[110909] = "alterTime",
-				-- Legion
-			[198111] = "temporalShield",
-			[198144] = "iceForm",
-			[86949] = "cauterize",
-
-			--dk
-				-- OLD
-			[49039] = "lichborne", -- 巫妖之軀
-			[48792] = "iceboundFortitude", -- 冰固
-			[55233] = "vampiricBlood", -- 血族之裔
+			-- Death Knight (Aura Applied)
+			[49039] = "lichborne",
+			[48792] = "iceboundFortitude",
+			[55233] = "vampiricBlood",
 			[51271] = "pillarofFrost",
 			[48707] = "antiMagicShell",
-				-- Mist of pandaria
-			[115989] = "unholyBlight",
-				-- WoD
 			[152279] = "BreathOfSindragosa",
-				-- Legion
 			[219809] = "tombstone",
 			[194679] = "runetap",
 			[194844] = "bonestorm",
@@ -169,120 +35,211 @@
 			[207256] = "obliteration",
 			[207319] = "corpseShield",
 			[114556] = "purgatory",
+			[207171] = "remorselessWinter", -- Remorseless Winter callout on stun application, since RW is rotational.
+				--NOTE: Do something with Remorseless Winter stacks: 207171 = stun, 211794 = Winter is Coming stacks
+			
+			-- Druid (Aura Applied)
+			[102560] = "incarnationElune",
+			[102543] = "incarnationKitty",
+			[102558] = "incarnationUrsoc",
+			[33891] = "incarnationTree",
+			[61336] = "survivalInstincts",
+			[22812] = "barkskin",
+			[132158] = "naturesSwiftness",
+			[22842] = "frenziedRegeneration", 
+			[1850] = "dash",
+			[50334] = "berserk",
+			[69369] = "PredatorSwiftness",
+			[124974] = "natureVigil",
+			[112071] = "celestialAlignment",
+			[102342] = "ironBark",
+			[102351] = "canarionWard",
+			[155835] = "BristlingFur",
+			[29166] = "innervate",
+			[194223] = "celestialAlignment",
+			[200851] = "rageOfSleeper",
+			[203727] = "thorns",
 
-			--hunter
-				-- OLD
-			[19263] = "deterrence", -- 威懾
-			[3045] = "rapidFire",
-			[54216] = "mastersCall",
-			[53480] = "roarOfSacrifice", -- pet skill
-				-- Mist of pandaria
-				-- Legion
+			-- Hunter (Aura Applied)
+			[19263] = "deterrence",
 			[186265] = "deterrence", -- Aspect of the Turtle
+			[3045] = "rapidFire",
+			[53271] = "mastersCall",
+			[53480] = "roarOfSacrifice", -- Pet Skill
 			[186257] = "cheetah",
 			[212640] = "mendingBandage",
 			[193526] = "trueShot",
 			[186289] = "eagle",
+			
+			-- Mage (Aura Applied)
+			[45438] = "iceBlock",
+			[12042] = "arcanePower",
+			[12472] = "icyVeins",
+			[12043] = "presenceOfMind",
+			[108839] = "iceFloes",
+			[198111] = "temporalShield",
+			[198144] = "iceForm",
+			[86949] = "cauterize",
 
-			--lock
-				-- Mist of pandaria
-			[108416] = "sacrificialPact",
-			[108503] = "grimoireOfSacrifice",
-			[113858] = "darkSoul",
-			[113861] = "darkSoul",
-			[113860] = "darkSoul",
-			[104773] = "unendingResolve",
-				-- Legion
-			[196098] = "darkSoul", -- Updated for Legion
-			[212295] = "netherWard",
-
-			--monk
-				-- Mist of pandaria
+			-- Monk (Aura Applied)
 			[122278] = "dampenHarm",
 			[122783] = "diffuseMagic",
-			[120954] = "fortifyingBrew",
-			[201318] = "fortifyingBrew",
-			[115176] = "zenMeditation",
-			[201325] = "zenMeditation",
+			[115203] = "fortifyingBrew", --Fortifying Brew (Brewmaster)
+			[201318] = "fortifyingBrew", --Fortifying Elixir (PvP Talent)
+			[115176] = "zenMeditation", -- Zen Meditation (Brewmaster)
+			[201325] = "zenMoment", --Zen Moment (PvP Talent)
 			[116849] = "lifeCocoon",
 			[122470] = "touchOfKarma",
-				-- WoD
 			[152175] = "HurricaneStrike",
 			[152173] = "Serenity",
-			[216113] = "fistweaving",
+			[216113] = "fistweaving", --Way of the Crane
+			[197908] = "manaTea",
+						
+			-- Paladin (Aura Applied)
+			[1022] = "handOfProtection", 
+			[1044] = "handOfFreedom",
+			[6940] = "sacrifice",		-- Blessing of Sacrifice
+			[199448] = "sacrifice",		-- Blessing of Sacrifice (Ultimate Sacrifice PvP Talent)
+			[642] = "divineShield", 
+			[31884] = "avengingWrath", -- Protection/Retribution
+			[31842] = "avengingWrath", -- Holy
+			[224668] = "avengingWrath", -- Crusade (Retribution Talent)
+			[105809] = "holyAvenger",
+			[114917] = "healingExecution",
+			[152262] = "Seraphim",
+			[204150] = "lightAegis",
+			[31850] = "ardentDefender",
+			[205191] = "eyeForAnEye",
+			[184662] = "vengeanceShield",
+			[86659] = "ancientKings", -- Guardian of Ancient Kings
+			[212641] = "ancientKings", -- Guardian of Ancient Kings (Glyph)
+			[228049] = "forgottenQueens",
+			
+			-- Priest (Aura Applied)
+			[33206] = "painSuppression",
+			[47585] = "dispersion",
+			[47788] = "guardianSpirit",
+			[17] = "powerWordShield",
+			[10060] = "powerInfusion",
+			[197862] = "archangelHealing",
+			[197871] = "archangelDamage",
+			[200183] = "apotheosis",
+			[213610] = "holyWard",
+			[197268] = "rayOfHope",
+			[193223] = "surrenderToMadness",
+			[47536] = "rapture",
+			[194249] = "voidForm",
+			[218413] = "voidForm",
+			[15286] = "vampiricEmbrace",
+
+			-- Rogue (Aura Applied)
+			[185313] = "shadowDance",
+			[185422] = "shadowDance",
+			[2983] = "sprint",
+			[31224] = "cloakOfShadows", 
+			[13750] = "adrenalineRush",
+			[5277] = "evasion",
+			[51690] = "killingSpree",
+			[121471] = "shadowBlades",
+			[199754] = "riposte",
+			[31230] = "cheatDeath",
+			[202665] = "dreadblades",
+			
+			-- Shaman (Aura Applied)
+			[204288] = "earthShield",
+			[79206] = "spiritwalkersGrace",
+			[16166] = "elementalMastery",
+			[114050] = "ascendance",
+			[114051] = "ascendance",
+			[114052] = "ascendance",
+			[210918] = "etherealForm",
+			[108271] = "astralShift",
+			[204293] = "spiritLink",
+			
+			-- Warlock (Aura Applied)
+			[108416] = "sacrificialPact",
+			[108503] = "grimoireOfSacrifice",
+			[104773] = "unendingResolve",
+			[196098] = "darkSoul", -- Soul Harvest (Legion's Version)
+			[212295] = "netherWard",
+
+			-- Warrior (Aura Applied)
+			[184364] = "enragedRegeneration",
+			[871] = "shieldWall", 
+			[18499] = "berserkerRage",
+			[46924] = "bladestorm", 
+			[1719] = "battleCry", 
+			[118038] = "dieByTheSword", 
+			[107574] = "avatar",
+			[12292] = "bloodbath",
+			[198817] = "sharpenBlade",
+			[197690] = "defensestance",
 		},
 		auraRemoved = {					-- aura removed [spellid] = ".mp3 file name",
-				-- OLD
-			[642] = "bubbleDown", -- 無敵結束
-			[47585] = "dispersionDown", -- 消散結束
-			[1022] = "protectionDown", -- 保護結束
-			[31224] = "cloakDown", -- 斗篷結束
-			[74001] = "combatReadinessDown", -- 戰鬥就緒結束
-			[871] = "shieldWallDown", -- 盾墻結束
-			[112048] = "shieldBarrierDown", -- Added
-			[174926] = "shieldBarrierDown", -- Added
-			[33206] = "PSDown", -- 壓制結束
-			[5277] = "evasionDown", -- 閃避結束
-			[45438] = "iceBlockDown", -- 冰箱結束
-			[49039] = "lichborneDown", -- 巫妖之軀結束
-			[48792] = "iceboundFortitudeDown", -- 冰固結束
-			[19263] = "deterrenceDown", -- 威懾結束
-			[48707] = "AntiMagicShellDown", -- Added
-			[51690] = "killingSpreeDown", -- added to 2.2.2
-			[114030] = "vigilanceDown",
-			[84747] = "deepInsightDown",
-			[118038] = "dieByTheSwordDown", -- add 2.3.6
-				-- Mist of pandaria
-			[108271] = "astralShiftDown",
-			[120954] = "fortifyingBrewDown",
-			[201318] = "fortifyingBrewDown",
-			[115203] = "fortifyingBrewDown",
-			[115176] = "zenMeditationDown",
-			[201325] = "zenMeditationDown",
-			[122470] = "karmaDown", -- Added
-			[118347] = "reinforceDown", -- Added
-			[118350] = "empowerDown", -- Added
-			[109964] = "spiritShellDown", -- Added
-				-- Legion
-			[219809] = "tombstoneDown",
-			[206977] = "mirrorDown",
-			[207319] = "corpseDown",
-			[198589] = "blurDown",
-			[196718] = "darknessDown",
-			[162264] = "metamorphDown",
-			[187827] = "metamorphDown",
-			[188501] = "sightsDown",
-			[196555] = "netherwalkDown",
-			[207810] = "bondageDown",
-			[186265] = "deterrenceDown",
-			[198111] = "temporalDown",
-			[198144] = "iceFormDown",
-			[216113] = "fistingDown",
-			[31850] = "defenderDown",
-			[205191] = "eyeDown",
-			[184662] = "vengeanceShieldDown",
-			[213610] = "wardDown",
-			[197268] = "hopeDown",
-			[193223] = "madnessDown",
-			[210918] = "etherealDown",
-			[212295] = "netherWardDown",
-			[86659] = "kingsDown",
-			[228049] = "queensDown",
-			[116849] = "lifeCocoonDown",
-			--[102560] = "incarnationDown",
-			--[102543] = "incarnationDown",
-			--[102558] = "incarnationDown",
-			--[33891] = "incarnationDown",
-			[117679] = "incarnationDown",
-			[197690] = "damageStance",
-			[193526] = "trueShotDown",
-			[199754] = "riposteDown",
-			[204293] = "spiritLinkDown",
-			[200851] = "rageOfSleeperDown",
-			[202665] = "dreadbladesDown",
+			[642] = "bubbleDown",				--Divine Shield
+			[47585] = "dispersionDown",			--Dispersion
+			[1022] = "protectionDown",			--Blessing of Protection
+			[31224] = "cloakDown", 				--Cloak of Shadows
+			[871] = "shieldWallDown", 			--Shield Wall
+			[33206] = "PSDown",					--Pain Suppression
+			[5277] = "evasionDown", 			--Evasion
+			[45438] = "iceBlockDown", 			--Ice Block
+			[49039] = "lichborneDown",			--Lichborne
+			[48792] = "iceboundFortitudeDown",	--Icebound Fortitude
+			[19263] = "deterrenceDown", 		--Deterrence
+			[186265] = "deterrenceDown",		--Aspect of the Turtle
+			[48707] = "AntiMagicShellDown",		--Anti-Magic Shell
+			[51690] = "killingSpreeDown",		--Killing Spree
+			[118038] = "dieByTheSwordDown",		--Die by the Sword
+			[108271] = "astralShiftDown",		--Astral Shift
+			[201318] = "fortifyingBrewDown",	--Fortifying Elixir (PvP Talent)
+			[115203] = "fortifyingBrewDown",	--Fortifying Brew (Brewmaster)
+			[115176] = "zenMeditationDown",		--Zen Meditation (Brewmaster)
+			[122470] = "karmaDown",				--Touch of Karma
+			[219809] = "tombstoneDown",			--Tombstone
+			[206977] = "mirrorDown",			--Blood Mirror
+			[207319] = "corpseDown",			--Corpse Shield
+			[198589] = "blurDown",				--Blur
+			[212800] = "blurDown",				--Blur (Other ID)
+			[196718] = "darknessDown",			--Darkness
+			[209426] = "darknessDown",			--Darkness (Other ID)
+			[162264] = "metamorphDown",			--Metamorphosis
+			[187827] = "metamorphDown",			--Metamorphosis (Vengeance)
+			[188501] = "sightsDown",			--Spectral Sight
+			[196555] = "netherwalkDown",		--Netherwalk
+			[207810] = "bondageDown",			--Nether Bond
+			[198111] = "temporalDown",			--Temporal Shield
+			[198144] = "iceFormDown",			--Ice Form
+			[216113] = "fistingDown",			--Way of the Crane
+			[31850] = "defenderDown",			--Ardent Defender
+			[205191] = "eyeDown",				--Eye for an Eye
+			[184662] = "vengeanceShieldDown",	--Vengeance Shield
+			[213610] = "wardDown",				--Holy Ward
+			[197268] = "hopeDown",				--Ray of Hope
+			[193223] = "madnessDown",			--Surreder to Madness
+			[210918] = "etherealDown",			--Ethereal Form
+			[212295] = "netherWardDown",		--Nether Ward
+			[86659] = "kingsDown",				--Guardian of Ancient Kings
+			[228049] = "queensDown",			--Guardian of Forgotten Queens
+			[116849] = "lifeCocoonDown",		--Life Coccoon
+			[102560] = "incarnationDown",		--Incarnation (Boomkin)
+			[102543] = "incarnationDown",		--Incarnation (Cat)
+			[102558] = "incarnationDown",		--Incarnation (Bear)
+			[33891] = "incarnationDown",		--Incarnation (Tree)
+			[197690] = "damageStance",			--Defensive Stance (Falling off)
+			[193526] = "trueShotDown",			--Trueshot
+			[199754] = "riposteDown",			--Riposte
+			[204293] = "spiritLinkDown",		--Spirit Link
+			[200851] = "rageOfSleeperDown",		--Rage of the Sleeper
+			[202665] = "dreadbladesDown",		--Curse of the Dreadblades
+			[194249] = "voidFormDown",			--Voidform
+			[218413] = "voidFormDown",			--Voidform
+			[15286] = "vampiricEmbraceDown",	--Vampiric Embrace
+			[203727] = "thornsDown",			--Thorns
 			},
 		castStart = {					-- cast start [spellid] = ".mp3 file name",
-			--general
+		--GENERAL
+			-- Big Heals
 			[2060] = "bigHeal", -- Heal (Holy Priest)
 			[82326] = "bigHeal", -- Holy Light (Paladin)
 			[77472] = "bigHeal", -- Healing Wave (Shaman)
@@ -293,53 +250,41 @@
 			--[186263] = "bigHeal", -- Shadow Mend (Discipline/Shadow Priest)
 			--[116694] = "bigHeal", -- Effuse (Mistweaver)
 			--[124682] = "bigHeal", -- Enveloping Mists (Mistweaver)
-			[2006] = "resurrection",
-			[7328] = "resurrection",
-			[2008] = "resurrection",
-			[115178] = "resurrection",
-			[50769] = "resurrection", -- 復活術 救贖 先祖之魂 復活
-			[212040] = "resurrection", -- Druid Healer Legion
-			[212051] = "resurrection", -- Monk Healer Legion
-			[212036] = "resurrection", -- Priest Healer Legion
-			[212056] = "resurrection", -- Paladin Healer Legion
-			[212048] = "resurrection", -- Shaman Healer Legion
+			
+			-- Non-Combat Resurrections
+			[2006] = "resurrection", -- Resurrection (Priest)
+			[7328] = "resurrection", -- Redemption (Paladin)
+			[2008] = "resurrection", -- Ancestral Spirit (Shaman)
+			[115178] = "resurrection", -- Resusicate (Monk)
+			[50769] = "resurrection",  -- Revive (Druid)
+			-- Non-Combat Mass Resurrections
+			[212040] = "resurrection", -- Revitalize (Druid Mass Rez)
+			[212051] = "resurrection", -- Reawaken (Monk Mass Rez)
+			[212036] = "resurrection", -- Mass Resurrection (Priest Mass Rez)
+			[212056] = "resurrection", -- Absolution (Paladin Mass Rez)
+			[212048] = "resurrection", -- Ancestral Vision (Shaman Mass Rez)
+			
+			-- Death Knight (Spell Casting)
+				--None! :D
+				
+			-- Demon Hunter (Spell Casting)
+			[198013] = "eyeBeam",
 
-			--druid
-				-- OLD
-			[33786] = "cyclone", -- 吹風
-			[209753] = "cyclone", -- SCREAMS LOUDLY
-				-- Mist of pandaria
+			-- Druid (Spell Casting)
+			[33786] = "cyclone",
+			[209753] = "cyclone", -- SCREAMS LOUDLY Balance Druid Cyclone
 			[339] = "entanglingRoots",
-				-- Legion
-			[202767] = "littleMoon",
-			[202768] = "middleMoon",
-			[202771] = "fullMoon",
-
-			--paladin
-				-- Mist of pandaria
-			[20066] = "repentance", -- 懺悔
-			[115750] = "blindingLight",
-
-			--rogue
-
-			--warrior
-
-			--priest
-				-- OLD
-			[9484] = "shackleUndead", -- 束縛亡靈
-			[605] = "dominateMind", -- 精神控制
-				-- Mist of pandaria
-			[32375] = "massDispell",
-
-			--shaman
-			[51514] = "hex", -- Frog
-			[210873] = "hex", -- Compy
-			[211004] = "hex", -- Spider
-			[211015] = "hex", -- Cockroach
-			[211010] = "hex", -- Snake
-
-			--mage
-				-- OLD
+			[202767] = "littleMoon", -- New Moon
+			[202768] = "middleMoon", -- Half Moon
+			[202771] = "fullMoon", -- Full Moon
+			
+			-- Hunter (Spell Casting)
+			[982] = "revivePet", 
+			[120360] = "barrage", 
+			[19386] = "wyvernSting",
+			[209789] = "freezingArrow",
+			
+			-- Mage (Spell Casting)
 			[118] = "polymorph", -- Sheep
 			[28271] = "polymorph", -- Turtle
 			[28272] = "polymorph", -- Pig
@@ -352,53 +297,133 @@
 			[161353] = "polymorph", -- Polar Bear Cub
 			[161354] = "polymorph", -- Monkey
 			[126819] = "polymorph", -- Porcupine
-				-- Mist of pandaria
-			[102051] = "frostjaw",
 			[205021] = "rayOfFrost",
 			[31687] = "waterElemental",
 			[203286] = "greaterPyro",
+			[199786] = "glacialSpike",
+			[113724] = "ringOfFrost",
+			
+			-- Monk (Spell Casting)
+			[205406] = "sheilunsGift",
 
-			--dk
+			-- Paladin (Spell Casting)
+			[20066] = "repentance",
+			[200652] = "tyrsDeliverance",
+			
+			-- Priest (Spell Casting)
+			[9484] = "shackleUndead", 
+			[605] = "dominateMind",
+			[32375] = "massDispell",
+			[207946] = "lightsWrath",
+			[205065] = "voidTorrent",
 
-			--hunter
-			[982] = "revivePet", -- 復活寵物
-			[120360] = "barrage", -- add 2.2.2
-			[109259] = "powerShot", -- add 2.2.2
-			[19386] = "wyvernSting", -- moved from cast_succes 2.3.4
-
-			--warlock
-				-- OLD
-			[710] = "banish", -- 放逐術
-			[5782] = "fear", -- 恐懼
-			[691] = "summonDemon",
-			[712] = "summonDemon",
-			[697] = "summonDemon",
-			[688] = "summonDemon",
-				-- Mist of pandaria
-			[112866] = "summonDemon", -- Fel Imp
-			[112867] = "summonDemon", -- Void Lord
-			[112870] = "summonDemon", -- Wrathguard
-			[112868] = "summonDemon", -- Shivarra
-			[112869] = "summonDemon", -- Observer
-				-- WoD
+			-- Rogue (Spell Casting)
+				--None! :D
+				
+			-- Shaman (Spell Casting)
+			[51514] = "hex", -- Frog
+			[210873] = "hex", -- Compy
+			[211004] = "hex", -- Spider
+			[211015] = "hex", -- Cockroach
+			[211010] = "hex", -- Snake
+			[207778] = "giftOfTheQueen",
+			[205495] = "stormkeeper",
+			
+			-- Warlock (Spell Casting)
+			[710] = "banish",
+			[5782] = "fear",
+			[691] = "summonDemon", -- Felhunter
+			[712] = "summonDemon", -- Succubus
+			[697] = "summonDemon", -- Voidwalker
+			[688] = "summonDemon", -- Imp
+			[30146] = "summonDemon", -- Felguard
+			[157757] = "summonDemon", -- Doomguard
+			[157898] = "summonDemon", -- Infernal
+			[112866] = "summonDemon", -- Fel Imp (Glyph)
+			[112867] = "summonDemon", -- Void Lord (Glyph)
+			[112870] = "summonDemon", -- Wrathguard (Glyph)
+			[112868] = "summonDemon", -- Shivarra (Glyph)
+			[112869] = "summonDemon", -- Observer (Glyph)
 			[152108] = "Cataclysm",
-				-- Legion
-			--[157695] = "demonBolt",
 			[104316] = "dreadstalkers",
 			[6358] = "seduction",
 			[115268] = "seduction",
 			[30283] = "shadowfury",
+			[30108] = "unstableAffliction",
+			[116858] = "chaosBolt",
 
-			-- monk
+			-- Warrior (Spell Casting)
+				--None! :D
 		},
 		castSuccess = {					--cast success [spellid] = ".mp3 file name",
-			--general
+			-- Cure (DPS Dispel)
+			[213644] = "cure", 		-- Cleanse Toxins (Retribution/Protection Paladin)
+			[51886] = "cure", 		-- Cleanse Spirit (Enhancement/Elemental Shaman)
+			[2782] = "cure", 		-- Remove Corruption (Guardian/Feral/Balance Druid)
+			[213634] = "cure", 		-- Purify Disease (Shadow Priest)
+			[218164] = "cure", 		-- Detox (Brewmaster/Windwalker Monk)
+			--I miss Remove Curse for mages. :( This spot is reserved for its memory. 
+			
+			-- Dispel (Healer (Magic) Dispel)
+			[4987] = "dispel", 		-- Cleanse (Holy Paladin)
+			[77130] = "dispel", 	-- Purify Spirit (Restoration Shaman)
+			[88423] = "dispel", 	-- Nature's Cure (Restoration Druid)
+			[527] = "dispel", 		-- Purify (Holy/Discipline Priest)
+			[115450] = "dispel", 	-- Detox (Mistweaver Monk)
+			-- Warlocks, because they're special snowflakes that think they need buffs.
+			[89808] = "dispel", 	-- Singe Magic
+			[137178] = "dispel",	-- Singe Magic (Green)
+			[212623] = "dispel",	-- Singe Magic (PvP Talent)
+			[212620] = "dispel",	-- Singe Magic (PvP Talent, looks to be unused)
+			
+			-- CastSuccess (Major, cast-time CCs that went off)
+				--Polymorph (Mage)
+			[118] = "success", -- Sheep
+			[28271] = "success", -- Turtle
+			[28272] = "success", -- Pig
+			[61305] = "success", -- Black Cat
+			[61721] = "success", -- Rabbit
+			[61025] = "success", -- Serpent
+			[61780] = "success", -- Turkey
+			[161372] = "success", -- Peacock
+			[161355] = "success", -- Penguin
+			[161353] = "success", -- Polar Bear Cub
+			[161354] = "success", -- Monkey
+			[126819] = "success", -- Porcupine		
+			[113724] = "success", -- Ring of Frost
+				--Hex (Shaman)
+			[51514] = "success", -- Frog
+			[210873] = "success", -- Compy
+			[211004] = "success", -- Spider
+			[211015] = "success", -- Cockroach
+			[211010] = "success", -- Snake			
+				--Fear (Warlock)
+			[5782] = "success",
+				--Cyclone (Druid)
+			[33786] = "success",
+			[209753] = "success", -- SCREAMS LOUDLY AGAIN
+				--Wyvern Sting (Hunter)
+			[19386] = "success",
+			[209789] = "success",
+				--Repentence (Paladin)
+			[20066] = "success",
+				--Mind Control (Priest)
+			[605] = "success",
+			
+			-- Purges
+			[528] = "purge",		-- Dispel Magic (Priest)
+			[370] = "purge", 		-- Purge (Shaman)
+			[19505] = "purge",		-- Devour Magic (Warlock :|)
+		
+			--GENERAL
 			[2825] = "bloodLust",
 			[32182] = "bloodLust",
 			[80353] = "bloodLust",
 			[90355] = "bloodLust",
 			[160452] = "bloodLust",
 			[178207] = "bloodLust",
+			[204361] = "bloodLust",
+			[204362] = "bloodLust",
 			[107079] = "quakingPalm",
 			[20549] = "warStomp",
 			[28730] = "arcaneTorrent",
@@ -409,6 +434,7 @@
 			[129597] = "arcaneTorrent",
 			[202719] = "arcaneTorrent",
 			[80483] = "arcaneTorrent",
+			[232633] = "arcaneTorrent",
 			[58984] = "shadowmeld",
 			[20594] = "stoneform",
 			[7744] = "willOfTheForsaken",
@@ -422,7 +448,26 @@
 			[208683] = "trinket2", -- Gladiator's Medallion Legion
 			[195710] = "trinket3", -- Honorable Medallion Legion
 			
-			--demonhunter
+			-- Death Knight (Cast Success)
+			[47528] = "mindFreeze",
+			[47476] = "strangulate",
+			[47568] = "runeWeapon", -- Empowered Rune Weapon
+			[207127] = "runeWeapon", -- Hungering Rune Weapon
+			[49206] = "gargoyle", 			-- Summon Gargoyle
+			[207349] = "gargoyle",			-- Dark Arbiter
+			[77606] = "darkSimulacrum",
+			[51052] = "antiMagicZone",
+			[108194] = "asphyxiate",
+			[108199] = "gorefiendGrasp",
+			--[196770] = "remorselessWinter", -- Disabled since RW is rotational now, alert applied to succesful stuns.
+			[152280] = "Defile",
+			[207167] = "blindingSleet",
+			[204160] = "chillStreak",
+			[190778] = "sindragosaFury",
+			[130736] = "soulReaper",
+			[220143] = "apocalypse",
+			
+			-- Demon Hunter (Cast Success)
 			[183752] = "consumeMagic",
 			[179057] = "chaosNova",
 			[206649] = "leotherasEye",
@@ -435,211 +480,29 @@
 			[202137] = "silenceSigil",
 			[211881] = "felEruption",
 			[203704] = "manaBreak",
+			[217832] = "imprison",
 
-			--druid
-				-- OLD
+			-- Druid (Cast Success)
 			[740] = "tranquility",
-			[78675] = "solarBeam", -- 太陽光束
-				-- Mist of pandaria
+			[78675] = "solarBeam",
 			[102280] = "displacerBeast",
 			[108238] = "renewal",
 			[102359] = "massEntanglement",
-			[33831] = "fNatureRoot",
-			[102703] = "fNatureStun",
-			[102693] = "fNatureHealing",
-			[102706] = "fNatureProtect",
 			[99] = "disorientingRoar",
 			[5211] = "mightyBash",
-			[102560] = "incarnationElune",
-			[102543] = "incarnationKitty",
-			[102558] = "incarnationUrsoc",
-			[33891] = "incarnationTree",
 			[102417] = "wildCharge",
 			[102383] = "wildCharge",
 			[49376] = "wildCharge",
 			[16979] = "wildCharge",
 			[102416] = "wildCharge",
 			[102401] = "wildCharge",
-			[106839] = "skullBash", -- added to 2.2.2
-				-- Legion
+			[106839] = "skullBash",
 			[203651] = "overgrowth",
 			[201664] = "demoRoar",
+			[208253] = "essenceOfGhanir",
 			
-			--paladin
-				-- OLD
-			[96231] = "rebuke", -- 責難
-			[853] = "hammerofjustice", -- 制裁			
-			[31821] = "auraMastery", -- 光環精通
-				-- Mist of pandaria
-			[105593] = "fistOfJustice",
-			[85499] = "speedOfLight",
-				-- Legion
-			[205656] = "pony",
-			[190784] = "pony",
-			[115750] = "blindingLight",
-			[210220] = "holyWrath",
-			[210256] = "sanctuary",
-			[633] = "layOnHands",
-
-			--rogue
-				-- OLD
-			[2094] = "blind", -- 致盲
-			[1766] = "kick", -- 腳踢
-			[14185] = "preparation", -- 準備就緒
-			[1856] = "vanish", -- 消失
-			[76577] = "smokeBomb", -- 煙霧彈
-			[79140] = "vendetta",
-				-- LEGION
-			[207777] = "dismantle",
-			[207736] = "shadowyDuel",
-			[200806] = "exsanguinate",
-			[198529] = "plunderArmor",
-			[1833] = "cheapShot",
-			[408] = "kidney",
-			[199804] = "kidney",
-			[185767] = "cannonballBarrage",
-			[1330] = "garrote",
-			[193316] = "diceRoll",
-
-			--warrior
-				-- OLD
-			[114028] = "massSpellReflection", -- moved from SpellAuraApplied
-			[97462] = "commandingShout", -- 集結怒吼
-			[5246] = "fear3", -- 破膽怒吼
-			[6552] = "pummel", -- 拳擊
-			[107566] = "staggeringShout",
-			[2457] = "battlestance", -- 戰鬥姿態
-			[71] = "defensestance", -- 防禦姿態
-				-- Mist of pandaria				
-			[102060] = "disruptingShout",
-			[46968] = "shockwave",
-			[118000] = "dragonRoar",
-			[107570] = "stormBolt",
-			[114192] = "mockingBanner",
-				-- WoD
-			[152277] = "Ravager",
-			[176289] = "SiegeBreaker", -- Maybe useless
-			[174926] = "shieldBarrier", -- Added
-			[112048] = "shieldBarrier", -- Added
-				-- Legion
-			[1160] = "demoShout",
-
-			--priest
-				-- old
-			[8122] = "fear4", -- 心靈尖嘯
-			[34433] = "shadowFiend", -- 暗影惡魔
-			[64044] = "disarm3", -- 心靈驚駭
-			[15487] = "silence", -- 沉默
-			[64843] = "divineHymn",
-			[19236] = "desperatePrayer",
-				-- Mist of pandaria
-			[112833] = "spectralGuise",
-			[108920] = "voidTendrils",
-			[123040] = "mindbender",
-			[121135] = "cascade",		
-
-			[81209] = "chakraChastise",
-			[81206] = "chakraSanctuary",
-			[81208] = "chakraSerenity",
-				-- Legion
-			[204263] = "shiningForce",
-			[2050] = "holySerenity",
-			[88625] = "chastise",
-			[205369] = "mindBomb",
-			[211522] = "psyfiend",
-			[108968] = "voidshift",
-			[528] = "purge",
-			[208065] = "lightOfTuure",
-			[62618] = "wordBarrier",
-
-			--shaman
-				-- old
-			[8177] = "grounding", -- 根基圖騰
-			[8143] = "tremorTotem", -- 戰慄圖騰
-			[98008] = "spiritLinkTotem", -- 靈魂鏈接圖騰
-			[370] = "purge", -- added to 2.2.2
-				-- Mist of pandaria
-			[108270] = "stoneBulwark",
-			[51485] = "earthgrab",
-			[2484] = "earthbind",
-			[108273] = "windwalk",
-			--[108285] = "callOfTheElements",
-			[108287] = "totemicProjection",
-			[108280] = "healingTide",
-			[108281] = "ancestralGuidance",
-			[118345] = "pulverize",
-			[2894] = "fireElemental",
-			[2062] = "earthElemental",
-			[108269] = "capacitor",
-			[57994] = "windShear",
-				-- WoD
-			[152256] = "stormElemental",
-			[152255] = "LiquidMagma",	-- Maybe useless
-				-- Legion
-			[198067] = "fireElemental", -- Updated for Legion
-			[198103] = "earthElemental", -- Updated for Legion
-			[192058] = "capacitor", -- Updated for Legion
-			[192077] = "windRushTotem",
-			[196932] = "hexTotem",
-			[192249] = "stormElemental", -- Updated for Legion
-			[192222] = "LiquidMagma", -- Updated for Legion
-			[204330] = "skyfuryTotem",
-			[204331] = "counterstrikeTotem",
-			[204332] = "windfuryTotem",
-			[204437] = "lightningLasso",
-			[207399] = "reincarnationTotem",
-			[198838] = "protectionTotem",
-			[204336] = "grounding", -- Updated for Legion
-
-			--mage
-				-- old
-			[11129] = "Combustion", -- 燃火
-			[11958] = "coldSnap", -- 急速冷卻
-			[44572] = "deepFreeze", -- 深結
-			[2139] = "counterspell", -- 法術反制
-			[66] = "invisibility", -- 隐形术
-			[113724] = "ringOfFrost", -- 霜之環
-			[12051] = "evocation",
-				-- Mist of pandaria
-			[110959] = "greaterInvisibility",
-				-- WoD
-			[152087] = "PrismaticCrystal",
-			[153595] = "CometStorm", -- Maybe useless
-			[153561] = "Meteor",
-				-- Legion
-			[198158] = "massInvis",
-			[190319] = "Combustion", -- Legion Combustion
-			[30449] = "spellSteal",
-
-			--dk
-				-- old
-			[47528] = "mindFreeze", -- 心智冰封
-			[47476] = "strangulate", -- 絞殺
-			[47568] = "runeWeapon", -- 強力符文武器
-			[49206] = "gargoyle", -- 召喚石像鬼
-			[77606] = "darkSimulacrum", -- 黑暗幻象
-			[51052] = "antiMagicZone",
-				-- Mist of pandaria
-			[108194] = "asphyxiate",
-			[108199] = "gorefiendGrasp",
-			[108201] = "desacratedGround",
-			[108200] = "remorselessWinter",
-				-- WoD
-			[152280] = "Defile",
-				-- Legion
-			[207167] = "blindingSleet",
-			[204160] = "chillStreak",
-			[190778] = "sindragosaFury",
-			[130736] = "soulReaper",
-			[207349] = "arbiterGargoyle",
-
-			--hunter
-				-- old
-			[147362] = "counterShot", -- 反制射击 
-			[1499] = "freezingTrap",
-			[60192] = "freezingTrap2",
-			[19801] = "tranquilizingShot", -- added to 2.2.2
-				-- Mist of pandaria
+			-- Hunter (Cast Success)
+			[147362] = "counterShot",
 			[109248] = "bindingShot",
 			[109304] = "Exhilaration",
 			[131894] = "murderOfCrows",
@@ -654,63 +517,36 @@
 			[122804] = "direBeast",
 			[122802] = "direBeast",
 			[121118] = "direBeast",
-			[120697] = "lynxRush",
-			[121818] = "stampede", -- Updated in Legion
-				-- Legion
+			[121818] = "stampede",
 			[202914] = "spiderSting",
 			[208652] = "direHawk",
 			[205691] = "direBasilisk",
 			[201430] = "stampede",
 			[187707] = "muzzle",
-			[187650] = "freezingTrap2",
+			[187650] = "freezingTrap",
 			[191241] = "stickyBomb",
 			[213691] = "scatterShot",
-			[209789] = "freezingArrow",
 			[201078] = "snakeHunter",
 			[186387] = "burstingShot",
-
-			--warlock
-				-- old
-			[6789] = "mortalCoil", -- aka Death Coil 死亡纏繞
-			[5484] = "terrorHowl", -- 恐懼嚎叫 Howl of Terror - was fear2 2.2.3 -- Updated for Legion
-			[19647] = "spellLock", -- 法術封鎖
-			[119910] = "spellLock", -- New Interrupt? blizz pls
-			[171140] = "spellLock", -- New Interrupt? blizz pls
-			[171138] = "spellLock", -- New Interrupt? blizz pls
-			[48020] = "demonicCircleTeleport", -- 惡魔法陣:傳送
-				-- Mist of pandaria
-			[108359] = "darkRegeneration",
-			[111397] = "bloodFear",
-			[108482] = "unboundWill",
-			--[108505] = "archimondesVengeance",
-			[110913] = "darkBargain",
-			[111859] = "grimoireOfService",
-			[111895] = "grimoireOfService",
-			[111896] = "grimoireOfService",
-			[111897] = "grimoireOfService",
-			[111898] = "grimoireOfService",
-				-- Legion
-			--[212619] = "callFelPuppy",
-			[212619] = "spellLock",
-			[196277] = "implosion",
-
-			-- monk
-				-- Mist of pandaria
+			
+			-- Mage (Cast Success)
+			[2139] = "counterspell", 
+			[66] = "invisibility", 
+			[12051] = "evocation",
+			[110959] = "greaterInvisibility",
+			[153595] = "CometStorm",
+			[153561] = "Meteor",
+			[198158] = "massInvis",
+			[190319] = "Combustion",
+			[30449] = "spellSteal",
+			
+			-- Monk (Cast Success)
 			[116841] = "tigersLust",
-			[115399] = "chiBrew",
-			[119392] = "chargingOxWave",
 			[119381] = "legSweep",
-			[116847] = "rushingJadeWind",
 			[123904] = "invokeXuen",
 			[115078] = "paralysis",
-		--	[115315] = "oxStatue", Disabled due to low value
-		--	[115313] = "serpentStatue", Disabled due to low value
 			[116705] = "spearStrike",
-			[123761] = "manatea",
 			[119996] = "transfer",
-				-- WoD
-			[157535] = "BreathOfTheSerpent", -- maybe useless
-				-- Legion
 			[137639] = "stormEarthFire",
 			[115310] = "revival",
 			[198898] = "craneSong",
@@ -718,6 +554,110 @@
 			[198664] = "invokeCrane",
 			[214326] = "explodingKeg",
 			[115080] = "touchOfDeath",
+			[233759] = "grappleWeapon",
+			
+			-- Paladin (Cast Success)
+			[96231] = "rebuke",
+			[853] = "hammerofjustice", 	
+			[31821] = "auraMastery", 
+			[190784] = "pony",				-- Divine Steed (Was Holy/Ret, now all specs)
+			[115750] = "blindingLight",
+			[210220] = "holyWrath",
+			[210256] = "sanctuary",
+			[633] = "layOnHands",
+			
+			-- Priest (Cast Success)
+			[8122] = "fear4", 		-- Psychic Scream
+			[34433] = "shadowFiend", 
+			[64044] = "disarm3",	-- Psychic Horror
+			[15487] = "silence",
+			[64843] = "divineHymn",
+			[19236] = "desperatePrayer",
+			[123040] = "mindbender",
+			[204263] = "shiningForce",
+			[2050] = "holySerenity",
+			[88625] = "chastise",
+			[205369] = "mindBomb",
+			[211522] = "psyfiend",
+			[108968] = "voidshift",
+			[208065] = "lightOfTuure",
+			[62618] = "wordBarrier",
+
+			-- Rogue (Cast Success)
+			[2094] = "blind",
+			[1766] = "kick",
+			[1856] = "vanish",
+			[76577] = "smokeBomb",
+			[79140] = "vendetta",
+			[207777] = "dismantle",
+			[207736] = "shadowyDuel",
+			[200806] = "exsanguinate",
+			[198529] = "plunderArmor",
+			[1833] = "cheapShot",
+			[408] = "kidney",
+			[199804] = "kidney",
+			[185767] = "cannonballBarrage",
+			[1330] = "garrote",
+			[193316] = "diceRoll",
+			[192759] = "kingsbane",
+			[1776] = "gouge",
+			
+			-- Shaman (Cast Success)
+			[98008] = "spiritLinkTotem",
+			[51485] = "earthgrab",
+			[108280] = "healingTide",
+			[108281] = "ancestralGuidance",
+			[118345] = "pulverize",
+			[108269] = "capacitor",
+			[57994] = "windShear",
+			[152256] = "stormElemental",
+			[152255] = "LiquidMagma",
+			[198067] = "fireElemental", -- Updated for Legion
+			[198103] = "earthElemental", -- Updated for Legion
+			[192058] = "capacitor", -- Updated for Legion
+			[192077] = "windRushTotem",
+			[196932] = "hexTotem",
+			[192249] = "stormElemental", -- Updated for Legion
+			[192222] = "LiquidMagma", -- Updated for Legion
+			[204330] = "skyfuryTotem",
+			[204331] = "counterstrikeTotem",
+			[204332] = "windfuryTotem",
+			[204437] = "lightningLasso",
+			[207399] = "reincarnationTotem",
+			[198838] = "protectionTotem",
+			[204336] = "grounding", -- Updated for Legion
+			
+			-- Warlock (Cast Success)
+			[6789] = "mortalCoil",
+			[5484] = "terrorHowl",
+			[19647] = "spellLock",
+			[119910] = "spellLock",
+			[171140] = "spellLock",
+			[171138] = "spellLock",
+			[212619] = "spellLock",
+			[48020] = "demonicCircleTeleport",
+			[111859] = "grimoireOfService",
+			[111895] = "grimoireOfService",
+			[111896] = "grimoireOfService",
+			[111897] = "grimoireOfService",
+			[111898] = "grimoireOfService",
+			[196277] = "implosion",
+			[205178] = "soulEffigy",
+
+			-- Warrior (Cast Success)
+			[97462] = "commandingShout",
+			[5246] = "fear3", -- Intimidating Shout
+			[6552] = "pummel",
+			[107566] = "staggeringShout",	
+			[46968] = "shockwave",
+			[118000] = "dragonRoar",
+			[107570] = "stormBolt",
+			[152277] = "Ravager", -- Arms
+			[228920] = "Ravager", -- Protection
+			[1160] = "demoShout",
+			[23920] = "spellReflection", -- Protection
+			[216890] = "spellReflection", -- Arms/Fury
+			[213915] = "massSpellReflection",
 		},
 		friendlyInterrupt = {			--friendly interrupt [spellid] = ".mp3 file name",
 			[19647] = "lockout", -- Spell Lock

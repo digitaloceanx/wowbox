@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Combuctor Config
 ## Notes: An options menu for Combuctor
 ## Title-zhCN: [多玩] 背包整合 - 设置菜单

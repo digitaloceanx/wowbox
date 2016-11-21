@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: GridResizeFrame
 ## Notes: New layout with user adjustable frame width settings for each group size.
 ## Author: DrJeckel of Hyjal-US

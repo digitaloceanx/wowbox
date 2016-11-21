@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+﻿## Interface: 70100
 ## Title: [Duowan] ChatPopo
 ## Notes: The core library of duowan
 ## Title-zhCN: [多玩] 聊天泡泡

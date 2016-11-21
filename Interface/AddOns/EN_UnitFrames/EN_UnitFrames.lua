@@ -84,14 +84,6 @@ function EUF_OnEvent(self, event, ...)
 		end
 		-- 状态条状态
 		EUF_InitCVar();
-		PlayerFrameManaBar.TextString:SetText('')
-		PlayerFrameManaBar.TextString.SetText = function() end
-		PlayerFrameHealthBar.TextString:SetText('')
-		PlayerFrameHealthBar.TextString.SetText = function() end
-		TargetFrameManaBar.TextString:SetText('')
-		TargetFrameManaBar.TextString.SetText = function() end
-		TargetFrameHealthBar.TextString:SetText('')
-		TargetFrameHealthBar.TextString.SetText = function() end
 	end
 end
 

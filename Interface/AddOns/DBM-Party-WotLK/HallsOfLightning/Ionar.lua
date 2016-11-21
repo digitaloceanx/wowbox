@@ -1,9 +1,9 @@
 local mod	= DBM:NewMod(599, "DBM-Party-WotLK", 6, 275)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 229 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 240 $"):sub(12, -3))
 mod:SetCreatureID(28546)
-mod:SetEncounterID(559, 560)
+mod:SetEncounterID(559, 560, 1984)
 mod:SetZone()
 mod:SetUsedIcons(8)
 
@@ -13,7 +13,7 @@ mod:RegisterEventsInCombat(
 	"SPELL_AURA_APPLIED 52658 59795",
 	"SPELL_AURA_REMOVED 52658 59795",
 	"SPELL_CAST_START 52770",
-	"UNIT_HEALTH target focus mouseover boss1"
+	"UNIT_HEALTH boss1"
 )
 
 local warningDisperseSoon	= mod:NewSoonAnnounce(52770, 2)

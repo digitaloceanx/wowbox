@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: MySlot
 ## Title-zhCN: [多玩] 按键配置
 ## Title-zhTW: [多玩] 按鍵配置

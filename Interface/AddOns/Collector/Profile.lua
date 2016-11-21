@@ -72,7 +72,7 @@ function Profile.Invoke:OnEnable()
     end
 
     for k, v in pairs(self.db.global.friend) do
-        local id = not k:find('#', nil, true) and Ambiguate(k, 'none') or bnids[k] 
+        local id = not k:find('#', nil, true) and Ambiguate(k, 'none') or bnids[k]
         if id then
             local friend = Friend:Get(id)
             friend:SetQueryStamp(v.queryStamp)
@@ -105,7 +105,7 @@ function Profile.Invoke:OnEnable()
             item:SetWorldFeedList(DecodeTargetList(v))
         end
     end
-    
+
     ----- firstLogin
     if self.db.global.firstLogin then
         self.db.global.firstLogin = false
@@ -135,7 +135,8 @@ function Profile.Invoke:OnEnable()
 end
 
 function Profile:GetCurrentRealm()
-    return (GetAutoCompleteRealms() or {GetRealmName()})[1]
+    local realms = GetAutoCompleteRealms()
+    return (not realms or not realms[1]) and GetRealmName() or realms[1]
 end
 
 function Profile:OnDatabaseShutdown()
@@ -297,7 +298,7 @@ do
         { key = 'mountBlip', type = COLLECT_TYPE_MOUNT },
         { key = 'petBlip', type = COLLECT_TYPE_PET },
     }
-    
+
     local blipKlassesCache = setmetatable({}, {__index = function(t, k)
         t[k] = {}
         for i, v in ipairs(blipData) do
@@ -330,4 +331,3 @@ function Profile:IsRecommendShown()
     self.db.profile.showRecomment = t
     return r
 end
-

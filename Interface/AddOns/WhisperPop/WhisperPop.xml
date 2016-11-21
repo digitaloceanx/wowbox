@@ -85,7 +85,7 @@
 			<AbsDimension x="32" y="32"/>
 		</Size>
 		<Anchors>
-			<Anchor point="BOTTOM" relativeTo="FriendsMicroButton" relativePoint="TOP">
+			<Anchor point="BOTTOM" relativeTo="QuickJoinToastButton" relativePoint="TOP">
 				<Offset><AbsDimension x="0" y="0"/></Offset>
 			</Anchor>
 		</Anchors>

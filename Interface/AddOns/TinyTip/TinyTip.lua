@@ -337,9 +337,8 @@ local function SetClassIcon(classToken,ispet)
 		TT.peticon:SetTexture("Interface\\Icons\\Pet_TYPE_"..PET_TYPE_SUFFIX[classToken])
 		TT.peticon:Show()
 	else
-	--	coords = CLASS_BUTTONS[classToken]
-	--	TT.icon:SetTexCoord(coords[1],coords[2],coords[3],coords[4])
-	--	TT.icon:Show()
+		TT.icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [classToken]))	
+		TT.icon:Show()
 	end
 end
 
@@ -510,7 +509,7 @@ local function SetUnit(self, ...)
 	if levelLine then
 		-- 等级
 		tmp = UnitLevel(unit)
-		tmp2 = ParseColor(GetQuestDifficultyColor(tmp), true)
+		tmp2 = ParseColor(GetCreatureDifficultyColor(tmp), true)
 		if reaction and reaction > 4 and tmp >= UnitLevel("player") +5 then
 			tmp2 = "800000"
 		end

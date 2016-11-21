@@ -5,9 +5,9 @@ local Objectives = Addon:NewModule(ObjectiveTracker_GetModuleInfoTable(), 'Objec
 
 local function AnchorBlock(block, anchorBlock, checkFit)
     local module = block.module;
-    local blocksFrame = module.BlocksFrame; 
+    local blocksFrame = module.BlocksFrame;
     local offsetY = module.blockOffsetY;
-    block:ClearAllPoints(); 
+    block:ClearAllPoints();
     if ( anchorBlock ) then
         if ( anchorBlock.isHeader ) then
             offsetY = module.fromHeaderOffsetY;
@@ -20,7 +20,7 @@ local function AnchorBlock(block, anchorBlock, checkFit)
             offsetY = offsetY + anchorBlock.module.fromModuleOffsetY;
             block:SetPoint("LEFT", OBJECTIVE_TRACKER_HEADER_OFFSET_X, 0);
         else
-            block:SetPoint("LEFT", module.blockOffsetX, 0);     
+            block:SetPoint("LEFT", module.blockOffsetX, 0);
         end
         block:SetPoint("TOP", anchorBlock, "BOTTOM", 0, offsetY);
     else
@@ -40,7 +40,7 @@ local function AnchorBlock(block, anchorBlock, checkFit)
 end
 
 function Objectives:OnInitialize()
-    self.updateReasonModule = 0x2000
+    self.updateReasonModule = 0x100000
     self.updateReasonEvents = 0
     self.usedBlocks = {}
     self.usedProgressBars = {}
@@ -65,21 +65,24 @@ function Objectives:OnEnable()
     self:RegisterMessage('COLLECTOR_TRACKLIST_UPDATE', 'Refresh')
     self:RegisterEvent('UPDATE_INSTANCE_INFO', 'Refresh')
 
-    self:SecureHook('ObjectiveTracker_Update')
-
-    if ObjectiveTrackerFrame.MODULES then
-        self:Startup()
-    else
-        self:RegisterEvent('PLAYER_ENTERING_WORLD', function()
-            self:UnregisterEvent('PLAYER_ENTERING_WORLD')
+    C_Timer.After(1, function()
+        if ObjectiveTrackerFrame.MODULES then
             self:Startup()
-        end)
-    end
+        else
+            self:RegisterEvent('PLAYER_ENTERING_WORLD', function()
+                self:UnregisterEvent('PLAYER_ENTERING_WORLD')
+                self:Startup()
+            end)
+        end
+    end)
+
+    
 end
 
 function Objectives:OnDisable()
     self:Refresh()
     tDeleteItem(ObjectiveTrackerFrame.MODULES, self)
+    tDeleteItem(ObjectiveTrackerFrame.MODULES_UI_ORDER, self)
 end
 
 function Objectives:ObjectiveTracker_Update()
@@ -99,6 +102,7 @@ end
 
 function Objectives:Startup()
     tinsert(ObjectiveTrackerFrame.MODULES, self)
+    tinsert(ObjectiveTrackerFrame.MODULES_UI_ORDER, self)
     self:Refresh()
 end
 
@@ -157,7 +161,7 @@ function Objectives:Layout()
         local item = plan:GetObject()
 
         self:SetBlockHeader(block, item:GetName())
-        
+
         self:_SetState(block, plan)
 
         if item:GetProgressObject() then
@@ -172,6 +176,7 @@ end
 
 function Objectives:AddBlock(block)
     local state = ObjectiveTracker_AddBlock(block)
+    
     if state then
         block:Show()
         block:SetHeight(block.height)
@@ -204,7 +209,7 @@ function Objectives:AddProgressBar(block, line, percent, color)
         progressBar.Bar.Label:Hide()
 
         ObjectiveTrackerProgressBar_SetValue(progressBar, percent, color)
-    end 
+    end
     -- anchor the status bar
     local anchor = block.currentLine or block.HeaderText
     if ( anchor ) then
@@ -213,7 +218,7 @@ function Objectives:AddProgressBar(block, line, percent, color)
         progressBar:SetPoint('TOPLEFT', 0, -block.module.lineSpacing)
     end
     progressBar.block = block
-    
+
 
     line.ProgressBar = progressBar
     block.height = block.height + progressBar.height + block.module.lineSpacing

@@ -4,9 +4,9 @@
 ## Notes: Rotation helper framework.
 ## Notes-zhCN: 在动作条上提示下个技能的输出辅助插件.
 ## Notes-zhTW: 在動作條上提示下個技能的輸出輔助外掛程式.
-## Version: 1.12
+## Version: 1.18
 ## Author: Kaminaris
-## Interface: 70000
+## Interface: 70100
 ## SavedVariables: TDDps_Options
 ## OptionalDependencies: Bartender4, ElvUI, ButtonForge
 ## X-Curse-Packaged-Version: v1.9
@@ -29,3 +29,4 @@
 #Modules\TDDps_Warrior\main.lua
 #Modules\TDDps_Hunter\main.lua
 #Modules\TDDps_Mage\main.lua
+#Modules\TDDps_Druid\main.lua

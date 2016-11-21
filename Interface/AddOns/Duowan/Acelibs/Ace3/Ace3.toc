@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## X-Curse-Packaged-Version: r1140
 ## X-Curse-Project-Name: Ace3
 ## X-Curse-Project-ID: ace3

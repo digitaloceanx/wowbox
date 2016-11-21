@@ -449,9 +449,11 @@ function UpdateStoneButton_Click()
 				for bagS,bagTable in pairs(playerTable) do
 					if type(bagTable) == "table" then
 						for _,idString in pairs(bagTable) do
-							local id, count = strsplit(';',idString)
-							if tonumber(SearchId) == tonumber(id) then
-								counts = counts + (count or 1)
+							if type(idString)=="string" then
+								local id, count = strsplit(';',idString)
+								if tonumber(SearchId) == tonumber(id) then
+									counts = counts + (count or 1)
+								end
 							end
 						end
 					end

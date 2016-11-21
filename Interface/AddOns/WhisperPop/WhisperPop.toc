@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: WhisperPop
 ## Notes: WhisperPop
 ## Title-zhCN: [多玩] 密语聊天 WhisperPop

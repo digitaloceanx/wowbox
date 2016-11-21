@@ -6,7 +6,7 @@
 --	We are using this as the base list of quests, so we do not look at the locale
 --	to determine whether we should abandon further processing.
 
-local G = Grail.questNames
+local G = Grail.quest.name
 local _, release, _, interface = GetBuildInfo()
 release = tonumber(release)
 interface = tonumber(interface)
@@ -17794,6 +17794,7 @@ G[36570]='Unruly Visitors'
 G[37441]="Solanian's Belongings"
 G[37839]='Light Be With You'
 G[37840]="Draenor's Blessing"
+G[40173]='The Unstable Prism'
 end
 
 if release >= 20490 then
@@ -17805,19 +17806,12 @@ G[40105]='Drakum'
 G[40106]='Gondar'
 G[40107]='Mudlump'
 G[40168]='The Swirling Vial'
-G[40173]='The Unstable Prism'
 G[40235]='Abrogator Arbitrator'
 G[40237]='Work Work Stoppage'
 G[40329]='Battle Pet Tamers: Warlords'
 G[40395]='Timewalking Heroic Random (Nth)'
 G[40416]='Tracking Quest'
 G[40418]='To Tanaan!'
-G[600000]='Blasted Lands Phase Requirements'
-G[600001]='Blasted Lands Alliance Phase Requirements'
-G[600002]='Blasted Lands Horde Phase Requirements'
-G[600000]=GetMapNameByID(19)..' '..REQUIREMENTS
-G[600001]=GetMapNameByID(19)..' '..FACTION_ALLIANCE..' '..REQUIREMENTS
-G[600002]=GetMapNameByID(19)..' '..FACTION_HORDE..' '..REQUIREMENTS
 end
 
 if release >= 20726 then
@@ -23260,6 +23254,96 @@ G[43640]='The Arcway: Creeping Suspicions'
 G[44026]="WANTED: Mal'Dreth the Corruptor"
 G[44190]='DANGER: Jade Darkhaven'
 G[44292]='WANTED: Majestic Elderhorn'
+end
+
+if release >= 22624 then
+G[41186]='History of Highmountain'
+G[41187]='Surveying Student'
+G[41188]='Misdirected'
+G[41268]='Queen Queenfish'
+G[41290]='Aqueous Aethril'
+G[41326]='Work Order: Stormscales'
+G[41347]='Extra-Rancid Felhound Hide'
+G[41442]='Striking Leystone Deposits'
+G[41531]='Iridescent Dreamleaf'
+G[41664]='Vantus Rune Work Order: Dragons of Nightmare'
+G[41675]='Work Order: Blink-Trigger Headgun'
+G[42723]='Eye of Azshara: A Tough Shell'
+G[42742]='Darkheart Thicket: Rage Rot'
+G[42764]='Court of Stars: Wraith in the Machine'
+G[42769]='Court of Stars: Bring Me the Eyes'
+G[42922]='Vault of the Wardens: Startup Sequence'
+G[42927]='DANGER: Malisandra'
+G[43502]='A Change of Seasons'
+G[43558]='Bindings of the Windlord'
+G[43562]="Giving It All We've Got"
+G[43563]='Ephemeral Manastorm Projector'
+G[43564]='Flow Control'
+G[43565]='Bring Home the Beacon'
+G[43566]='Withered Progress'
+G[43567]='All In'
+G[43568]="Arcan'dor, Gift of the Ancient Magi"
+G[43569]="Arluin's Request"
+G[43633]='WANTED: Thondrax'
+G[43756]='Enigmatic'
+G[44054]='Demonicide'
+G[44172]='The Arena Calls'
+end
+
+if release >= 22810 then
+G[43642]='Black Rook Hold: The Sorrow'
+end
+
+if release >= 22908 then
+G[33145]='Grimfrost Hill'
+G[34076]='The Burial Fields'
+G[34496]='The Hills of Valuun'
+G[34501]='Frostbite Hollow'
+G[34504]='Bloodthorn Cave'
+G[34505]='Forbidden Glacier'
+G[34639]="Aruuna's Desolation"
+G[34660]="Zorkra's Fall"
+G[34667]='Court of Souls'
+G[34723]='Ironfist Harbor'
+G[34724]='The Forgotten Caves'
+G[34728]='The Shimmer Moor'
+G[35236]='Orunai Coast'
+G[35237]="Mor'gran Logworks"
+G[35649]='The Writhing Mire'
+G[35881]='Ruins of the First Bastion'
+G[36473]='Affliction Ridge'
+G[36476]='South Gronn Canyon'
+G[36480]='Valley of Destruction'
+G[36500]='The Razorbloom'
+G[36504]='Evermorn Springs'
+G[36520]='Tailthrasher Basin'
+G[36563]='Mistcreep Mire'
+G[36564]='Tangleheart'
+G[36566]='Stonemaul Arena'
+G[36571]='Iyun Weald'
+G[36590]='The Howling Crag'
+G[36603]='Brimstone Springs'
+G[36660]='Bloodmane Pridelands'
+G[36792]='Bladefist Hold'
+G[37280]='Snarlpaw Ledge'
+G[37295]='Kill Rylai Crestfall'
+G[37297]='Kill Jeron Emberfall'
+G[37421]="Kuuro's Claim"
+G[37422]='Zangarra'
+G[37475]='Molten Quarry'
+G[37476]='Ashmaul Burial Grounds'
+G[37477]="Brute's Rise"
+G[37478]='Amphitheater of Annihilation'
+G[38649]='Silence in the City'
+G[38692]='Answering Aggression'
+G[38694]='Regroup'
+G[38695]='Crackdown'
+G[38720]='No Reason to Stay'
+G[39263]='Ashran Excavation'
+G[40390]='[REUSE]'
+G[41460]='Primal Leystone Outcropping'
+G[42889]='The Way Back Home'
+G[43807]='Withered Wrangling: Ambervale'
 end
 
 --	End of localized quest names

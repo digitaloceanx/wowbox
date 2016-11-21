@@ -1,4 +1,4 @@
-## Interface: 30100
+## Interface: 70100
 ## Title: ButtonFacade: |cffff8000Asteroid|r
 ## Version: 1.0
 ## Notes: Asteroid skin for ButtonFacade.

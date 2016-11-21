@@ -34,7 +34,7 @@ function panel:OnShow(...)
 	if isWindowed and not WorldMapMinimized then
 		WorldMapMinimized = true
 		self.KeyParent.Key:ClearAllPoints()
-		self.KeyParent.Key:SetPoint("BOTTOMRIGHT", WorldMapDetailFrame, "BOTTOMLEFT", -2, -2) --by eui.cc
+		self.KeyParent.Key:SetPoint("BOTTOMLEFT", WorldMapScrollFrame, "BOTTOMRIGHT")
 	elseif not isWindowed and WorldMapMinimized then
 		self.KeyParent.Key:ClearAllPoints()
 		self.KeyParent.Key:SetPoint(Points[Point % #Points + 1], WorldMapScrollFrame)

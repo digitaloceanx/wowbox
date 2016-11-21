@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: CombatTime
 ## Description: Simple, light-weight, LDB-enabled timer that tracks how long you spend in combat
 ## Notes: Simple, light-weight, LDB-enabled timer that tracks how long you spend in combat

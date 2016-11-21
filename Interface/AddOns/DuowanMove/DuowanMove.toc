@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] DuowanMove
 ## Notes: 
 ## Title-zhCN: [多玩] 多玩界面

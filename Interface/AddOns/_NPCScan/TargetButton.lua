@@ -100,8 +100,12 @@ close_button:SetSize(32, 32)
 close_button:SetScale(0.8)
 close_button:SetHitRectInsets(8, 8, 8, 8)
 
+--target_button.Drag = target_button:CreateTitleRegion()
+target_button.Drag = CreateFrame("Button", nil, target_button)
+target_button.Drag:SetMovable(true)
+target_button.Drag:RegisterForDrag("LeftButton", "RightButton")
+target_button.Drag:RegisterForClicks("AnyUp");
 
-target_button.Drag = target_button:CreateTitleRegion()
 target_button.Model = _G.CreateFrame("PlayerModel", nil, target_button)
 target_button.Flash = _G.CreateFrame("Frame")
 target_button.Flash.LoopCountMax = 3
@@ -290,13 +294,17 @@ end
 -- Not a secure function Can be run in combat.
 function target_button:EnableDrag(Enable)
 	local Drag = self.Drag
-	Drag:ClearAllPoints()
+--	Drag:ClearAllPoints()
 
 	if Enable then
-		Drag:SetAllPoints()
+	--	Drag:SetAllPoints()
+		Drag:SetScript("OnDragStart", function(self) self:StartMoving() end) --by eui.cc
+		Drag:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 	else
 		-- Position offscreen
 		Drag:SetPoint("TOP", _G.UIParent, 0, math.huge)
+		Drag:SetScript("OnDragStart", nil)
+		Drag:SetScript("OnDragStop", nil)
 	end
 end
 

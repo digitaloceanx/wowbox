@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 
 ## Title: Lib: AceHook-2.1
 ## Notes: AddOn development framework

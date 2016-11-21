@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: Spell Timer
 ## Notes: Dispaly some timer with progress bar to remind user how long the spells will remains.
 ## Title-zhCN: [多玩] 法术计时器

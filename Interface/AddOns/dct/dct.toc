@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Dennis's Combat Text
 ## Notes: Thanks for: MagicDragoon,Dove,水沐森林,神恋歌(繁体化)
 ## Title-zhCN: [多玩] 战斗指示器 DCT

@@ -1,11 +1,11 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: World Quest Tracker
 ## Title-zhCN: [多玩] 世界任务追踪
 ## Title-zhTW: [多玩] 世界任務追蹤
 ## Notes: Make more easy to see world quests
 ## SavedVariables: WQTrackerDB
 ## SavedVariablesPerCharacter: WQTrackerDBChr
-## X-Curse-Packaged-Version: r74
+## X-Curse-Packaged-Version: r100
 ## X-Curse-Project-Name: World Quest Tracker
 ## X-Curse-Project-ID: world-quest-tracker
 ## X-Curse-Repository-ID: wow/world-quest-tracker/mainline

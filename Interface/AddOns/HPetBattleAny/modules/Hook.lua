@@ -801,7 +801,10 @@ hookfunction.PetBattleUnitFrame_OnClick=function(self,button)
 			end
 		elseif self.petOwner == 2  then
 			if HPetAllInfoFrame then
-				local breedID,rarity,level= HPetBattleAny.EnemyPetInfo[self.petIndex].breedID,HPetBattleAny.EnemyPetInfo[self.petIndex][5],HPetBattleAny.EnemyPetInfo[self.petIndex][1]
+				local breedID,rarity,level ;
+				if(HPetBattleAny.EnemyPetInfo[self.petIndex]) then
+					breedID,rarity,level = HPetBattleAny.EnemyPetInfo[self.petIndex].breedID,HPetBattleAny.EnemyPetInfo[self.petIndex][5],HPetBattleAny.EnemyPetInfo[self.petIndex][1]
+				end
 				if HPetSaves.lockEnemy then
 					if breedID~=HPetAllInfoFrame.breedID or speciesID~=HPetAllInfoFrame.speciesID or not HPetAllInfoFrame:IsShown() then
 						HPetAllInfoFrame:Update(speciesID,breedID,rarity,level)

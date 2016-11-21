@@ -342,7 +342,7 @@ function prototype:Update(icon)
 	local available, cd = 0, nil
 
 	for guid, player in next, players do
-		if UnitIsConnected(player) and not UnitIsDeadOrGhost(player) and (not IsInGroup() or UnitInRange(player)) then
+		if UnitIsConnected(player) and not UnitIsDeadOrGhost(player) and (not IsInGroup() or UnitIsVisible(player)) then
 			local remaining = oRA3CD:GetRemainingCooldown(guid, spellId)
 			if remaining == 0 then
 				local charges = oRA3CD:GetRemainingCharges(guid, spellId)
@@ -511,6 +511,8 @@ local function GetOptions(self, db)
 		end
 	end
 
+	local countdownForCooldowns = GetCVarBool("countdownForCooldowns")
+
 	local options = {
 		type = "group",
 		get = function(info)
@@ -578,10 +580,11 @@ local function GetOptions(self, db)
 			showCooldownText = {
 				name = L.showCooldownText,
 				desc = L.showCooldownTextDesc,
+				descStyle = not countdownForCooldowns and "inline",
 				type = "toggle",
 				order = 4,
 				width = "full",
-				disabled = function() return not GetCVarBool("countdownForCooldowns") end,
+				disabled = not countdownForCooldowns,
 			},
 		},
 	}

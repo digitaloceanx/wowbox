@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] GearScoreLite
 ## Title-zhCN: [多玩] 装备评分 (GearScoreLite)
 ## Title-zhTW: [多玩] 裝備評分 (GearScoreLite)

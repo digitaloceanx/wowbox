@@ -1958,11 +1958,11 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1017,
 			typeID = RaceID.ArchRaceDemons
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.385605:0.348530"] = {
 			-- Digsite: Andu'talah
 			blobID = 346508,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.000000:0.000000"] = {
 			-- Digsite: Anora Hollow
@@ -1970,17 +1970,17 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1033,
 			typeID = RaceID.Unknown,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.401371:0.295898"] = {
 			-- Digsite: Ashmane's Fall
 			blobID = 354089,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.298442:0.338099"] = {
 			-- Digsite: Black Rook Hold
 			blobID = 354080,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.459232:0.148113"] = {
 			-- Digsite: Bloodhunt Highland
@@ -1992,7 +1992,7 @@ function private.InitializeDigsiteTemplates()
 			-- Digsite: Bradensbrook
 			blobID = 346502,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.658986:0.340886"] = {
 			-- Digsite: Citrine Bay
@@ -2006,17 +2006,17 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1017,
 			typeID = RaceID.ArchRaceDemons
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.534983:0.435322"] = {
 			-- Digsite: Crimson Thicket
 			blobID = 363027,
 			mapID = 1033,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.000000:0.000000"] = {
 			-- Digsite: Crimson Thicket
 			blobID = 363060,
 			mapID = 1033,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.473618:0.188563"] = {
 			-- Digsite: Darkfeather Valley
@@ -2034,13 +2034,13 @@ function private.InitializeDigsiteTemplates()
 			-- Digsite: Dreadroot
 			blobID = 354251,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.427701:0.432854"] = {
 			-- Digsite: Eastern Ambervale
 			blobID = 363017,
 			mapID = 1033,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.631011:0.303383"] = {
 			-- Digsite: Fallen Kings
@@ -2078,29 +2078,29 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1015,
 			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.465284:0.449814"] = {
 			-- Digsite: Gates of the City
 			blobID = 363021,
 			mapID = 1033,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.640035:0.370825"] = {
 			-- Digsite: Gates of Valor
 			blobID = 350063,
 			mapID = 1017,
 			typeID = RaceID.ArchRaceDemons,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.305502:0.443922"] = {
 			-- Digsite: Kal'delar
 			blobID = 346504,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.403229:0.475374"] = {
 			-- Digsite: Koralune Estate
 			blobID = 363029,
 			mapID = 1033,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.000000:0.000000"] = {
 			-- Digsite: Legion Camp: Chaos
@@ -2108,11 +2108,11 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1015,
 			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.358267:0.435959"] = {
 			-- Digsite: Lightsong
 			blobID = 346506,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.366973:0.540268"] = {
 			-- Digsite: Llothien
@@ -2132,23 +2132,23 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1015,
 			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.453181:0.482381"] = {
 			-- Digsite: Meredil
 			blobID = 363025,
 			mapID = 1033,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.000000:0.000000"] = {
 			-- Digsite: Meredil
 			blobID = 363036,
 			mapID = 1033,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.443997:0.390095"] = {
 			-- Digsite: Moonwhisper Gulch
 			blobID = 346531,
 			mapID = 1033,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.307413:0.556034"] = {
 			-- Digsite: Nor'Danil Wellspring
@@ -2162,11 +2162,11 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1017,
 			typeID = RaceID.ArchRaceDemons
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.396859:0.408170"] = {
 			-- Digsite: Northern Moonfall Retreat
 			blobID = 363019,
 			mapID = 1033,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.479245:0.265640"] = {
 			-- Digsite: Northern Snowblind Mesa
@@ -2220,7 +2220,7 @@ function private.InitializeDigsiteTemplates()
 			-- Digsite: Shala'nir
 			blobID = 346512,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.608344:0.373214"] = {
 			-- Digsite: Skold-Ashil
@@ -2252,11 +2252,11 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1033,
 			typeID = RaceID.Unknown,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.365752:0.446868"] = {
 			-- Digsite: Southern Wash
 			blobID = 354093,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.000000:0.000000"] = {
 			-- Digsite: Southern Watcher Isle (copy)
@@ -2282,11 +2282,11 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1033,
 			typeID = RaceID.Unknown,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.398611:0.333481"] = {
 			-- Digsite: Sundersong Glade
 			blobID = 354087,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.369362:0.683355"] = {
 			-- Digsite: Temple of a Thousand Lights
@@ -2298,13 +2298,13 @@ function private.InitializeDigsiteTemplates()
 			-- Digsite: Thas'talah
 			blobID = 354245,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.323603:0.347018"] = {
 			-- Digsite: The Crescent Vale
 			blobID = 346514,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.484341:0.153289"] = {
 			-- Digsite: The Haglands
@@ -2328,7 +2328,7 @@ function private.InitializeDigsiteTemplates()
 			-- Digsite: The Wildwood
 			blobID = 354249,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 		["8:0.442458:0.131551"] = {
 			-- Digsite: The Witchwood
@@ -2336,7 +2336,7 @@ function private.InitializeDigsiteTemplates()
 			mapID = 1024,
 			typeID = RaceID.ArchRaceHighmountainTauren,
 		},
-		["8:0.000000:0.000000"] = {
+		["8:0.302635:0.495598"] = {
 			-- Digsite: Timeworn Strand
 			blobID = 350662,
 			mapID = 1015,
@@ -2364,7 +2364,7 @@ function private.InitializeDigsiteTemplates()
 			-- Digsite: Wretched Hollow
 			blobID = 354247,
 			mapID = 1018,
-			typeID = RaceID.Unknown,
+			typeID = RaceID.ArchRaceHighborneNightElves,
 		},
 	}
 

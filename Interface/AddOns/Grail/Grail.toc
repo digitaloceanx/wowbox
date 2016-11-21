@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: Grail
 ## Notes: Knows about quests
 ## Title-zhCN: [多玩] 任务指示数据库
@@ -6,7 +6,7 @@
 ## Title-zhTW: [多玩] 任務指示數據庫
 ## Notes-zhTW: 提供可接任務提示的數據庫
 ## Author: Scott M Harrison
-## Version: 081
+## Version: 083
 ## SavedVariables: GrailDatabase
 ## SavedVariablesPerCharacter: GrailDatabasePlayer
 ## Dependencies: Duowan

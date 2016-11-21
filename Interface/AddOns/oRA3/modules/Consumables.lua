@@ -12,7 +12,7 @@ local UnitIsUnit, IsInGroup, IsInRaid, IsInInstance = UnitIsUnit, IsInGroup, IsI
 local UnitBuff, UnitName, UnitIsConnected, UnitIsVisible = UnitBuff, UnitName, UnitIsConnected, UnitIsVisible
 local GetTime, UnitIsDeadOrGhost = GetTime, UnitIsDeadOrGhost
 
---luacheck: globals oRA3CheckButton ChatFrame_AddMessageEventFilter ChatThrottleLib
+--luacheck: globals oRA3CheckButton ChatFrame_AddMessageEventFilter
 
 local GROUP_CHECK_THROTTLE = 0.8
 local PLAYER_CHECK_THROTTLE = 0.3
@@ -95,10 +95,23 @@ do
 	-- 	[201334] = 225,
 	-- 	[225600] = 300,
 	-- 	[225605] = 375,
-	-- -- aoe damage
+	-- 	-- aoe damage
 	-- 	[201336] = true, -- ~10k
 	-- 	[225601] = true, -- ~13.5k
 	-- 	[201336] = true, -- ~17k
+	-- 	-- stats (feast)
+	-- 	-- str
+	-- 	[201634] = 150,
+	-- 	[201638] = 200,
+	-- 	-- agi
+	-- 	[201635] = 150,
+	-- 	[201639] = 200,
+	-- 	-- int
+	-- 	[201636] = 150,
+	-- 	[201640] = 200,
+	-- 	-- sta
+	-- 	[201637] = 225,
+	-- 	[201641] = 300,
 	-- }
 
 	function getFood(player)
@@ -270,13 +283,15 @@ end
 -- API
 
 do
-	-- 375 stat food
 	local maxFoods = {
 		[225602] = true, -- crit
 		[225604] = true, -- mastery
 		[225603] = true, -- haste
 		[225605] = true, -- versatility
-		-- need 200 stat / 300 stamina ids
+		-- [201638] = true, -- str
+		-- [201639] = true, -- agi
+		-- [201640] = true, -- int
+		-- [201641] = true, -- sta
 	}
 	-- 1300 stat flask
 	local maxFlasks = {
@@ -300,7 +315,7 @@ do
 	end)
 
 	local function send(name, text)
-		ChatThrottleLib:SendChatMessage("BULK", "oRA", ("oRA3> %s"):format(text), "WHISPER", nil, name)
+		SendChatMessage(("oRA3> %s"):format(text), "WHISPER", nil, name)
 	end
 	local function whisper(name, text)
 		module:ScheduleTimer(send, 0.2, name, text) -- send after print spam

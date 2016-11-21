@@ -130,9 +130,9 @@ local function GetTaggedTitle(i, color, tag)
 		local tagString = tag and GetQuestTag(groupSize, frequency, GetQuestTagInfo(questID)) or ""
 		if color then
 			if db.questLevels then
-				title = format("|cff%s[%s%s] %s|r", rgb2hex(GetQuestDifficultyColor(level)), level, tagString, title)
+				title = format("|cff%s[%s%s] %s|r", rgb2hex(GetCreatureDifficultyColor(level)), level, tagString, title)
 			else
-				title = format("|cff%s%s|r", rgb2hex(GetQuestDifficultyColor(level)), title)
+				title = format("|cff%s%s|r", rgb2hex(GetCreatureDifficultyColor(level)), title)
 			end
 		elseif db.questLevels then
 			title = format("[%s%s] %s", level, tagString, title)
@@ -716,7 +716,7 @@ local function ProcessGossip(index, skip, ...)
 		if level == -1 then
 			-- keep the text untouched
 		elseif db.gossipColor then
-			button:SetText(format("|cff%s[%d]|r %s", rgb2hex(GetQuestDifficultyColor(level)), level, text))
+			button:SetText(format("|cff%s[%d]|r %s", rgb2hex(GetCreatureDifficultyColor(level)), level, text))
 		else
 			button:SetText(format("[%d] %s", level, text))
 		end
@@ -752,7 +752,7 @@ function Quester:QUEST_GREETING()
 		if level == -1 then
 			-- keep the text untouched
 		elseif db.gossipColor then
-			button:SetText(format("|cff%s[%d]|r %s", rgb2hex(GetQuestDifficultyColor(level)), level, title))
+			button:SetText(format("|cff%s[%d]|r %s", rgb2hex(GetCreatureDifficultyColor(level)), level, title))
 		else
 			button:SetText(format("[%d] %s", level, title))
 		end

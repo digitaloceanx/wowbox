@@ -1,3 +1,9 @@
+-- Title: WorldFlightMap
+-- Notes: Replaces the taxi map with the world map
+-- Author: Semlar
+-- Version: 7.1.0.1
+
+
 local FlightmapCoordinates = { -- fairly accurate sizes for the different flight maps, these were calculated using very special maths and things
 	[1] = { -- Kalimdor
 		left = 10970,
@@ -70,9 +76,9 @@ local TaxiButtons = {}
 TaxiFrame:UnregisterAllEvents() -- we should probably undo this if we're in an area that isn't supported somehow
 UIParent:UnregisterEvent('TAXIMAP_OPENED')
 
-local f = CreateFrame('Frame', 'WorldFlightMapFrame', WorldMapButton)
+local f = CreateFrame('Frame', 'EUIWorldFlightMapFrame', WorldMapButton)
 f:SetAllPoints()
-f:SetFrameStrata('HIGH')
+--f:SetFrameStrata('HIGH')
 f:SetFrameLevel(2000)
 
 f:SetScript('OnEvent', function(self, event, ...) return self[event] and self[event](self, ...) end)
@@ -113,8 +119,35 @@ local function DrawLine(button1, button2, r, g, b, a)
 	return line
 end
 
+local Transforms = {}
+for _, transformID in ipairs(GetWorldMapTransforms()) do
+	local mapID, displayMapID, _, _, bottom, top, right, left, y, x = GetWorldMapTransformInfo(transformID)
+	tinsert(Transforms, {
+		mapID = mapID, displayMapID = displayMapID,
+		left = left, top = top,
+		right = right, bottom = bottom,
+		x = x, y = y,
+	})
+end
 
-local function GetMapSize()
+local function TransformCoordinates(mapID, left, top, right, bottom)
+	for transformID, transformData in pairs(Transforms) do
+		if transformData.mapID == mapID and transformData.left > left and right > transformData.right and transformData.top > top and bottom > transformData.bottom then
+			mapID = transformData.displayMapID
+			left, top = left + transformData.x, top + transformData.y
+			right, bottom = right + transformData.x, bottom + transformData.y
+			break
+		end
+	end
+	
+	--if MapContinents[mapID] then
+		--mapID = MapContinents[mapID]
+	--end
+	
+	return mapID, left, top, right, bottom
+end
+
+local function GetMapSize() -- Return dimensions and offset of current map
 	local _, left, top, right, bottom = GetCurrentMapZone()
 	local floorNum, dright, dbottom, dleft, dtop = GetCurrentMapDungeonLevel()
 	if DungeonUsesTerrainMap() then floorNum = floorNum - 1 end
@@ -122,6 +155,12 @@ local function GetMapSize()
 	
 	if left and left ~= right then
 		local width, height = left - right, top - bottom
+
+		local mapID, _, displayMapID = GetAreaMapInfo(GetCurrentMapAreaID())
+		if displayMapID ~= -1 then
+			mapID, left, top, right, bottom = TransformCoordinates(mapID, left, top, right, bottom)
+		end
+		
 		return left, top, right, bottom, width, height, format('%d.%d', GetCurrentMapAreaID(), floorNum)
 	end
 end
@@ -275,7 +314,7 @@ local function CreateButton(i)
 	return button
 end
 
-function GetButton(i)
+local function GetButton(i)
 	return TaxiButtons[i] or CreateButton(i)
 end
 
@@ -370,6 +409,11 @@ local function ZoomOutForNodes() -- Zoom map out until we can see at least one c
 end
 
 function f:TAXIMAP_OPENED()
+	if InCombatLockdown() then -- Prevent the world map from opening in combat due to its action button
+		print(ERR_TAXIPLAYERBUSY)
+		CloseTaxiMap()
+		return
+	end
 	TAXI_OPEN = true
 	if not WorldMapFrame:IsShown() then
 		ToggleWorldMap()
@@ -427,7 +471,7 @@ function f:TAXIMAP_CLOSED()
 	CurrentContinent = -1
 	self:UnregisterEvent('WORLD_MAP_UPDATE')
 	f:Hide()
-	if WorldMapFrame:IsShown() then
+	if WorldMapFrame:IsShown() and not InCombatLockdown() then
 		ToggleWorldMap()
 	end
 end
@@ -451,4 +495,70 @@ WorldMapFrame:HookScript('OnHide', function() -- stop interaction with the fligh
 	-- seems to trigger when switching between windowed and fullscreen mode
 	TimeSince = 0
 	timer:Show()
+end)
+
+do return end
+-----------------
+-- Replace World Map zoom function (WorldMapScrollFrame_OnMouseWheel)
+local ScrollFrame = CreateFrame('ScrollFrame', nil, WorldMapScrollFrame:GetParent())
+ScrollFrame:SetAllPoints(WorldMapScrollFrame)
+ScrollFrame:SetFrameLevel(WorldMapScrollFrame:GetFrameLevel() - 1)
+
+local ContinentFrame = CreateFrame('frame', nil, ScrollFrame)
+ContinentFrame:SetSize(1002, 668)
+ScrollFrame:SetScrollChild(ContinentFrame)
+
+local tx = ContinentFrame:CreateTexture()
+tx:SetAllPoints()
+tx:SetTexture('interface/icons/inv_mushroom_11')
+
+local MIN_ZOOM = 0.695; -- 0.695 WORLDMAP_SETTINGS.size
+local MAX_ZOOM = 3;
+WorldMapScrollFrame:SetScript('OnMouseWheel', function(self, delta)
+  local scrollFrame = WorldMapScrollFrame;
+  local oldScrollH = scrollFrame:GetHorizontalScroll();
+  local oldScrollV = scrollFrame:GetVerticalScroll();
+ 
+  -- get the mouse position on the frame, with 0,0 at top left
+  local cursorX, cursorY = GetCursorPosition();
+  local relativeFrame;
+  if ( WorldMapFrame_InWindowedMode() ) then
+    relativeFrame = UIParent;
+  else
+    relativeFrame = WorldMapFrame;
+  end
+  local frameX = cursorX / relativeFrame:GetScale() - scrollFrame:GetLeft();
+  local frameY = scrollFrame:GetTop() - cursorY / relativeFrame:GetScale();
+ 
+  local oldScale = WorldMapDetailFrame:GetScale();
+  local newScale = oldScale + delta * 0.3;
+  newScale = max(WORLDMAP_SETTINGS.size, newScale);
+  newScale = min(MAX_ZOOM, newScale);
+  WorldMapDetailFrame:SetScale(newScale);
+  QUEST_POI_FRAME_WIDTH = WorldMapDetailFrame:GetWidth() * newScale;
+  QUEST_POI_FRAME_HEIGHT = WorldMapDetailFrame:GetHeight() * newScale;
+ 
+  scrollFrame.maxX = QUEST_POI_FRAME_WIDTH - 1002 * WORLDMAP_SETTINGS.size;
+  scrollFrame.maxY = QUEST_POI_FRAME_HEIGHT - 668 * WORLDMAP_SETTINGS.size;
+  scrollFrame.zoomedIn = abs(WorldMapDetailFrame:GetScale() - WORLDMAP_SETTINGS.size) > 0.05;
+  scrollFrame.continent = GetCurrentMapContinent();
+  scrollFrame.mapID = GetCurrentMapAreaID();
+ 
+  -- figure out new scroll values
+  local scaleChange = newScale / oldScale;
+  local newScrollH = scaleChange * ( frameX + oldScrollH ) - frameX;
+  local newScrollV = scaleChange * ( frameY + oldScrollV ) - frameY;
+  -- clamp scroll values
+  newScrollH = min(newScrollH, scrollFrame.maxX);
+  newScrollH = max(0, newScrollH);
+  newScrollV = min(newScrollV, scrollFrame.maxY);
+  newScrollV = max(0, newScrollV);
+  -- set scroll values
+  scrollFrame:SetHorizontalScroll(newScrollH);
+  scrollFrame:SetVerticalScroll(newScrollV);
+ 
+  WorldMapFrame_Update();
+  WorldMapScrollFrame_ReanchorQuestPOIs();
+  WorldMapFrame_ResetPOIHitTranslations();
+  WorldMapBlobFrame_DelayedUpdateBlobs();
 end)

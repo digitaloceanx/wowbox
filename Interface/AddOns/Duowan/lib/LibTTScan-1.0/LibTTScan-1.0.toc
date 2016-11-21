@@ -1,0 +1,21 @@
+## Interface: 70100
+## X-Curse-Packaged-Version: v4
+## X-Curse-Project-Name: LibTTScan-1.0 
+## X-Curse-Project-ID: libttscan-1
+## X-Curse-Repository-ID: wow/libttscan-1/mainline
+
+## Title: Lib: TTScan-1.0
+## Version: v4
+## Notes: Lightweight tooltip scanning
+## Author: Oleg "Rowaa[SR13]" Volkov
+
+## LoadOnDemand: 1
+## LoadWith: 
+## Dependencies: 
+## OptionalDeps: LibStub
+
+## SavedVariables: 
+## SavedVariablesPerCharacter: 
+
+LibStub.lua
+LibTTScan-1.0.lua

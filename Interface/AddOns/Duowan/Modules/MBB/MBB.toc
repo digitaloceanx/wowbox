@@ -1,4 +1,4 @@
-﻿## Interface: 30100
+## Interface: 70100
 ## Title: 小地图按钮整合 MBB
 ## Author: Tunhadil, Fixed by Pericles for WotLK
 ## X-Category: Map

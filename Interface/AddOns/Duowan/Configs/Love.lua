@@ -245,20 +245,20 @@ if (dwIsConfigurableAddOn("Love") or dwIsConfigurableAddOn("Collector")) then
 		end
 	);
 	
-	dwRegisterCheckButton(
-		"LoveMod",
-		DW_PITCH,
-		DW_PITCH_DESC,
-		"EnableDWPitch",
-		1,
-		function (arg)
-			if (arg == 1) then
-				DWPitch_Toggle(true)
-			else
-				DWPitch_Toggle(false)
-			end
-		end
-	);
+	-- dwRegisterCheckButton(
+		-- "LoveMod",
+		-- DW_PITCH,
+		-- DW_PITCH_DESC,
+		-- "EnableDWPitch",
+		-- 1,
+		-- function (arg)
+			-- if (arg == 1) then
+				-- DWPitch_Toggle(true)
+			-- else
+				-- DWPitch_Toggle(false)
+			-- end
+		-- end
+	-- );
 	
 	-- dwRegisterCheckButton(
 		-- "LoveMod",
@@ -285,11 +285,11 @@ if (dwIsConfigurableAddOn("Love") or dwIsConfigurableAddOn("Collector")) then
 			function (arg)		
 				if arg==1 then
 					if (not dwIsAddOnLoaded("Collector")) then
-					--	dwLoadAddOn("Collector");
+						dwLoadAddOn("Collector");
 					end
 				else
 					if (dwIsAddOnLoaded("Collector")) then	
-					--	dwRequestReloadUI(nil);
+						dwRequestReloadUI(nil);
 					end
 				end
 			end

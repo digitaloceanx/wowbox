@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+﻿## Interface: 70100
 ## Title:|cFFBF00FF[H]|r Something About Pet Battle
 ## Notes:Something About Pet Battle,Type /hpq to config
 ## Title-zhCN: [多玩]|cFFBF00FF[H]|r 宠物对战增强
@@ -13,8 +13,8 @@
 ## X-Revision: Duowan
 ## LoadOnDemand: 1
 
-## X-Date: 2016-07-23
-## Version: 2.2.8
+## X-Date: 2016-09-26
+## Version: 2.2.9
 
 ## SavedVariables: HPetSaves
 

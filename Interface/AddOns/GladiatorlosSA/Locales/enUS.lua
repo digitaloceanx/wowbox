@@ -84,7 +84,7 @@ L["Disable friendly interrupt"] = "Friendly Interrupts"
 L["Check this will disable alert for successfully-landed friendly interrupting abilities"] = "Disable all callouts for ally successful interrupts. ('Countered!')"
 L["Buff Applied"] = true
 L["Target and Focus Only"] = true
-L["Alert works only when your current target or focus gains the buff effect or use the ability"] = true
+L["Alert works only when your current target or focus gains the buff effect or use the ability"] = "If enabled, alerts will only happen if the ability is used on, or is cast by, your current target or focused target.|n|nThis option is separate for each category."
 L["Alert Drinking"] = true
 L["In arena, alert when enemy is drinking"] = true
 L["PvP Trinketed Class"] = true
@@ -104,13 +104,12 @@ L["|cffA330C9Demon Hunter|r"] = true
 L["|cff9482C9Warlock|r"] = true
 L["Buff Down"] = true
 L["Spell Casting"] = true
-L["Big Heals"] = true
-L["Greater Heal, Divine Light, Greater Healing Wave, Healing Touch, Enveloping Mist"] = "Heal (Priest)|nPower Word: Radiance (Priest)|nShadow Covenant (Priest)|nVivify (|cFF00FF96Monk|r)|nHoly Light (|cffF58CBAPaladin|r)|nHealing Wave (|cff0070daShaman|r)|nHealing Touch (|cffFF7D0ADruid|r)"
+L["BigHeal"] = "Big Heals"
+L["BigHeal_Desc"] = "Heal (Priest)|nPower Word: Radiance (Priest)|nShadow Covenant (Priest)|nVivify (|cFF00FF96Monk|r)|nHoly Light (|cffF58CBAPaladin|r)|nHealing Wave (|cff0070daShaman|r)|nHealing Touch (|cffFF7D0ADruid|r)"
 L["Resurrection"] = true
-L["Resurrection, Redemption, Ancestral Spirit, Revive, Resuscitate"] = "All out-of-combat resurrection abilities."
+L["Resurrection_Desc"] = "All out-of-combat resurrection abilities."
 L["Special Abilities"] = true
 L["Friendly Interrupt"] = true
-L["Spell Lock, Counterspell, Kick, Pummel, Mind Freeze, Skull Bash, Rebuke, Solar Beam, Spear Hand Strike, Wind Shear, Consume Magic"] = true
 L["Profiles"] = true
 
 L["PvPWorldQuests"] = "NYI"
@@ -144,3 +143,15 @@ L["Master"] = true
 L["SFX"] = true
 L["Ambience"] = true
 L["Music"] = true
+
+L["DPSDispel"] = "Non-Magic Dispels"
+L["DPSDispel_Desc"] = "Generic callout for hybrid class dispels that do not remove Magic effects.|n|nRemove Corruption (|cffFF7D0ADruid|r)|nDetox (|cFF00FF96Monk|r)|nCleanse Toxins (|cffF58CBAPaladin|r)|nPurify Disease (Priest)|nCleanse Spirit (|cff0070daShaman|r)"
+L["HealerDispel"] = "Magic Dispels"
+L["HealerDispel_Desc"] = "Generic callout for healing class (AND WARLOCKS. >:| ) dispels that remove Magic effects.|n|nNature's Cure (|cffFF7D0ADruid|r)|nDetox (|cFF00FF96Monk|r)|nCleanse (|cffF58CBAPaladin|r)|nPurify (Priest)|nPurify Spirit (|cff0070daShaman|r)|nSinge Magic (|cff9482C9Warlock|r)"
+L["CastingSuccess"] = "CC Cast Success"
+L["CastingSuccess_Desc"] = "Enables generic 'success' callout when a major enemy cast-time Crowd Control ability successfully finishes a cast.|n|n|cffC41F3BWARNING: ALL of the abilities below will announce their success if this is enabled, even if you have some of them disabled in Spell Casting.|r|n|nCyclone (|cffFF7D0ADruid|r)|nFreezing Arrow (|cffABD473Hunter|r)|nWyvern Sting (|cffABD473Hunter|r)|nPolymorph (|cff69CCF0Mage|r)|nRing of Frost (|cff69CCF0Mage|r)|nRepentance (|cffF58CBAPaladin|r)|nMind Control (Priest)|nHex (|cff0070daShaman|r)|nFear (|cff9482C9Warlock|r)"
+
+L["DispelKickback"] = "Dispel Penalties"
+
+L["Purge"] = "Purges"
+L["PurgeDesc"] = "Generic callout for hybrid class (AND WARLOCKS. D:< ) purges that remove magic effects from your team.|n|nDispel Magic (Priest)|nPurge (|cff0070daShaman|r)|nDevour Magic (|cff9482C9Warlock|r)"

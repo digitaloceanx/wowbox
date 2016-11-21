@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] TheBurningTrade-交易增强
 ## Notes: trade log, mage warlock trade assistant
 ## Title-zhCN: [多玩] 交易增强 TheBurningTrade

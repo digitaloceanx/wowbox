@@ -105,14 +105,14 @@ L["|cff0070daShaman|r"] = "|cff0070DE薩滿|r"
 L["|cff69CCF0Mage|r"] = "|cff69CCF0法師|r"
 L["|cffC41F3BDeath Knight|r"] = "|cffC41F3B死亡騎士|r"
 L["|cffABD473Hunter|r"] = "|cffABD473獵人|r"
-L["|cFF00FF964Monk|r"] = "|cFF00FF96武僧|r"
+L["|cFF00FF96Monk|r"] = "|cFF00FF96武僧|r"
 L["|cffA330C9Demon Hunter|r"] = "|cffA330C9?|r"
 L["Buff Down"] = "敵方增益結束"
 L["Spell Casting"] = "敵方讀條技能"
-L["Big Heals"] = "大型治療法術"
-L["Greater Heal, Divine Light, Greater Healing Wave, Healing Touch, Enveloping Mist"] = "強效治療術 神聖之光 強效治療波 治療之觸"
+L["BigHeal"] = "大型治療法術"
+L["BigHeal_Desc"] = "強效治療術 神聖之光 強效治療波 治療之觸"
 L["Resurrection"] = "復活技能"
-L["Resurrection, Redemption, Ancestral Spirit, Revive, Resuscitate"] = "復活術 救贖 先祖之魂 復活"
+L["Resurrection_Desc"] = "復活術 救贖 先祖之魂 復活"
 L["|cff9482C9Warlock|r"] = "|cff9482C9術士|r"
 L["Special Abilities"] = "敵方特殊技能"
 L["Friendly Interrupt"] = "友方打斷技能"
@@ -149,3 +149,15 @@ L["Master"] = true
 L["SFX"] = true
 L["Ambience"] = true
 L["Music"] = true
+
+L["DPSDispel"] = true
+L["DPSDispel_Desc"] = true
+L["HealerDispel"] = true
+L["HealerDispel_Desc"] = true
+L["CastingSuccess"] = true
+L["CastingSuccess_Desc"] = true
+
+L["DispelKickback"] = true
+
+L["Purge"] = true
+L["PurgeDesc"] = true

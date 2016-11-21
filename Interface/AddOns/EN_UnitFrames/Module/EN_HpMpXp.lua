@@ -104,9 +104,7 @@ function PlayerHp_Update()
 	PlayerValueFrame.NewHealthValue:SetText( EUF_FormatNumericValue(currValue).."/"..EUF_FormatNumericValue(valueMax));
 
 	EUF_PlayerFrameHP:SetText(EUF_FormatNumericValue(currValue).."/"..EUF_FormatNumericValue(valueMax))
-	EUF_PlayerFrameHPPercent:SetText(percent .. "%")
-	EUF_PlayerFrameHP2:SetText(EUF_FormatNumericValue(currValue).."/"..EUF_FormatNumericValue(valueMax))
---	EUF_PlayerFrameHPPercent2:SetText(percent .. "%")
+	EUF_PlayerFrameHPPercent:SetText(percent .. "%")	
 end
 
 function PlayerPower_Update()	
@@ -114,15 +112,13 @@ function PlayerPower_Update()
 	local unit = PlayerFrame.unit or "player";
 	currValue = UnitPower(unit);
 	valueMax = UnitPowerMax(unit);	
-
+	
  	if valueMax > 0 then
 		PlayerValueFrame.NewManaValue:SetText( EUF_FormatNumericValue(currValue).."/"..EUF_FormatNumericValue(valueMax));
 		EUF_PlayerFrameMP:SetText(EUF_FormatNumericValue(currValue).."/"..EUF_FormatNumericValue(valueMax));
-		EUF_PlayerFrameMP2:SetText(EUF_FormatNumericValue(currValue).."/"..EUF_FormatNumericValue(valueMax));
 	else
 		PlayerValueFrame.NewManaValue:SetText("0/0");
 		EUF_PlayerFrameMP:SetText("");
-		EUF_PlayerFrameMP2:SetText("");
 	end	
 end
 
@@ -140,10 +136,7 @@ PlayerFrameHealthBar:SetScript("OnValueChanged", function(self, value)
 	PlayerValueFrame.NewHealthValue:SetText( EUF_FormatNumericValue(Value).."/"..EUF_FormatNumericValue(valueMax));
 
 	EUF_PlayerFrameHP:SetText(EUF_FormatNumericValue(Value).."/"..EUF_FormatNumericValue(valueMax))
-	EUF_PlayerFrameHP2:SetText(EUF_FormatNumericValue(Value).."/"..EUF_FormatNumericValue(valueMax))
 	EUF_PlayerFrameHPPercent:SetText(percent .. "%")
---	EUF_PlayerFrameHPPercent2:SetText(percent .. "%")
-	PlayerFrameHealthBar.TextString:SetText('')
 end)
 
 --加入即時更新魔力、能量、怒氣、符能值及上載具時更新為載具魔力
@@ -152,15 +145,12 @@ PlayerFrameManaBar:SetScript("OnValueChanged", function(self)
 	local Value = self:GetValue();
 	local percent = math.floor(100 * Value / valueMax);
 	
-	PlayerFrameManaBar.TextString:SetText('')
 	if valueMax > 0 then
 		PlayerValueFrame.NewManaValue:SetText( EUF_FormatNumericValue(Value).."/"..EUF_FormatNumericValue(valueMax));
 		EUF_PlayerFrameMP:SetText(EUF_FormatNumericValue(Value).."/"..EUF_FormatNumericValue(valueMax));
-		EUF_PlayerFrameMP2:SetText(EUF_FormatNumericValue(Value).."/"..EUF_FormatNumericValue(valueMax));
 	else		
 		PlayerValueFrame.NewManaValue:SetText("0/0");
 		EUF_PlayerFrameMP:SetText("");
-		EUF_PlayerFrameMP2:SetText("");
 	end
 end)
 
@@ -215,9 +205,8 @@ function EUF_HP_Update(unit)
 
 		if unit == PlayerFrame.unit then
 			PlayerValueFrame.NewHealthValue:SetText( currValue.."/"..maxValue);
-			unitObj = EUF_PlayerFrameHP2;
-		--	unitPercentObj = EUF_PlayerFrameHPPercent2;
-
+	--		unitObj = EUF_PlayerFrameHP;
+	--		unitPercentObj = EUF_PlayerFrameHPPercent;
 			if(EUF_CurrentOptions) then
 				if EUF_CurrentOptions["AUTOHEALTHCOLOR"] == 1 then
 					PlayerFrameHealthBar:SetStatusBarColor(EUF_GetPercentColor(currValue, maxValue));
@@ -354,7 +343,6 @@ function EUF_PlayerFrameHPMP_Update()
 	PlayerFrameHealthBar.lockColor = true;	
 	--PetFrameHealthBar.lockColor = true;
 	local unit = PlayerFrame.unit or "player";	
-
 	EUF_HP_Update(unit);
 	EUF_MP_Update(unit);
 end

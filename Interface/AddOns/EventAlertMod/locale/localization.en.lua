@@ -1,9 +1,7 @@
-
-if GetLocale() ~= "enUS" then return end
-
 -- Prevent tainting global _.
 local _
 local _G = _G
+if GetLocale() == "enUS" then
 
 EA_TTIP_DOALERTSOUND = "Play a sound when an event triggers.";
 EA_TTIP_ALERTSOUNDSELECT = "Choose which sound to play when an event triggers.";
@@ -44,36 +42,23 @@ EA_TTIP_SPECFLAG_CHECK_SOULSHARDS = "Show SoulShards in the left 1st position of
 EA_TTIP_SPECFLAG_CHECK_LUNARPOWER = "Show Lunar Power in the left 1st position of Self-Buffs";
 EA_TTIP_SPECFLAG_CHECK_COMBOPOINT = "Show ComboPoint in the left 1st position of Target-DeBuffs";
 EA_TTIP_SPECFLAG_CHECK_LIFEBLOOM = "Show the LifeBloom timer and stack in the left 1st position of Self-Buffs"
-EA_TTIP_SPECFLAG_CHECK_RAGE = "Show Rage in the left 1st position of Slef-Buffs";					-- 支援怒氣(戰士,熊D)
-EA_TTIP_SPECFLAG_CHECK_FOCUS = "Show Focus in the left 1st position of Slef-Buffs";					--  支援集中值(獵人)
-EA_TTIP_SPECFLAG_CHECK_ENERGY = "Show Energy in the left 1st position of Slef-Buffs";				--  支援能量(賊,貓D,武僧)
+EA_TTIP_SPECFLAG_CHECK_RAGE = "Show Rage in the left 1st position of Self-Buffs";					-- 支援怒氣(戰士,熊D)
+EA_TTIP_SPECFLAG_CHECK_FOCUS = "Show Focus in the left 1st position of Self-Buffs";					--  支援集中值(獵人)
+EA_TTIP_SPECFLAG_CHECK_FOCUS_PET = "Show Focus in the left 2nd position of Self-Buffs";				--  支援寵物集中值(獵人)
+EA_TTIP_SPECFLAG_CHECK_ENERGY = "Show Energy in the left 1st position of Self-Buffs";				--  支援能量(賊,貓D,武僧)
 EA_TTIP_SPECFLAG_CHECK_LIGHTFORCE = "Show Chi of Monk in the left 1st position of Self-Buffs";		--  支援武僧真氣
-EA_TTIP_SPECFLAG_CHECK_SHADOWORBS = "Show Shadow Orbs in the left 1st position of Self-Buffs";		--  支援暗影寶珠(暗牧)
+EA_TTIP_SPECFLAG_CHECK_INSANITY = "Show Insanity in the left 1st position of Self-Buffs";			--  支援暗影瘋狂(暗牧)
 EA_TTIP_SPECFLAG_CHECK_DEMONICFURY = "Show Demonic Fury in the left 1st position of Self-Buffs";	--  支援惡魔之怒
 EA_TTIP_SPECFLAG_CHECK_BURNINGEMBERS = "Show Burning Embers in the left 1st position of Self-Buffs";--  支援燃火餘燼
 EA_TTIP_SPECFLAG_CHECK_ARCANECHARGES = "Show Arcane Charges in the left 1st position of Self-Buffs";--  Support Mage's Arcane Charges
 EA_TTIP_SPECFLAG_CHECK_MAELSTROM = "Show Maelstrom in the left 1st position of Self-Buffs";			--  Support Shaman's Maelstrom
 EA_TTIP_SPECFLAG_CHECK_FURY = "Show Fury in the left 1st position of Self-Buffs";					--  Support Demonhunter's Fury 
+EA_TTIP_SPECFLAG_CHECK_PAIN = "Show Pain in the left 1st position of Self-Buffs";					--  Support Demonhunter's Pain 
 
 EA_TTIP_GRPCFG_ICONALPHA = "Change the alpha value of this Icon";
 EA_TTIP_GRPCFG_TALENT = "Only active at this spec.";
 EA_TTIP_GRPCFG_HIDEONLEAVECOMBAT = "Hide when leave of combat";
 EA_TTIP_GRPCFG_HIDEONLOSTTARGET = "Hide when lost of target";
-
-EA_CLASS_DK = "DEATHKNIGHT";
-EA_CLASS_DRUID = "DRUID";
-EA_CLASS_HUNTER = "HUNTER";
-EA_CLASS_MAGE = "MAGE";
-EA_CLASS_PALADIN = "PALADIN";
-EA_CLASS_PRIEST = "PRIEST";
-EA_CLASS_ROGUE = "ROGUE";
-EA_CLASS_SHAMAN = "SHAMAN";
-EA_CLASS_WARLOCK = "WARLOCK";
-EA_CLASS_WARRIOR = "WARRIOR";
-EA_CLASS_MONK = "MONK";
-EA_CLASS_FUNKY = "FUNKY";
-EA_CLASS_OTHER = "OTHER";
-EA_CLASS_DEMONHUNTER = "DEMONHUNTER";
 
 EA_XOPT_ICONPOSOPT = "Icon Position Options";
 EA_XOPT_SHOW_ALTFRAME = "Show Alert Frame";
@@ -215,15 +200,7 @@ EA_XGRPALERT_UNITTYPES = {
 EA_XGRPALERT_CHECKCD = "Check CD:";
 
 EA_XGRPALERT_HEALTH = "Health:";
-EA_XGRPALERT_COMPARES = {
-	[1]={text="<", value=1},
-	[2]={text="<=", value=2},
-	[3]={text="=", value=3},
-	[4]={text=">=", value=4},
-	[5]={text=">", value=5}, 
-	[6]={text="<>", value=6}, 
-	[7]={text="*", value=7}, 	--any
-};
+
 EA_XGRPALERT_COMPARETYPES = {
 	[1]={text="Value", value=1},
 	[2]={text="Percent", value=2},
@@ -315,33 +292,14 @@ EA_XCMD_CMDHELP = {
 	},
 }
 
--- Class Mana/Power and special power definitions
-EA_SPELL_POWER_MANA = 0;				-- Mana (Mage, Warlock, Shaman, Paladin, Priest, Druids)
-EA_SPELL_POWER_RAGE = 1;				-- Rage (Warrior, Druid in bear form)
-EA_SPELL_POWER_FOCUS = 2;				-- Focus (Hunter)
-EA_SPELL_POWER_ENERGY = 3;				-- Energy (Rogue, Druid in cat form, Monk)
-EA_SPELL_POWER_COMBO_POINT = 4;				-- Combopoint (Rogue, Druid in cat form)
-EA_SPELL_POWER_RUNES = 5;				-- Rune (Death Knight)
-EA_SPELL_POWER_RUNIC_POWER = 6;			-- Runic Power (Death Knight)
-EA_SPELL_POWER_SOUL_SHARDS = 7;			-- Soul Shards (Affliction Warlock)
-EA_SPELL_POWER_LUNAR_POWER = 8;			-- Lunar Power (Druid in moonkin form)
-EA_SPELL_POWER_HOLY_POWER = 9;			-- Holy Power (Paladin)
-EA_SPELL_POWER_LIGHT_FORCE = 12;		-- Chi (Monk)
-EA_SPELL_POWER_SHADOW_ORBS = 13;		-- Shadow Orbs (Shadow Priest)
-EA_SPELL_POWER_BURNING_EMBERS = 14;		-- Burning Embers (Destruction Warlock)
-EA_SPELL_POWER_DEMONIC_FURY = 15;		-- Demonic Fury (Demonology Warlock)
-EA_SPELL_POWER_ARCANE_CHARGES = 16;		-- Arcane Charges (Arcane Mage )
-EA_SPELL_POWER_MAELSTROM = 11;			-- Maelstrom (Enhanced Shaman and Element Shaman)
-EA_SPELL_POWER_FURY = 17;			-- Maelstrom (Enhanced Shaman and Element Shaman)
-
 EA_XOPT_SPECFLAG_HOLYPOWER = "HolyP ower";
 EA_XOPT_SPECFLAG_RUNICPOWER = "Runic Power";
 EA_XOPT_SPECFLAG_RUNES = "Runes";
 EA_XOPT_SPECFLAG_SOULSHARDS = "Soul Shards";
-EA_XOPT_SPECFLAG_LUNAR_POWER = "Lunar Power";
+EA_XOPT_SPECFLAG_LUNARPOWER = "Lunar Power";
 EA_XOPT_SPECFLAG_COMBOPOINT = "Combo Points";
 EA_XOPT_SPECFLAG_LIFEBLOOM = "Life Bloom";
-EA_XOPT_SPECFLAG_SHADOWORBS = "Insanity";	
+EA_XOPT_SPECFLAG_INSANITY = "Insanity";	
 EA_XOPT_SPECFLAG_RAGE = "Rage";
 EA_XOPT_SPECFLAG_ENERGY = "Energy";
 EA_XOPT_SPECFLAG_FOCUS = "Focus";
@@ -351,6 +309,7 @@ EA_XOPT_SPECFLAG_DEMONICFURY = "Demonic Fury";
 EA_XOPT_SPECFLAG_ARCANECHARGES = "Arcane Charges";
 EA_XOPT_SPECFLAG_MAELSTROM = "Maelstrom";
 EA_XOPT_SPECFLAG_FURY = "Fury";
+EA_XOPT_SPECFLAG_Pain = "Pain";
 
 EA_XGRPALERT_POWERTYPE = "PowerType:";
 EA_XGRPALERT_POWERTYPES = {
@@ -364,27 +323,32 @@ EA_XGRPALERT_POWERTYPES = {
 	[8]={text="Lunar Power", value=EA_SPELL_POWER_LUNAR_POWER},
 	[9]={text="Holy Power", value=EA_SPELL_POWER_HOLY_POWER},
 	[10]={text="Chi", value=EA_SPELL_POWER_LIGHT_FORCE},				--5.1   support Chi of Monk.
-	[11]={text="Insanity", value=EA_SPELL_POWER_SHADOW_ORBS},		--5.1 By ZYF: support Shadow Orbs. 
+	[11]={text="Insanity", value=EA_SPELL_POWER_INSANITY},		
 	[12]={text="Burning Embers", value=EA_SPELL_POWER_BURNING_EMBERS},
 	[13]={text="Demonic Fury", value=EA_SPELL_POWER_DEMONIC_FURY},
 	[14]={text="Arcane Charges", value=EA_SPELL_POWER_ARCANE_CHARGES},
 	[15]={text="Maelstrom", value=EA_SPELL_POWER_MAELSTROM},
-	[16]={text="Maelstrom", value=EA_SPELL_POWER_FURY},
+	[16]={text="Fury", value=EA_SPELL_POWER_FURY},
+	[17]={text="Pain", value=EA_SPELL_POWER_PAIN},
 };
 
 EA_XSPECINFO_COMBOPOINT = "Combo Point";
 EA_XSPECINFO_RUNICPOWER	= "Runic Power";
 EA_XSPECINFO_RUNES	= "Runes";
 EA_XSPECINFO_SOULSHARDS	= "Soul Shards";
-EA_XSPECINFO_LUNAR_POWER	= "Lunar Power";		--7.0  support Lunar Power of Balance Druid.
+EA_XSPECINFO_LUNARPOWER	= "Lunar Power";		--7.0  support Lunar Power of Balance Druid.
 --EA_XSPECINFO_ECLIPSE	= "Eclipse(Luna)";
 --EA_XSPECINFO_ECLIPSEORG	= "Eclipse(Solar)";
 EA_XSPECINFO_HOLYPOWER	= "Holy Power";
-EA_XSPECINFO_SHADOWORBS= "Insanity";				--7.0  support Insanity of Shadow PRIEST.
+EA_XSPECINFO_INSANITY= "Insanity";				--7.0  support Insanity of Shadow PRIEST.
 EA_XSPECINFO_ENERGY= "Energy";
 EA_XSPECINFO_RAGE= "Rage";
 EA_XSPECINFO_FOCUS= "Focus";
+EA_XSPECINFO_FOCUS_PET= "Pet Focus";
 EA_XSPECINFO_LIGHTFORCE= "Chi";						--5.1   support Chi of Monk.
 EA_XSPECINFO_ARCANE_CHARGES= "Arcane Charges";		--7.0   support Arcane Charges of Arcane Mage.
 EA_XSPECINFO_MAELSTROM= "Maelstrom";				--7.0   support Maelstrom of Shaman.
 EA_XSPECINFO_FURY= "Fury";							--7.0   support Fury of Demonhunter
+EA_XSPECINFO_PAIN= "Pain";							--7.0   support Pain of Demonhunter
+
+end		-- End Of If

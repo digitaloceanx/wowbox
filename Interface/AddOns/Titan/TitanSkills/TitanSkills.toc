@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: Titan Panel [|cffbc1212Skills|r] |cff00aa001.5|r
 ## Notes: Displays Professions on the Titan Panel
 ## Author: Kjasi

@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Grid
 ## Title-zhCN: [多玩] 团队框架 Grid
 ## Title-zhTW: [多玩] 團隊框架 Grid

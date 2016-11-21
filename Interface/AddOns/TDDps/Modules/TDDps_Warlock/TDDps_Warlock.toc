@@ -1,10 +1,10 @@
 ## Title: TDDps_Warlock
-## Version: 1.3.1
+## Version: 1.4.1
 ## Author: Kaminari
-## Interface: 70000
+## Interface: 70100
 ## Dependencies: TDDps
 ## LoadOnDemand: 1
-## X-Curse-Packaged-Version: v1.3.1
+## X-Curse-Packaged-Version: v1.4.1
 ## X-Curse-Project-Name: TDDps Warlock
 ## X-Curse-Project-ID: tddps-warlock
 ## X-Curse-Repository-ID: wow/tddps-warlock/mainline

@@ -243,7 +243,6 @@ L["Other Windows"] = true
 L["Outgoing"] = true
 L["Outside Instances"] = true
 L["Overall Data"] = true
-L[" overheal"] = true
 L["Overheal"] = true
 L["Overhealing"] = true
 L["Overhealing Done"] = true

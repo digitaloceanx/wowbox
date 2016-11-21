@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] EquipSwitcher 
 ## Title-zhCN: [多玩] 快速换装
 ## Title-zhTW: [多玩] 快速換裝

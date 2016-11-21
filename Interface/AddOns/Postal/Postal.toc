@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Postal
 ## Title-zhCN: [多玩] 邮件助手 Postal
 ## Title-zhTW: [多玩] 郵件助手 Postal

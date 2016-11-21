@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Combuctor
 ## Title-zhCN: [多玩] 背包整合 Combuctor
 ## Title-zhTW: [多玩] 背包整合 Combuctor

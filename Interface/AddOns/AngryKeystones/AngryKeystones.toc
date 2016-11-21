@@ -1,0 +1,24 @@
+﻿## Interface: 70100
+## Title: Angry Keystones
+## Title-zhCN: [多玩] 大秘境计时
+## Title-zhTW: [多玩] 大秘境計時
+## Notes: Displays additional information for Mythic Keystone dungeons
+## Author: Ermad
+## SavedVariables: AngryKeystones_Config, AngryKeystones_Data
+## SavedVariablesPerCharacter: AngryKeystones_CharacterConfig
+## X-Curse-Packaged-Version: v0.6.5
+## X-Curse-Project-Name: Angry Keystones
+## X-Curse-Project-ID: angry-keystones
+## X-Curse-Repository-ID: wow/angry-keystones/mainline
+## X-DuowanAddon: 团队副本
+## X-Revision: Duowan
+
+Core.lua
+Locale.lua
+Config.lua
+
+ObjectiveTracker.lua
+ProgressTracker.lua
+Keystone.lua
+Gossip.lua
+Splits.lua

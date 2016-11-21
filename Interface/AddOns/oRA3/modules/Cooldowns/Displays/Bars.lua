@@ -192,47 +192,27 @@ do
 		return self[key]
 	end })
 
-	local greyColor = classColors.UNKNOWN
-	function prototype:RestyleBar(bar)
+	function prototype:UpdateBarStatus(bar)
 		local db = self.db
-
-		local barStyle = bar:Get("ora3cd:barstyle")
-		if barStyle and barStyle ~= db.barStyle then
-			barStyles[barStyle].BarStopped(bar)
-			bar.candyBarBackdrop:Hide()
-		end
-		barStyle = db.barStyle
-		bar:Set("ora3cd:barstyle", barStyle)
-
 		local player = bar:Get("ora3cd:player")
 		local status = UnitExists(player) and (not UnitIsConnected(player) and L.offline or UnitIsDeadOrGhost(player) and L.dead or (IsInGroup() and not UnitInRange(player)) and L.range)
-		local classColor = status and greyColor or classColors[bar:Get("ora3cd:class") or UNKNOWN] or greyColor -- XXX why does this need a second fallback?
 		local spell = bar:Get("ora3cd:spell")
-
-		bar:SetScale(db.barScale)
-		bar:SetHeight(db.barHeight)
-		bar:SetIcon(db.barShowIcon and bar:Get("ora3cd:icon"))
-		bar:SetTexture(media:Fetch("statusbar", db.barTexture))
-		bar.fill = db.barFill and not bar:Get("ora3cd:ready") -- set directly, don't update min/max values
-		if db.barClassColor then
-			bar:SetColor(classColor.r, classColor.g, classColor.b, status and db.barStatusAlpha or 1)
-		else
-			local r, g, b = unpack(db.barColor)
-			bar:SetColor(r, g, b, status and db.barStatusAlpha or 1)
-		end
-		bar.candyBarBackground:SetVertexColor(unpack(db.barColorBG))
-
-		bar.candyBarLabel:SetFont(media:Fetch("font", db.barLabelFont), db.barLabelFontSize, db.barLabelOutline ~= "NONE" and db.barLabelOutline)
-		bar.candyBarLabel:SetJustifyH(db.barLabelAlign)
-		if db.barLabelClassColor then
-			bar.candyBarLabel:SetTextColor(classColor.r, classColor.g, classColor.b, 1)
-		else
-			bar.candyBarLabel:SetTextColor(unpack(db.barLabelColor))
-		end
-
-		local unit = player:gsub("%-.+", "")
 		if db.barShorthand then spell = shorts[spell] end
 
+		-- update color
+		if status and db.barColorStatus then
+			local r, g, b, a = unpack(db.barStatusColor)
+			bar:SetColor(r, g, b, a or 1)
+		elseif db.barClassColor then
+			local classColor = classColors[bar:Get("ora3cd:class")] or classColors.UNKNOWN
+			bar:SetColor(classColor.r, classColor.g, classColor.b, 1)
+		else
+			local r, g, b, a = unpack(db.barColor)
+			bar:SetColor(r, g, b, a or 1)
+		end
+
+		-- update label
+		local unit = player:gsub("%-.+", "")
 		local charges = bar:Get("ora3cd:charges")
 		if tonumber(charges) and charges > 0 then
 			if db.barShowSpell then
@@ -257,28 +237,60 @@ do
 		else
 			bar:SetLabel()
 		end
-
-		bar.candyBarDuration:SetFont(media:Fetch("font", db.barDurationFont), db.barDurationFontSize, db.barDurationOutline ~= "NONE" and db.barDurationOutline)
-		if db.barDurationClassColor then
-			bar.candyBarDuration:SetTextColor(classColor.r, classColor.g, classColor.b, 1)
-		else
-			bar.candyBarDuration:SetTextColor(unpack(db.barDurationColor))
-		end
-		bar:SetTimeVisibility(db.barShowDuration and not bar:Get("ora3cd:ready")) -- show cd text for charges?
-
-		if barStyle == "Default" then
-			bar.candyBarDuration:ClearAllPoints()
-			if db.barDurationAlign == "RIGHT" then
-				bar.candyBarDuration:SetPoint("RIGHT", bar.candyBarBar, "RIGHT", -2, 0)
-			elseif db.barDurationAlign == "LEFT" then
-				bar.candyBarDuration:SetPoint("LEFT", bar.candyBarBar, "LEFT", 2, 0)
-			elseif db.barDurationAlign == "CENTER" then
-				bar.candyBarDuration:SetPoint("CENTER", bar.candyBarBar, "CENTER", 0, 0)
-			end
-		end
-
-		barStyles[barStyle].ApplyStyle(bar)
 	end
+end
+
+function prototype:RestyleBar(bar)
+	local db = self.db
+
+	local barStyle = bar:Get("ora3cd:barstyle")
+	if barStyle and barStyle ~= db.barStyle then
+		barStyles[barStyle].BarStopped(bar)
+		bar.candyBarBackdrop:Hide()
+	end
+	barStyle = db.barStyle
+	bar:Set("ora3cd:barstyle", barStyle)
+
+	local classColor = classColors[bar:Get("ora3cd:class")] or classColors.UNKNOWN
+
+	bar:SetScale(db.barScale)
+	bar:SetHeight(db.barHeight)
+	bar:SetIcon(db.barShowIcon and bar:Get("ora3cd:icon"))
+	bar:SetTexture(media:Fetch("statusbar", db.barTexture))
+	bar.fill = db.barFill and not bar:Get("ora3cd:ready") -- set directly, don't update min/max values
+
+	bar.candyBarBackground:SetVertexColor(unpack(db.barColorBG))
+
+	bar.candyBarLabel:SetFont(media:Fetch("font", db.barLabelFont), db.barLabelFontSize, db.barLabelOutline ~= "NONE" and db.barLabelOutline)
+	bar.candyBarLabel:SetJustifyH(db.barLabelAlign)
+	if db.barLabelClassColor then
+		bar.candyBarLabel:SetTextColor(classColor.r, classColor.g, classColor.b, 1)
+	else
+		bar.candyBarLabel:SetTextColor(unpack(db.barLabelColor))
+	end
+
+	bar.candyBarDuration:SetFont(media:Fetch("font", db.barDurationFont), db.barDurationFontSize, db.barDurationOutline ~= "NONE" and db.barDurationOutline)
+	if db.barDurationClassColor then
+		bar.candyBarDuration:SetTextColor(classColor.r, classColor.g, classColor.b, 1)
+	else
+		bar.candyBarDuration:SetTextColor(unpack(db.barDurationColor))
+	end
+	bar:SetTimeVisibility(db.barShowDuration and not bar:Get("ora3cd:ready")) -- show cd text for charges?
+
+	if barStyle == "Default" then
+		bar.candyBarDuration:ClearAllPoints()
+		if db.barDurationAlign == "RIGHT" then
+			bar.candyBarDuration:SetPoint("RIGHT", bar.candyBarBar, "RIGHT", -2, 0)
+		elseif db.barDurationAlign == "LEFT" then
+			bar.candyBarDuration:SetPoint("LEFT", bar.candyBarBar, "LEFT", 2, 0)
+		elseif db.barDurationAlign == "CENTER" then
+			bar.candyBarDuration:SetPoint("CENTER", bar.candyBarBar, "CENTER", 0, 0)
+		end
+	end
+
+	self:UpdateBarStatus(bar)
+
+	barStyles[barStyle].ApplyStyle(bar)
 end
 
 function prototype:GetBar(guid, spellId)
@@ -419,7 +431,7 @@ function prototype:oRA3CD_UpdatePlayer(_, guid)
 	for bar in next, self.bars do
 		if bar:Get("ora3cd:guid") == guid then
 			if oRA3CD:CheckFilter(self, bar:Get("ora3cd:player")) then
-				self:RestyleBar(bar)
+				self:UpdateBarStatus(bar)
 			else
 				bar:Stop()
 			end
@@ -487,7 +499,8 @@ local defaultDB = {
 	barClassColor = true,
 	barColor = { 0.25, 0.33, 0.68, 1 },
 	barColorBG = { 0.5, 0.5, 0.5, 0.3 },
-	barStatusAlpha = 0.2,
+	barColorStatus = true,
+	barStatusColor = { 0.8, 0.8, 0.8, 0.2 },
 	barShowIcon = true,
 	barShowDuration = true,
 	barShowUnit = true,
@@ -599,11 +612,18 @@ local function GetOptions(self, db)
 				order = 14,
 				width = "full",
 			},
-			barStatusAlpha = {
-				type = "range",
-				name = L.disabledAlpha,
-				min = 0, max = 1, step = 0.1,
+			barColorStatus = {
+				type = "toggle",
+				name = L.useStatusColor,
+				desc = L.useStatusColorDesc,
 				order = 14.5,
+				width = "full",
+			},
+			barStatusColor = {
+				type = "color", hasAlpha = true,
+				name = L.statusColor,
+				disabled = function() return not db.barColorStatus end,
+				order = 14.6,
 				width = "full",
 			},
 			barHeight = {

@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Author: SLore/xuewu
 ## Title:[Duowan] RaidAlerter
 ## Notes: RaidAlerter

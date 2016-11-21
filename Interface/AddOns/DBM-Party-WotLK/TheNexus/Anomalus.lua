@@ -1,16 +1,16 @@
 local mod	= DBM:NewMod(619, "DBM-Party-WotLK", 8, 281)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 220 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 239 $"):sub(12, -3))
 mod:SetCreatureID(26763)
-mod:SetEncounterID(522, 523)
+mod:SetEncounterID(522, 523, 2009)
 mod:SetZone()
 
 mod:RegisterCombat("combat")
 
 mod:RegisterEventsInCombat(
 	"SPELL_SUMMON 47743",
-	"UNIT_HEALTH boss1 target focus mousover"
+	"UNIT_HEALTH boss1"
 )
 
 local warningRiftSoon	= mod:NewSoonAnnounce(47743, 2)

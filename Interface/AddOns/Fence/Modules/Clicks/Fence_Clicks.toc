@@ -1,4 +1,4 @@
-﻿## Interface: 30000
+## Interface: 70100
 ## Title: Fence [|cffeda55fClicks|r]
 ## Notes: Add many clicky shortcuts to the auction house.
 ## Notes-deDE: Ein Auktionshaus AddOn, um das Leben eines jeden Hehlers zu vereinfachen.

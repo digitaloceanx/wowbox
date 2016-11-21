@@ -203,3 +203,7 @@ L["Order Resources + Ancient Mana (Current char)"] = "职业大厅资源+远古�
 L["Ancient Mana (Formatted)"] = "远古魔力（格式化）"
 L["Icon: Ancient Mana"] = "图标：远古魔力"
 L["Oil (Formatted)"] = "原油（格式化）"
+L["Icon: Artifact Knowledge"] = "图标：神器知识"
+L["Artifact Knowledge (Formatted)"] = "神器知识（格式化）"
+L["Artifact Knowledge (Percentage Increase)"] = "神器知识（百分比递增）"
+L["Order Resources, Ancient Mana and Artifact Knowledge Increase (Current char)"] = "订单资源,远古魔力和神器知识（当前角色）"

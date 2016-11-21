@@ -2,7 +2,9 @@ local addonName, at = ...
 
 
 local core = CreateFrame('Frame', nil, UIParent)
-core:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
+	core:SetScript("OnEvent", function(self, event, ...)
+		self[event](self, ...)
+	end)
 at.core = core
 
 local type, pairs = type, pairs
@@ -68,10 +70,15 @@ function core:CopyTable(t, t2)
 	end
 end
 
+function core:GetN(t)
+  local count = 0
+  for _ in pairs(t) do count = count +1 end
+  return count
+end
+
 
 --tables
 core.plates = {} -- keeps track of namplates
-core.units = {} -- stores references to plates using GUID's
 
 
 
@@ -99,133 +106,6 @@ core.MOUSEOVER_GUID = nil
 
 
 
-
-
--- upvalues from frame
---   I've seen some authors override these in other parts of the UI...
---	 an example are some Minimap addons.
-local GetNumChildren = core.GetNumChildren
-local GetChildren = core.GetChildren
-local GetName = core.GetName
-local GetAlpha = core.GetAlpha
-
-
-
-local function OnShow(self)
-	core:Callback('NameplateOnShow', self)
-	
-	visible = visible + 1
-	if hasTarget and self:GetAlpha() == 1 then
-		targetUpdate = 0
-	end
-end
-local function OnHide(self)
-	local tab = core.plates[self]
-	tab.isPlayer = nil
-	visible = visible - 1
-	if hasTarget and self:GetAlpha() == 1 then
-		targetUpdate = nil
-	end
-	
-	core:Callback('NameplateOnHide', self, targetUpdate)
-
-	local guid = tab.guid
-	if guid then
-		core.units[guid] = nil
-		tab.guid = nil
-	end
-
-	core.plates[self] = tab
-end
-local function SetNameplateVars(plate, guid, token)
-	if guid then
-		if not core.units[guid] then
-			core.units[guid] = plate
-			core.plates[plate].guid = guid
-		end
-		core.plates[plate].isPlayer = UnitPlayerControlled(token)
-		core.plates[plate].canAttack = UnitCanAttack('player', token)
-	end
-end
-local function OnUpdate(self)
-	if targetUpdate then
-		if hasTarget and targetUpdate > visible and self:GetAlpha() == 1 then
-			SetNameplateVars(self, core.TARGET_GUID, 'target')
-			core:Callback('NameplateOnTargetUpdate', self)
-			targetUpdate = nil
-				
-		else
-			targetUpdate = targetUpdate +1
-			
-		end
-	end
-	if updateMouseover and core.plates[self].overlay:IsShown() then
-		SetNameplateVars(self, updateMouseover, 'mouseover')
-		core:Callback('NameplateOnMouseover', self)
-		updateMouseover = nil
-		
-	end
-end
-
-local numWorldChildren = 0
-local function ScanFrames(num, ...)
-	local frame
-	for x = numWorldChildren +1, num do
-		frame = select(x, ...)
-		if frame.ArtContainer then
-			local tab = {}
-			local overlay = frame.ArtContainer.Highlight
-			local threat = frame.ArtContainer.AggroWarningTexture
-			local name = frame.NameContainer.NameText
-			local hp = frame.ArtContainer.HealthBar
-			tab.overlay = overlay
-			tab.threat = threat
-			tab.name = name
-			tab.hp = hp
-			
-			core.plates[frame] = tab
-			core:Callback('NameplateAdded', frame, hp, threat, overlay, name)
-
-			OnShow(frame)
-			OnUpdate(frame)
-			frame:HookScript('OnShow', OnShow)
-			frame:HookScript('OnHide', OnHide)
-			frame:HookScript('OnUpdate', OnUpdate)
-		end
-	end
-end
-
-
---core:RegisterEvent('PLAYER_TARGET_CHANGED')-- fires before the nameplates are updated
-function core:PLAYER_TARGET_CHANGED(var)
-	-- since UNIT_AURA also fires this we can ignore it by checking for a variable
-	local guid
-	if not var then
-		--UnitIsDead prevents the first frame to update when looting from corpse
-		hasTarget = (UnitExists('target') and not UnitIsDead('target'))
-		visible = hasTarget and #core.plates or 0
-
-		guid = UnitGUID('target')
-		core.TARGET_GUID = guid
-		targetUpdate = 0
-		core:Callback('PLAYER_TARGET_CHANGED', not guid or not UnitCanAttack('player', 'target'))
-	else
-		targetUpdate = 0
-	end
-end
-
---core:RegisterEvent('UPDATE_MOUSEOVER_UNIT')-- may fire after the nameplates are updated
-function core:UPDATE_MOUSEOVER_UNIT(var)
-	local guid
-	
-	--if not var then
-		guid = UnitGUID('mouseover')
-		core.MOUSEOVER_GUID = guid
-	--end
-	updateMouseover = guid
-end
-
-
 core.VariableLoadCount = 0
 function core:LoadVariables()
 	-- this will run for each event that loads some form of variable; only doing anything once they've all loaded.
@@ -238,6 +118,7 @@ function core:LoadVariables()
 
 		JamPlatesAccessoriesCP = JamPlatesAccessoriesCP or self.PLAYER_GUID
 		self.db = self:CopyTable(JamPlatesAccessoriesDB[JamPlatesAccessoriesCP] or self.db, self.db)
+		--self.spells = self:CopyTable(JamPlatesAccessoriesDB.spells or {})
 		
 		
 		if core.db.name == 'default' and JamPlatesAccessoriesCP == self.PLAYER_GUID then
@@ -305,7 +186,7 @@ function core:PLAYER_ENTERING_WORLD()
 
 
 	self:LoadVariables()
-	self.PLAYER_ENTERING_WORLD = self.PLAYER_TARGET_CHANGED
+	self:UnregisterEvent('PLAYER_ENTERING_WORLD')
 end
 
 core:RegisterEvent('ADDON_LOADED')
@@ -331,20 +212,28 @@ function core:PLAYER_LOGOUT()
 end
 
 function JamPlatesAccessories_Toggle(toggle) --by eui.cc
-	if toggle == 1 then
-		toggle = true
-	else
+	if toggle == 0 then
 		toggle = false
+	else
+		toggle = true
 	end
+
 	core.db.aura.enabled = toggle
 	core.db.tracker.enabled = toggle
 	core.db.threat.enabled = toggle
 --	core.db.cp.enabled = toggle
 	core.db.combat.enabled = toggle
+	core.db.resource.enabled = toggle
 
 	core:CallbackKey('Toggle', 'aura')
 	core:CallbackKey('Toggle', 'tracker')
 --	core:CallbackKey('Toggle', 'cp')
 	core:CallbackKey('Toggle', 'threat')
 	core:CallbackKey('Toggle', 'combat')
+	core:CallbackKey('Toggle', 'resource')
+end
+
+function JamPlatesAccessories_ToggleRes()
+	core.db.resource.enabled = not core.db.resource.enabled
+	core:CallbackKey('Toggle', 'resource')
 end

@@ -1,9 +1,9 @@
-﻿
-if GetLocale() ~= "zhTW" then return end
-
--- Prevent tainting global _.
+﻿-- Prevent tainting global _.
 local _
 local _G = _G
+
+if GetLocale() == "zhTW" then 
+
 
 EA_TTIP_DOALERTSOUND = "事件發生時是否播放音效.";
 EA_TTIP_ALERTSOUNDSELECT = "選擇事件發生時所播放的音效.";
@@ -48,32 +48,19 @@ EA_TTIP_SPECFLAG_CHECK_RAGE = "開啟/關閉, 於本身BUFF框架左側第一格
 EA_TTIP_SPECFLAG_CHECK_FOCUS = "開啟/關閉, 於本身BUFF框架左側第一格顯示集中值";				--  支援集中值(獵人)
 EA_TTIP_SPECFLAG_CHECK_ENERGY = "開啟/關閉, 於本身BUFF框架左側第一格顯示能量";				--  支援能量(賊,貓D,武僧)
 EA_TTIP_SPECFLAG_CHECK_LIGHTFORCE = "開啟/關閉, 於本身BUFF框架左側第一格顯示真氣堆疊數";	--  支援武僧真氣
-EA_TTIP_SPECFLAG_CHECK_SHADOWORBS = "開啟/關閉, 於本身BUFF框架左側第一格顯示瘋狂";		--  支援暗影寶珠(暗牧)
+EA_TTIP_SPECFLAG_CHECK_INSANITY = "開啟/關閉, 於本身BUFF框架左側第一格顯示瘋狂";			--  支援暗影寶珠(暗牧)
 EA_TTIP_SPECFLAG_CHECK_DEMONICFURY = "開啟/關閉於本身BUFF框架左側第一格顯示惡魔之怒";		--  支援惡魔之怒
 EA_TTIP_SPECFLAG_CHECK_BURNINGEMBERS = "開啟/關閉於本身BUFF框架左側第一格顯示燃火餘燼";		--  支援燃火餘燼
 EA_TTIP_SPECFLAG_CHECK_ARCANECHARGES = "開啟/關閉於本身BUFF框架左側第一格顯示秘法充能";		--  支援秘法充能
 EA_TTIP_SPECFLAG_CHECK_MAELSTROM = "開啟/關閉於本身BUFF框架左側第一格顯示元能";				--  支援薩滿元能
 EA_TTIP_SPECFLAG_CHECK_FURY = "開啟/關閉於本身BUFF框架左側第一格顯示魔怒";					--  支援惡魔獵人魔怒
+EA_TTIP_SPECFLAG_CHECK_PAIN = "開啟/關閉於本身BUFF框架左側第一格顯示魔痛";					--  支援惡魔獵人魔痛
+EA_TTIP_SPECFLAG_CHECK_FOCUS_PET = "開啟/關閉於本身BUFF框架左側第二格顯示寵物集中值";		--  支援獵人寵物集中
 
 EA_TTIP_GRPCFG_ICONALPHA = "變更圖示的透明度";
 EA_TTIP_GRPCFG_TALENT = "限定此專精時才作用";
 EA_TTIP_GRPCFG_HIDEONLEAVECOMBAT = "離開戰鬥後,隱藏圖示";
 EA_TTIP_GRPCFG_HIDEONLOSTTARGET = "沒有目標時,隱藏圖示";
-
-EA_CLASS_DK = "DEATHKNIGHT";
-EA_CLASS_DRUID = "DRUID";
-EA_CLASS_HUNTER = "HUNTER";
-EA_CLASS_MAGE = "MAGE";
-EA_CLASS_PALADIN = "PALADIN";
-EA_CLASS_PRIEST = "PRIEST";
-EA_CLASS_ROGUE = "ROGUE";
-EA_CLASS_SHAMAN = "SHAMAN";
-EA_CLASS_WARLOCK = "WARLOCK";
-EA_CLASS_WARRIOR = "WARRIOR";
-EA_CLASS_MONK = "MONK";
-EA_CLASS_FUNKY = "FUNKY";
-EA_CLASS_OTHER = "OTHER";
-EA_CLASS_DEMONHUNTER = "DEMONHUNTER";
 
 EA_XOPT_ICONPOSOPT = "圖示位置&職業特殊能量";
 EA_XOPT_SHOW_ALTFRAME = "顯示主提示框架";
@@ -315,24 +302,7 @@ EA_XCMD_CMDHELP = {
 	},
 }
 
--- 各職業能量或特殊能量型態定義
-EA_SPELL_POWER_MANA = 0;				-- 法力（法師、術士、薩滿、聖騎士、牧師、補D）
-EA_SPELL_POWER_RAGE = 1;				-- 怒氣（戰士、熊D）
-EA_SPELL_POWER_FOCUS = 2;				-- 集中值 (獵人)
-EA_SPELL_POWER_ENERGY = 3;				-- 能量（盜賊、貓D、武僧）
-EA_SPELL_POWER_COMBO_POINT = 4;				-- 連擊點數（盜賊、貓D）
-EA_SPELL_POWER_RUNES = 5;				-- 符文（死亡騎士）
-EA_SPELL_POWER_RUNIC_POWER = 6;			-- 符文能量（死亡騎士）
-EA_SPELL_POWER_SOUL_SHARDS = 7;			-- 靈魂碎片（痛苦術士）
-EA_SPELL_POWER_LUNAR_POWER = 8;			-- 星能
-EA_SPELL_POWER_HOLY_POWER = 9;			-- 聖能（聖騎士）
-EA_SPELL_POWER_MAELSTROM = 11;			-- 元能(薩滿) (漩渦)
-EA_SPELL_POWER_LIGHT_FORCE = 12;		-- 真氣（武僧）
-EA_SPELL_POWER_SHADOW_ORBS = 13;		-- 瘋狂（暗牧）
-EA_SPELL_POWER_BURNING_EMBERS = 14;		-- 燃火餘燼（毀滅術士）
-EA_SPELL_POWER_DEMONIC_FURY = 15;		-- 惡魔之怒（惡魔術士）
-EA_SPELL_POWER_ARCANE_CHARGES = 16;		-- 秘法充能(秘法師)
-EA_SPELL_POWER_FURY = 17;				-- 惡魔獵人
+
 
 EA_XOPT_SPECFLAG_HOLYPOWER = "聖能";
 EA_XOPT_SPECFLAG_RUNICPOWER = "符文能量";
@@ -341,7 +311,7 @@ EA_XOPT_SPECFLAG_SOULSHARDS = "靈魂碎片";
 EA_XOPT_SPECFLAG_LUNARPOWER = "星能";
 EA_XOPT_SPECFLAG_COMBOPOINT = "賊/貓德連擊數";
 EA_XOPT_SPECFLAG_LIFEBLOOM = "生命之花";
-EA_XOPT_SPECFLAG_SHADOWORBS = "瘋狂";									
+EA_XOPT_SPECFLAG_INSANITY = "瘋狂";									
 EA_XOPT_SPECFLAG_RAGE = "怒氣";
 EA_XOPT_SPECFLAG_ENERGY = "能量";
 EA_XOPT_SPECFLAG_FOCUS = "集中值";
@@ -352,6 +322,7 @@ EA_XOPT_SPECFLAG_DEMONICFURY = "惡魔之怒";
 EA_XOPT_SPECFLAG_ARCANECHARGES = "秘法充能";
 EA_XOPT_SPECFLAG_MAELSTROM = "元能";
 EA_XOPT_SPECFLAG_FURY = "魔怒";
+EA_XOPT_SPECFLAG_PAIN = "魔痛";
 
 EA_XGRPALERT_POWERTYPE = "能量別:";
 EA_XGRPALERT_POWERTYPES = {
@@ -365,12 +336,13 @@ EA_XGRPALERT_POWERTYPES = {
 	[8]={text="星能", value=EA_SPELL_POWER_LUNAR_POWER},
 	[9]={text="聖能", value=EA_SPELL_POWER_HOLY_POWER},
 	[10]={text="真氣", value=EA_SPELL_POWER_LIGHT_FORCE},		
-	[11]={text="瘋狂", value=EA_SPELL_POWER_SHADOW_ORBS},		
+	[11]={text="瘋狂", value=EA_SPELL_POWER_INSANITY},		
 	[12]={text="燃火餘燼", value=EA_SPELL_POWER_BURNING_EMBERS},
 	[13]={text="惡魔之怒", value=EA_SPELL_POWER_DEMONIC_FURY},
 	[14]={text="秘法充能", value=EA_SPELL_POWER_ARCANE_CHARGES},
 	[15]={text="元能", value=EA_SPELL_POWER_MAELSTROM},
 	[16]={text="魔怒", value=EA_SPELL_POWER_FURY},
+	[17]={text="魔痛", value=EA_SPELL_POWER_PAIN},
 };
 
 EA_XSPECINFO_COMBOPOINT = "連擊數";
@@ -381,7 +353,7 @@ EA_XSPECINFO_LUNARPOWER= "星能";
 --EA_XSPECINFO_ECLIPSE	= "月能";
 --EA_XSPECINFO_ECLIPSEORG	= "日能";
 EA_XSPECINFO_HOLYPOWER	= "聖能";
-EA_XSPECINFO_SHADOWORBS= "瘋狂";		
+EA_XSPECINFO_INSANITY= "瘋狂";		
 EA_XSPECINFO_ENERGY= "能量";
 EA_XSPECINFO_RAGE= "怒氣";
 EA_XSPECINFO_FOCUS= "集中值";
@@ -389,4 +361,6 @@ EA_XSPECINFO_FOCUS_PET= "寵物集中";
 EA_XSPECINFO_LIGHTFORCE= "真氣";		
 EA_XSPECINFO_ARCANECHARGES= "秘法充能";			
 EA_XSPECINFO_MAELSTROM= "元能";		
-EA_XSPECINFO_FURY= "魔怒";			
+EA_XSPECINFO_FURY= "魔怒";	
+EA_XSPECINFO_PAIN= "魔痛";			
+end		-- End Of If

@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] Learning Aid
 ## Notes: Displays a bar of spells, abilities, tradeskills, mounts or mini-pets you've just learned.  By Jamash (Kil'jaeden-US)
 ## Notes: 新技能提示插件

@@ -8,4 +8,5 @@
 <Binding name="EZICONS_RESETICONS" description="Reset all target icons">
     	ezIcons:reset();
 </Binding>
+<Binding name="CLICK EasyObliterate:LeftButton" header="EASYOBLITERATEHEAD" category="ADDONS"/>
 </Bindings>

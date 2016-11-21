@@ -45,6 +45,7 @@ UIDropDownMenu_SetSelectedValue(drop, Addon.frame)
 function Addon:NewPanel(name)
 	local panel = Addon.Panel:New('CombuctorOptions' .. name, '|cff00ff00[背包]|r背包整合', L.OptionsSubtitle, nil, '|cff00ff00[背包]|r背包整合', L[name])
 	tinsert(panels, panel)
+	Combuctor.optionFrame = panel
 	return panel
 end
 

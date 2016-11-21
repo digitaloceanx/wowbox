@@ -1,11 +1,11 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: TomTom
 ## Title-zhCN: [多玩] 导航助手TomTom
 ## Notes-zhCN: 一个简单的导航助手
 ## Title-zhTW: [多玩] 導航助手TomTom
 ## Notes-zhTW: 一箇簡單的導航助手
 ## Author: jnwhiteh
-## Version: v60200-2.0.0
+## Version: v70100-1.0.0
 ## License: All Rights Reserved
 ## Notes: Acts as your portable navigation assistant
 ## Notes-zhCN:一个简单的导航助手。

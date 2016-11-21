@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: Trinket Menu
 ## Title-zhCN: [多玩] 饰品管理 TrinketMenu
 ## Title-zhTW: [多玩] 飾品管理 TrinketMenu

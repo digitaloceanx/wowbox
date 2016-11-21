@@ -487,37 +487,3 @@ end
 function GatherMate:MapLocalize(map)
 	return self.HBD:GetLocalizedMap(map)
 end
-
----------------------
--- DuowanInterface
-function GatherMate_Toggle(switch)
-	if (switch) then
-		db.showWorldMap = true;
-		GatherMapOptionButton:Show();
-		GatherMate:EnableModule("Display");
-	else
-		db.showWorldMap = false;
-		GatherMapOptionButton:Hide();
-		GatherMate:DisableModule("Display");
-	end
-end
-
-function GatherMate_MinimapToggle(switch)
-	local Display = GatherMate:GetModule("Display", true);
-	if (switch) then
-		db.showMinimap = true;
-	else
-		db.showMinimap = false;
-		if (Display) then
-			Display:CleanMinimapPins();
-		end
-	end
-end
-
-function GatherMate_TreasureToggle(switch)
-	if (switch) then
-		db.show["Treasure"] = "always";
-	else
-		db.show["Treasure"] = "never";
-	end
-end

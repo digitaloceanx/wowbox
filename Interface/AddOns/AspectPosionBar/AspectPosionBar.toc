@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] AspectPosionBar
 ## Notes: Aspect Posion Bar
 ## Title-zhCN: [多玩] 职业守护条

@@ -49,7 +49,7 @@ core:AddCallback('Toggle', 'combat', function(self, ...)
 	
 end)
 core:AddCallback('VariablesLoaded', 'combatindicator', function(self, frame)
-	self:AddCallback('NAME_PLATE_CREATED', 'combatindicator', function(self, plate, hp, threat, overlay, name)
+	self:AddCallback('NAME_PLATE_CREATED', 'combatindicator', function(self, plate)
 		local db = self.db.combat
 		local frame = CreateFrame('Frame', nil, plate)
 		frame:ClearAllPoints()

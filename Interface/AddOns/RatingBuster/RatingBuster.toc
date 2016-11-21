@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] RatingBuster
 ## Title-zhTW: [多玩] 裝備屬性解析 RatingBuster
 ## Notes-zhCN: 装备属性分析 RatingBuster

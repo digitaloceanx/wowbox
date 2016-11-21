@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: [Duowan] HandyNotes
 ## Title-zhCN: [多玩] 地图标记
 ## Title-zhTW: [多玩] 地圖標記

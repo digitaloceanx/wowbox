@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: OregorgerTracker
 ## Title-zhCN: 吞噬者奥尔高格助手 OregorgerTracker
 ## Title-zhTW: 『吞噬者』礦吞助手 OregorgerTracker

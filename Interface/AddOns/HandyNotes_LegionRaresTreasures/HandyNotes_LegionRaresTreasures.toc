@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title:  [Duowan] HandyNotes_Legion R & T
 ## Title-zhCN: [多玩] 地图标记-破碎群岛宝藏模块
 ## Title-zhTW: [多玩] 地圖標記-破碎群島定期模塊

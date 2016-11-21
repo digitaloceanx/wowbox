@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Author: Thrae (Modified by Hughman)
 ## Title: [Duowan] TinyTip 
 ## Notes: 格式化显示提示信息

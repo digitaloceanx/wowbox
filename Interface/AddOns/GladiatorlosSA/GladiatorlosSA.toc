@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: GladiatorlosSA
 ## Notes: PVP技能語音提示
 ## Title-zhCN: 竞技语音
@@ -7,7 +7,7 @@
 ## Notes-zhTW: 競技場技能語音提示
 ## Author: Abatorlos(of Spinebreaker), DuskAshes, superk521, zuhligan
 ## SavedVariables: GladiatorlosSADB
-## Version: 1.7a
+## Version: 1.11.1
 ## X-DuowanAddon: PvP
 ## Dependencies: Duowan
 ## X-Revision: Duowan

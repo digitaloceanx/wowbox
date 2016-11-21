@@ -21,6 +21,8 @@ if (GetLocale() == "zhCN") then
 	RAID_MOD_GROUPVOICE = "组队语音";
 	RAID_MOD_DWGKP = "金团助手";
 	RAID_MOD_LEADER = "团长助手";
+	RAID_MOD_AngryKeystones = "大秘境计时"
+	RAID_MOD_AngryKeystones_OPTION = "大秘境计时设置"
 	
 	RAID_MOD_DBM_ThogarAssist = "开启索戈尔助手"
 	RAID_MOD_DBM_ThogarAssist_DESC = "黑石铸造厂索戈尔助手"
@@ -117,7 +119,9 @@ elseif (GetLocale() == "zhTW") then
 	RAID_MOD_GROUPVOICE = "组队语音";
 	RAID_MOD_DWGKP = "金團助手";
 	RAID_MOD_LEADER = "團長助手";
-	
+	RAID_MOD_AngryKeystones = "大秘境计时"
+	RAID_MOD_AngryKeystones_OPTION = "大秘境计时设置"
+
 	RAID_MOD_DBM_ThogarAssist = "開啟索戈爾助手"
 	RAID_MOD_DBM_ThogarAssist_DESC = "黑石鑄造廠索戈爾助手"
 	RAID_MOD_DBM_ThogarAssist_Config = "打開設置"
@@ -212,6 +216,8 @@ else
 	RAID_MOD_GROUPVOICE = "组队语音";
 	RAID_MOD_DWGKP = "金团助手";
 	RAID_MOD_LEADER = "团长助手";
+	RAID_MOD_AngryKeystones = "大秘境计时"
+	RAID_MOD_AngryKeystones_OPTION = "大秘境计时设置"
 
 	RAID_MOD_DBM_ThogarAssist = "开启索戈尔助手"
 	RAID_MOD_DBM_ThogarAssist_DESC = "黑石铸造厂索戈尔助手"
@@ -1461,5 +1467,30 @@ if (dwIsConfigurableAddOn("AtlasLoot")) then
 			end
 		end, 
 		1
+	);	
+end
+
+if (dwIsConfigurableAddOn("AngryKeystones")) then
+	dwRegisterMod(
+		"AngryKeystonesMod",
+		RAID_MOD_AngryKeystones,
+		"AngryKeystones",
+		"",
+		"Interface\\ICONS\\INV_Box_01",
+		nil,
+		"RAID"
+	);
+	
+	dwRegisterButton(
+		"AngryKeystonesMod",
+		RAID_MOD_AngryKeystones_OPTION, 
+		function()			
+			if (dwIsAddOnLoaded("AngryKeystones")) then
+				if SlashCmdList.AngryKeystones then
+					SlashCmdList.AngryKeystones()
+				end
+			end
+		end, 
+		0
 	);	
 end

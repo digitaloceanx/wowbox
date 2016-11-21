@@ -6,14 +6,17 @@ if (GetLocale() == "zhCN") then
 	TRINKET_TITLE = "姓名版增强";
 	TRINKET_ENABLE = "启用姓名版增强";
 	TRINKET_OPEN_OPTIONS = "打开设置界面";
+	TRINKET_TOGGLE_RES = "开关职业资源";
 elseif (GetLocale() == "zhTW") then
 	TRINKET_TITLE = "姓名版增强";
 	TRINKET_ENABLE = "啟用姓名版增强";
 	TRINKET_OPEN_OPTIONS = "打開設定介面";
+	TRINKET_TOGGLE_RES = "开关职业资源";
 else
 	TRINKET_TITLE = "姓名版增强";
 	TRINKET_ENABLE = "启用姓名版增强";
 	TRINKET_OPEN_OPTIONS = "打开设置界面";
+	TRINKET_TOGGLE_RES = "开关职业资源";
 end
 
 if (dwIsConfigurableAddOn("JamPlates_Accessories")) then
@@ -63,4 +66,15 @@ if (dwIsConfigurableAddOn("JamPlates_Accessories")) then
 		end, 
 		1
 	);
+	
+	dwRegisterButton(
+		"JAMPLATESACCESSORIES",
+		TRINKET_TOGGLE_RES, 
+		function()			
+			if (dwIsAddOnLoaded("JamPlates_Accessories")) then
+				JamPlatesAccessories_ToggleRes();
+			end
+		end, 
+		1
+	);	
 end

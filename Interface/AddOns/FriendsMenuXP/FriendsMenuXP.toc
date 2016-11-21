@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Author: Warbaby @ 网易有爱 w.163.com/163ui
 ## Title: [Duowan] FriendsMenuXP
 ## Notes: Hook extra menu to friend list, guild list and chat player

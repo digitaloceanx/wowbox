@@ -12,8 +12,9 @@ core:AddCallback('Initialize', nil, function(self, ...)
 	tab.defaultEnabled = false
 	--tab.defaultTimers = true -- maybe some day
 	
-	--tab.invert = false
 	tab.ShowBorder = true
+	tab.showTime = true
+	tab.showDefaultTime = false
 	tab.BPR = 6
 	tab.scale = 1
 	tab.width = 17
@@ -55,6 +56,8 @@ core:AddCallback('Initialize', nil, function(self, ...)
 
 	tab.enabled = true
 	tab.ShowBorder = true
+	tab.showTime = true
+	tab.showDefaultTime = false
 	tab.BPR = 6
 	tab.scale = 1
 	tab.width = 17
@@ -106,6 +109,7 @@ local strfind, ipairs = string.find, ipairs
 local rad, ceil = math.rad, math.ceil
 local NumberFontNormalYellow = NumberFontNormalYellow
 local SystemFont_Shadow_Med1 = SystemFont_Shadow_Med1
+local DebuffTypeColor = DebuffTypeColor
 
 
 
@@ -144,57 +148,6 @@ TIMER_FONT:SetShadowOffset(SystemFont_Shadow_Med1:GetShadowOffset())
 local COUNT_FONT = CreateFont(addonName.. "AuraCountFont")
 COUNT_FONT:SetFont([[Fonts\FRIZQT__.TTF]], 8)
 
-
--- Being green ain't easy.
-local function RecyctableAuras(tab)
-	if tab then
-		-- put table back into free tables; they may have debuff frames in them so hide them
-		for x = 1, #tab do
-			local frame = tab[x]
-			frame:Hide()
-			frame:SetSize(core.db.aura.width, core.db.aura.height)
-			frame:SetScale(core.db.aura.scale)
-
-			frame.border:SetSize(core.db.aura.width +3, core.db.aura.height +2)
-		end
-		core.auras[#core.auras +1] = tab
-		return nil
-
-	elseif #core.auras > 0 then
-		-- get a table and send it out; there's no need for it to stick around either
-		tab = core.auras[#core.auras]
-		core.auras[#core.auras] = nil
-		return tab
-
-	else
-		-- if nothing else just send a fresh table; it should be returned later
-		return {visible = 0}
-	end
-end
-local function RecyctableCCs(tab)
-	if tab then
-		for x = 1, #tab do
-			local frame = tab[x]
-			frame:Hide()
-			frame:SetSize(core.db.tracker.width, core.db.tracker.height)
-			frame:SetScale(core.db.tracker.scale)
-
-			frame.border:SetSize(core.db.tracker.width +3, core.db.tracker.height +2)
-		end
-		core.tracker[#core.tracker +1] = tab
-		return nil
-
-	elseif #core.tracker > 0 then
-		tab = core.tracker[#core.tracker]
-		core.tracker[#core.tracker] = nil
-		return tab
-
-	else
-		return {}
-	end
-end
-
-
 local function Aura_OnHide(self)
 	self.spellID = nil
 end
@@ -225,6 +178,7 @@ local function CreateButton(parent, isCC)
 	-- finally
 	local cooldown = CreateFrame('Cooldown', nil, frame, "CooldownFrameTemplate")
 	cooldown:SetAllPoints(frame)
+	cooldown:SetHideCountdownNumbers(not db.showDefaultTime)
 	cooldown.noCooldownCount = true -- CooldownCount ignore thing
 	cooldown:SetReverse(true)
 	cooldown.timer = timer
@@ -246,19 +200,18 @@ end
 
 
 local function AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expirationTime, count, isCC)
+	local db = isCC and core.db.tracker or core.db.aura
 	frame.spellID = spellID
 
 	frame.texture:SetTexture(icon)
 	
 	frame.debuffType = debuffType
-	if isCC and core.db.tracker.ShowBorder or core.db.aura.ShowBorder then
+	local color = DebuffTypeColor[debuffType or 'none']
+	
+	frame.border:Hide()
+	if db.ShowBorder then
 		frame.border:Show()
-		local color = DebuffTypeColor[debuffType or 'none']
 		frame.border:SetVertexColor(color.r, color.g, color.b)
-		
-	else
-		frame.border:Hide()
-
 	end
 	
 	if count and count > 1 then
@@ -273,6 +226,10 @@ local function AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expi
 	if duration and ( duration > 0 ) then
 		frame.cooldown:Show()
 		frame.timer:Show()
+		if not db.showTime then
+			frame.timer:Hide()
+		end
+		frame.cooldown:SetHideCountdownNumbers(not db.showDefaultTime)
 
 		frame.cooldown.time = expirationTime
 		frame.cooldown.duration = duration
@@ -284,7 +241,6 @@ local function AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expi
 
 		frame.cooldown.time = nil
 		frame.cooldown.duration = nil
-		--frame.cooldown.inverse = false
 
 	end
 end
@@ -312,148 +268,57 @@ local Growth = {
 	},
 }
 
-local function AddAura(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count)
-	local buffs = self.plates[nameplate].auras
+local function AddAura(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count, isCC)
+	local db = isCC and self.db.tracker or self.db.aura
+	local buffs = isCC and self.plates[nameplate].tracker or self.plates[nameplate].auras
 	if not buffs then return end
+	
 	local index = buffs.visible +1
 	buffs.visible = index
 	local frame = buffs[index]
 	if not frame then
-		frame = CreateButton(nameplate)
-		self.plates[nameplate].auras[index] = frame
+		frame = CreateButton(nameplate, isCC)
+		if isCC then
+			self.plates[nameplate].tracker[index] = frame
+		else
+			self.plates[nameplate].auras[index] = frame
+		end
 	end
-	AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expirationTime, count)
+	AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expirationTime, count, isCC)
 
 	index = index -1
 	frame:ClearAllPoints()
-	if not self.db.aura.enabled then
+	if not db.enabled then
 		frame:Hide()
 	else
 		if index == 0 then
-			frame:SetPoint(self.db.aura.anchor, nameplate, self.db.aura.relative, self.db.aura.x, self.db.aura.y)
+			frame:SetPoint(db.anchor, nameplate, db.relative, db.x, db.y)
 
 		else
-			local bpr = self.db.aura.BPR
+			local bpr = db.BPR
 			local growth
 			if ceil(index / bpr) == index / bpr then
-				growth = self.db.aura.growth
+				growth = db.growth
 				--frame:SetPoint('BOTTOMLEFT', buffs[index - self.db.aura.BPR + 1], 'TOPLEFT', 0, 14)
 				frame:SetPoint(Growth.Row[growth][1], buffs[index - bpr + 1], Growth.Row[growth][2], 0, 14 * (growth and -1 or 1))
 
 			else
-				growth = self.db.aura.direction
+				growth = db.direction
 				frame:SetPoint(Growth.Column[growth][1], buffs[index], Growth.Column[growth][2], BUFF_HORIZ_SPACING  * (growth and 1 or -1), 0)
 				
 			end
 		end
 	end
-	self.plates[nameplate].auras.visible = buffs.visible
+	if isCC then
+		self.plates[nameplate].tracker.visible = buffs.visible
+	else
+		self.plates[nameplate].auras.visible = buffs.visible
+	end
 		
 	frame:Show()
 	return frame
 end
-local function AddCC(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count)
-	local buffs = self.plates[nameplate].tracker
-	if not buffs then return end
-	local index = buffs.visible +1
-	buffs.visible = index
-	local frame = buffs[index]
-	if not frame then
-		frame = CreateButton(nameplate)
-		self.plates[nameplate].tracker[index] = frame
-	end
-	AdjustAuraTraits(frame, spellID, icon, debuffType, duration, expirationTime, count, true)
-	frame:SetParent(nameplate)
 
-	index = index -1
-	frame:ClearAllPoints()
-
-	if not self.db.tracker.enabled then
-		frame:Hide()
-	else
-		if index == 0 then
-			frame:SetPoint(self.db.tracker.anchor, nameplate, self.db.tracker.relative, self.db.tracker.x, self.db.tracker.y)
-
-		else
-			local bpr = self.db.tracker.BPR
-			local growth
-			if ceil(index / bpr) == index / bpr then
-				growth = self.db.tracker.growth
-				frame:SetPoint(Growth.Row[growth][1], buffs[index - bpr + 1], Growth.Row[growth][2], 0, 14 * (growth and -1 or 1))
-
-			else
-				growth = self.db.tracker.direction
-				frame:SetPoint(Growth.Column[growth][1], buffs[index], Growth.Column[growth][2], BUFF_HORIZ_SPACING * (growth and 1 or -1), 0)
-				
-			end
-		end
-	end
-	self.plates[nameplate].tracker.visible = buffs.visible
-	
-	frame:Show()
-	return frame
-end
---[[
-local function DoseAura(self, nameplate, isCC, spellID, icon, debuffType, duration, expirationTime, count)
-	local buffs = self.plates[nameplate].auras
-	if isCC then buffs = self.plates[nameplate].tracker end
-	local v
-	for x = 1, buffs.visible do
-		v = buffs[x]
-		if v.spellID == spellID then
-			if count and count > 1 then
-				v.count:SetText(count)
-				v.count:Show()
-				v.count.value = count
-
-			else
-				v.count:Hide()
-
-			end
-			break
-		end
-	end
-end
-local function RefreshAura(self, nameplate, isCC, spellID, icon, debuffType, duration, expirationTime, count)
-	local buffs = self.plates[nameplate].auras
-	if isCC then buffs = self.plates[nameplate].tracker end
-	for x, v in ipairs(buffs) do
-		if v.spellID == spellID then
-			if count and count > 1 then
-				v.count:SetText(count)
-				v.count:Show()
-
-			else
-				v.count:Hide()
-
-			end
-			v.cooldown.time = expirationTime
-			v.cooldown.duration = duration
-			break
-		end
-	end
-end
-local function RemoveAura(self, nameplate, isCC, spellID)
-	local buffs = self.plates[nameplate].auras
-	if isCC then buffs = self.plates[nameplate].tracker end
-	local frame, v, icon, debuffType, duration, expirationTime, count
-	for x=1, buffs.visible do
-		v = buffs[x]
-		if v.spellID == spellID then
-			frame = v
-		elseif frame then
-			AdjustAuraTraits(frame, v.spellID, v.texture:GetTexture(), v.debuffType, v.cooldown.duration, v.cooldown.time, v.count.value)
-		end
-	end
-	if buffs[buffs.visible] then
-		buffs[buffs.visible]:Hide()
-	end
-	self.plates[nameplate].auras.visible = buffs.visible -1
-
-end
---]]
-
--- Oh ma gurd... I deleted it, yay!
 local function ScanAuras(self, nameplate, token)
 	local tab = self.plates[nameplate]
 	local aura = self.db.aura
@@ -465,34 +330,35 @@ local function ScanAuras(self, nameplate, token)
 	if tab.auras then tab.auras.visible = 0 end
 	if tab.tracker then tab.tracker.visible = 0 end
 	
-	local filter = 'HARMFUL' or nil
+	local filter = 'HARMFUL'
+	local unitIsAllied = not UnitCanAttack('player', token)
 	
-	local spellID, icon, count, debuffType, duration, expirationTime, caster = true
+	local spellID, name, icon, count, debuffType, duration, expirationTime, caster = true
 	while token and spellID do
-		_, _, icon, count, debuffType, duration, expirationTime, caster, _, _, spellID = UnitAura(token, index, filter)
+		name, _, icon, count, debuffType, duration, expirationTime, caster, _, _, spellID = UnitAura(token, index, filter)
 		if spellID then
 			local tmp = self.spells[spellID] or {}
+			tmp.name = name
 			tmp.icon = icon
 			tmp.debuffType = debuffType
-			tmp.duration = duration
 			self.spells[spellID] = tmp
 			
-			local unitIsAllied = UnitCanAttack('player', token)
 			-- Talasonx special honors; I've since improved the code he pointed out I had wrong.
+			-- and to Jordan5538
 			if (trac.filter[spellID] and trac.enabled) and (
 				(trac.showPlayerBuff and not filter and caster == 'player') or
 				(trac.showPlayerDebuff and filter and caster == 'player') or
 				(trac.showPetBuff and not filter and caster == 'pet') or
 				(trac.showPetDebuff and filter and caster == 'pet') or
 				
-				(trac.showFreindlyBuff and not filter and unitIsAllied) or
-				(trac.showFreindlyDebuff and filter and unitIsAllied) or
+				(trac.showFriendlyBuff and not filter and unitIsAllied) or
+				(trac.showFriendlyDebuff and filter and unitIsAllied) or
 				
 				(trac.showHostileBuff and not filter and not unitIsAllied) or
 				(trac.showHostileDebuff and filter and not unitIsAllied)
 				) then
 				
-				AddCC(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count)
+				AddAura(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count, true)
 				
 			elseif (aura.enabled and not aura.filter[spellID]) and (
 				(aura.showPlayerBuff and not filter and caster == 'player') or
@@ -500,13 +366,15 @@ local function ScanAuras(self, nameplate, token)
 				(aura.showPetBuff and not filter and caster == 'pet') or
 				(aura.showPetDebuff and filter and caster == 'pet') or
 				
-				(aura.showFreindlyBuff and not filter and unitIsAllied) or
-				(aura.showFreindlyDebuff and filter and unitIsAllied) or
+				(aura.showFriendlyBuff and not filter and unitIsAllied) or
+				(aura.showFriendlyDebuff and filter and unitIsAllied) or
 				
 				(aura.showHostileBuff and not filter and not unitIsAllied) or
 				(aura.showHostileDebuff and filter and not unitIsAllied)
 				) then
+				
 				AddAura(self, nameplate, spellID, icon, debuffType, duration, expirationTime, count)
+				
 			end
 		end
 		
@@ -534,9 +402,12 @@ local function ScanAuras(self, nameplate, token)
 	end
 end
 
-
 local UnitAurasEventFrames = {}
 core:AddCallback('NAME_PLATE_CREATED', 'aura', function(self, plate)
+	self.plates[plate].auras = {visible = 0}
+	self.plates[plate].tracker = {visible = 0}
+
+	-- in case an addon unregisters the nameplates events.....
 	UnitAurasEventFrames[plate] = CreateFrame('Frame', nil, plate)
 	UnitAurasEventFrames[plate]:SetScript('OnEvent', function()
 		ScanAuras(self, plate, plate.namePlateUnitToken)
@@ -545,23 +416,17 @@ core:AddCallback('NAME_PLATE_CREATED', 'aura', function(self, plate)
 	if plate.UnitFrame.BuffFrame then visible(plate.UnitFrame.BuffFrame) end
 end)
 
-local function HideUnusedFrames(default, aura, tracker)
-	local visible = default and main.Show or main.Hide
-	for x, v in pairs(core.plates) do
-		if x.UnitFrame.BuffFrame then visible(x.UnitFrame.BuffFrame) end
-		if not aura and v.auras then
-			local list = v.auras
-			for y=1, #list do
-				list[y]:Hide()
-			end
-			v.auras = RecyctableCCs(v.auras)
-		end
-		if not tracker and v.tracker then
-			local list = v.tracker
-			for y=1, #list do
-				list[y]:Hide()
-			end
-			v.tracker = RecyctableCCs(v.tracker)
+local function ToggleFrames(isCC)
+	local db = isCC and core.db.tracker or core.db.aura
+	for plate, v in pairs(core.plates) do
+		local tab = isCC and v.tracker or v.auras
+		for x = 1, #tab do
+			local frame = tab[x]
+			frame:Hide()
+			frame:SetSize(db.width, db.height)
+			frame:SetScale(db.scale)
+
+			frame.border:SetSize(db.width +3, db.height +2)
 		end
 	end
 end
@@ -570,7 +435,12 @@ local function ToggleEvents(self)
 	local aura = self.db.aura.enabled
 	local track = self.db.tracker.enabled
 	local state = aura or track
-	HideUnusedFrames(self.db.aura.defaultEnabled, aura, track)
+	local visible = self.db.aura.defaultEnabled and main.Show or main.Hide
+	for x, v in pairs(core.plates) do
+		visible(x.UnitFrame.BuffFrame)
+	end
+	ToggleFrames()
+	ToggleFrames(true)
 	if state then
 		state = 'AddCallback'
 	else
@@ -582,14 +452,18 @@ local function ToggleEvents(self)
 	
 	self[state](self, 'NAME_PLATE_UNIT_ADDED', 'aura', function(self, plate, token)
 		UnitAurasEventFrames[plate]:RegisterUnitEvent('UNIT_AURA', token)
-		self.plates[plate].auras = not self.plates[plate].auras and RecyctableAuras()
-		self.plates[plate].tracker = not self.plates[plate].tracker and RecyctableCCs()
 		ScanAuras(self, plate, token)
 	end)
 	self[state](self, 'NAME_PLATE_UNIT_REMOVED', 'aura', function(self, plate, token)
-		if aura then self.plates[plate].auras = RecyctableAuras(self.plates[plate].auras) end
-		if track then self.plates[plate].tracker = RecyctableCCs(self.plates[plate].tracker) end
 		UnitAurasEventFrames[plate]:UnregisterEvent('UNIT_AURA')
+		local tab = self.plates[plate].auras
+		for x = 1, #tab do
+			tab[x]:Hide()
+		end
+		tab = self.plates[plate].tracker
+		for x = 1, #tab do
+			tab[x]:Hide()
+		end
 	end)
 end
 

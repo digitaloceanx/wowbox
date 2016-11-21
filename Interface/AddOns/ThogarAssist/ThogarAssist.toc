@@ -1,4 +1,4 @@
-﻿## Interface: 70000
+## Interface: 70100
 ## Title: Thogar Assist
 ## Title-zhCN: 索戈尔助手Thogar Assist
 ## Title-zhTW: 索加爾助手Thogar Assist

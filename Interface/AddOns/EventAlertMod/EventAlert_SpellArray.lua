@@ -1958,10 +1958,10 @@ function EventAlert_LoadSpellArray()
 		},
 		-- Alternate Alert / 本職業額外提醒區
 		["ALTITEMS"] = {
-			[162919] = {enable=true,},   -- Nightmare Fire (Crit, Proc)
-			[162913] = {enable=true,},
-			[162915] = {enable=true,},
-			[162917] = {enable=true,},
+			[162919] = {enable=false,},   -- Nightmare Fire (Crit, Proc)
+			[162913] = {enable=false,},
+			[162915] = {enable=false,},
+			[162917] = {enable=false,},
 		},
 		-- Target Alert / 目標提醒區
 		["TARITEMS"] = {
